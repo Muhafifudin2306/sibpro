@@ -21,3 +21,14 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+Route::prefix('pengeluaran')->group(function () {
+
+    Route::get('/vendor', [App\Http\Controllers\VendorController::class, 'index'])->name('vendor');
+});
+
+Route::prefix('setting')->group(function () {
+    Route::get('/year', [App\Http\Controllers\YearController::class, 'index'])->name('year');
+    Route::post('/year/{id}', [App\Http\Controllers\YearController::class, 'update'])->name('updateYear');
+});

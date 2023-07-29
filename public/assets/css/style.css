@@ -4166,4 +4166,8 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
   }
 }
 
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
 /*# sourceMappingURL=style.css.map */
