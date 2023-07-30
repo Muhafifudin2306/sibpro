@@ -14,13 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 Route::prefix('pengeluaran')->group(function () {
@@ -30,5 +26,7 @@ Route::prefix('pengeluaran')->group(function () {
 
 Route::prefix('setting')->group(function () {
     Route::get('/year', [App\Http\Controllers\YearController::class, 'index'])->name('year');
-    Route::post('/year/{id}', [App\Http\Controllers\YearController::class, 'update'])->name('updateYear');
+    Route::post('/year/add', [App\Http\Controllers\YearController::class, 'store'])->name('storeYear');
+    Route::post('/year/update/{id}', [App\Http\Controllers\YearController::class, 'update'])->name('updateYear');
+    Route::delete('/year/delete/{id}', [App\Http\Controllers\YearController::class, 'destroy'])->name('deleteYear');
 });
