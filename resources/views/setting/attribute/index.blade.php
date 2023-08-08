@@ -1,6 +1,11 @@
 @extends('layouts.admin.app')
 
 @section('content')
+    <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
+
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
@@ -10,19 +15,19 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Tahun Aktif') }}</h1>
+                    <h1>{{ __('Data Atribut') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item active">Dashboard</div>
                         <div class="breadcrumb-item active">General Setting</div>
-                        <div class="breadcrumb-item">Tahun Aktif</div>
+                        <div class="breadcrumb-item">Atribut</div>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">Tahun Pembelajaran Aktif</h2>
+                        <h2 class="section-title">Data Atribut</h2>
                         <p class="section-lead">
-                            Pilih dan Tambah Data Tahun Pembelajaran Aktif
+                            Pilih dan Tambah Data Atribut
                         </p>
                     </div>
                     <div class="action-content">
@@ -31,36 +36,62 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    @foreach ($years as $year)
-                        @if ($year->year_status == 'active')
-                            <div class="col-12 col-md-6 col-lg-3">
-                                <div class="card card-success">
-                                    <div class="card-header">
-                                        <h4>Aktif</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <p>Tahun Pelajaran {{ $year->year_name }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        @elseif ($year->year_status == 'nonActive')
-                            <div class="col-12 col-md-6 col-lg-3">
-                                <div id="{{ $year->id }}" class="card card-danger">
-                                    <div class="card-header d-flex justify-content-between">
-                                        <h4>Non Aktif</h4>
-                                        <i class="fas fa-trash card-delete cursor-pointer text-danger"
-                                            data-card-id="{{ $year->id }}"></i>
-                                    </div>
-                                    <div class="card-body cursor-pointer card-body-off" data-card-id="{{ $year->id }}">
-                                        <p>Tahun Pelajaran {{ $year->year_name }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
 
-
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{{ __('Tabel Atribut') }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-tagihan-vendor">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th>Nama Atribut</th>
+                                            <th>Harga Atribut</th>
+                                            <th>Tahun Ajaran</th>
+                                            <th>Diubah pada</th>
+                                            <th>Petugas</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($attributes as $item)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ $no++ }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->attribute_name }}
+                                                </td>
+                                                <td>
+                                                    Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $item->years->year_name }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->updated_at->format('d F Y') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $item->users->name }}
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-info">Edit</button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -77,16 +108,22 @@
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Tahun</h5>
+                    <h5 class="modal-title">Tambah Data Atribut</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="yearForm">
+                <form id="attributeForm">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="inputAddress">Nama Tahun Pelajaran ( Misal : 2022/2023 )</label>
-                            <input type="text" class="form-control" name="year_name" placeholder="2022/2023">
+                            <label for="attribute_name">Nama Atribut</label>
+                            <input type="text" class="form-control" name="attribute_name" id="attribute_name"
+                                placeholder="Topi/Dasi/Seragam" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label for="attribute_price">Harga (Tulis : 100000) </label>
+                            <input type="number" class="form-control" name="attribute_price" id="attribute_price"
+                                placeholder="100000">
                         </div>
 
                     </div>
@@ -134,7 +171,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Tangkap form input tahun
-            const yearForm = document.getElementById('yearForm');
+            const yearForm = document.getElementById('attributeForm');
 
             // Tambahkan event listener untuk saat form disubmit
             yearForm.addEventListener('submit', function(event) {
@@ -148,7 +185,7 @@
                 });
 
                 // Kirim permintaan AJAX ke endpoint untuk menyimpan data tahun baru
-                fetch(`/setting/year/add`, {
+                fetch(`/setting/attribute/add`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -159,7 +196,7 @@
                     .then(response => response.json())
                     .then(data => {
                         // Tampilkan notifikasi sukses menggunakan Notiflix
-                        Notiflix.Notify.success("Data Tahun berhasil ditambahkan", {
+                        Notiflix.Notify.success("Data Atribut berhasil ditambahkan", {
                             timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
                         });
 
@@ -207,4 +244,12 @@
             });
         });
     </script>
+@endsection
+
+@section('script')
+    <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
 @endsection

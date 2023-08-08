@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Attribute;
 
 class Year extends Model
 {
@@ -10,6 +11,12 @@ class Year extends Model
 
     protected $fillable = [
         'year_name',
-        'year_status'
+        'year_status',
+        'user_id'
     ];
+
+    public function attributes()
+    {
+        return $this->hasMany(Attribute::class, 'id_year');
+    }
 }

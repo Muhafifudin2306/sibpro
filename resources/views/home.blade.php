@@ -3,7 +3,7 @@
 @section('content')
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
-        <x-navbarAdmin></x-navbarAdmin>
+        <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
         <x-sidebarAdmin></x-sidebarAdmin>
 
         <!-- Main Content -->

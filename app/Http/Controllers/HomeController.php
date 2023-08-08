@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -25,6 +26,7 @@ class HomeController extends Controller
     public function index()
     {
         $adminCount = User::count();
-        return view('home', compact('adminCount'));
+        $notifications = Notification::get();
+        return view('home', compact('adminCount', 'notifications'));
     }
 }
