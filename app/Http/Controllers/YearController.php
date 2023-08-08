@@ -34,7 +34,7 @@ class YearController extends Controller
 
         Notification::create([
             'notification_content' => Auth::user()->name . " " . "Membuat Data Tahun" . " " . $request->input('year_name'),
-            'notification_staus' => 0
+            'notification_status' => 0
         ]);
 
         // Mendapatkan harga atribut tertinggi dari setiap jenis atribut yang sudah ada
@@ -99,7 +99,7 @@ class YearController extends Controller
         $year->delete();
         Notification::create([
             'notification_content' => Auth::user()->name . " " . "Menghapus Data Tahun" . " " . $year->year_name,
-            'notification_staus' => 0
+            'notification_status' => 0
         ]);
 
         return response()->json(['message' => 'Data Tahun berhasil dihapus.']);

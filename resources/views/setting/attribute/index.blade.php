@@ -48,7 +48,7 @@
                                     <thead>
                                         <tr class="text-center">
                                             <th class="text-center">
-                                                #
+                                                No
                                             </th>
                                             <th>Nama Atribut</th>
                                             <th>Harga Atribut</th>
@@ -83,7 +83,16 @@
                                                     {{ $item->users->name }}
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-info">Edit</button>
+                                                    <div class="d-flex justify-content-center">
+                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                            data-target="#exampleModal{{ $item->id }}">
+                                                            <i class="fas fa-pen" title="Edit Harga"></i>
+                                                        </div>
+                                                        <div class="text-danger mx-2 cursor-pointer">
+                                                            <i class="fas attribute-delete fa-trash-alt"
+                                                                data-card-id="{{ $item->id }}" title="delete"></i>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -135,37 +144,69 @@
             </div>
         </div>
     </div>
+    @foreach ($attributes as $item)
+        <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal{{ $item->id }}">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Data Attribute</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form class="update-form" data-action="{{ url('/setting/attribute/update/' . $item->id) }} }}"
+                        method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="attribute_name">Nama Atribut</label>
+                                <input type="text" class="form-control" name="attribute_name" id="attribute_name"
+                                    value="{{ $item->attribute_name }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="attribute_price">Harga </label>
+                                <input type="number" class="form-control" name="attribute_price" id="attribute_price"
+                                    value="{{ round($item->attribute_price) }}" autofocus>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
     <script>
-        // Tangkap semua tombol "Ubah Status"
-        const updateButtons = document.querySelectorAll('.card-body-off');
+        document.addEventListener('DOMContentLoaded', function() {
+            const updateForms = document.querySelectorAll('.update-form');
 
-        // Tambahkan event listener untuk setiap tombol
-        updateButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Ambil ID card dari atribut data-card-id
-                const cardId = button.dataset.cardId;
+            updateForms.forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
 
-                // Kirim permintaan AJAX ke endpoint update-status
-                fetch(`/setting/year/update/${cardId}`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
+                    const formData = new FormData(form);
 
-                        Notiflix.Notify.success("Data Berhasil Diperbarui", {
-                            timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
+                    fetch(form.getAttribute('data-action'), {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Notiflix.Notify.success("Data Berhasil Diperbarui", {
+                                timeout: 3000
+                            });
+
+                            location.reload();
+                        })
+                        .catch(error => {
+                            Notiflix.Notify.failure('Error:', error);
                         });
-
-                        // Refresh halaman saat ini
-                        location.reload();
-                    })
-                    .catch(error => {
-                        Notiflix.Notify.failure('Error:', error);
-                    });
+                });
             });
         });
 
@@ -210,17 +251,17 @@
             });
         });
 
-        const deleteButtons = document.querySelectorAll('.card-delete');
+        const deleteAttribute = document.querySelectorAll('.attribute-delete');
 
         // Tambahkan event listener untuk setiap tombol "Hapus Data"
-        deleteButtons.forEach(button => {
+        deleteAttribute.forEach(button => {
             button.addEventListener('click', function() {
                 const cardId = button.dataset.cardId;
 
                 Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
                     'Batal',
                     function() {
-                        fetch(`/setting/year/delete/${cardId}`, {
+                        fetch(`/setting/attribute/delete/${cardId}`, {
                                 method: 'DELETE',
                                 headers: {
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}',

@@ -20,7 +20,7 @@ class AttributeController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         // Filter data atribut berdasarkan ID tahun aktif
-        $attributes = Attribute::where('year_id', $activeYearId)->get();
+        $attributes = Attribute::where('year_id', $activeYearId)->orderBy("created_at", "DESC")->get();
 
         $notifications = Notification::orderBy("created_at", 'DESC')->limit(10)->get();
 
@@ -54,9 +54,56 @@ class AttributeController extends Controller
             ]);
         }
 
+        $years = Year::find($activeYearId);
+
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "Membuat Data Atribut" . " " . $request->input('attribute_name') . " " . "dengan harga" . " " . "Rp" . $request->input('attribute_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_status' => 0
+        ]);
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $attributes,
         ], 201); // 201 Created
+    }
+
+    public function update(Request $request, $id)
+    {
+        $attributes = Attribute::find($id);
+
+        $attributes->update([
+            "attribute_price" =>  $request->input('attribute_price'),
+            'user_id' => Auth::user()->id
+        ]);
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $years = Year::find($activeYearId);
+
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "Mengedit Data Atribut" . " " . $attributes->attribute_name . " " . "dengan harga" . " " . "Rp" .  $request->input('attribute_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_status' => 0
+        ]);
+        return response()->json([
+            'message' => 'Data inserted successfully',
+            'data' => $attributes,
+        ], 201); // 201 Created
+    }
+
+    public function destroy($id)
+    {
+        $attribute = Attribute::find($id);
+
+        if (!$attribute) {
+            return response()->json(['message' => 'Data Tahun tidak ditemukan.'], 404);
+        }
+
+        $attribute->delete();
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $years = Year::find($activeYearId);
+
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "Menghapus Data Atribut" . " " . $attribute->attribute_name . " " . "dengan harga" . " " . "Rp" . $attribute->attribute_price . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_staus' => 0
+        ]);
+
+        return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
     }
 }
