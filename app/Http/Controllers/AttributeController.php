@@ -40,20 +40,6 @@ class AttributeController extends Controller
             'user_id' => Auth::user()->id
         ]);
 
-        // Dapatkan tahun-tahun nonaktif dari tabel Year
-        $nonActiveYears = Year::where('year_status', 'nonActive')->get();
-
-        // Looping untuk setiap tahun nonaktif
-        foreach ($nonActiveYears as $nonActiveYear) {
-            // Simpan data atribut untuk setiap tahun nonaktif
-            $attributes = Attribute::create([
-                'attribute_name' => $request->input('attribute_name'),
-                'attribute_price' => $request->input('attribute_price'),
-                'year_id' => $nonActiveYear->id,
-                'user_id' => Auth::user()->id
-            ]);
-        }
-
         $years = Year::find($activeYearId);
 
         Notification::create([

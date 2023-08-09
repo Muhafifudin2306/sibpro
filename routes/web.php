@@ -44,4 +44,11 @@ Route::prefix('setting')->group(function () {
         Route::post('/update/{id}', [App\Http\Controllers\AttributeController::class, 'update'])->name('updateAttribute');
         Route::delete('/delete/{id}', [App\Http\Controllers\AttributeController::class, 'destroy'])->name('deleteAttribute');
     });
+
+    Route::prefix('class')->group(function () {
+        Route::get('/', [App\Http\Controllers\StudentClassController::class, 'index'])->name('class');
+        Route::post('/add', [App\Http\Controllers\StudentClassController::class, 'store'])->name('storeClass');
+        Route::post('/update/{id}', [App\Http\Controllers\StudentClassController::class, 'update'])->name('updateClass');
+        Route::delete('/delete/{id}', [App\Http\Controllers\StudentClassController::class, 'destroy'])->name('deleteClass');
+    });
 });

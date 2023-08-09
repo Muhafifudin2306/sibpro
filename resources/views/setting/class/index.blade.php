@@ -15,19 +15,19 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Data Atribut') }}</h1>
+                    <h1>{{ __('Data Kelas') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item active">Dashboard</div>
                         <div class="breadcrumb-item active">General Setting</div>
-                        <div class="breadcrumb-item">Atribut</div>
+                        <div class="breadcrumb-item">Kelas</div>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">Data Atribut Daftar Ulang</h2>
+                        <h2 class="section-title">Data Kelas</h2>
                         <p class="section-lead">
-                            Pilih dan Tambah Data Atribut Daftar Ulang
+                            Pilih dan Tambah Data Kelas
                         </p>
                     </div>
                     <div class="action-content">
@@ -40,7 +40,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>{{ __('Tabel Atribut') }}</h4>
+                            <h4>{{ __('Tabel Kelas') }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -50,8 +50,7 @@
                                             <th class="text-center">
                                                 No
                                             </th>
-                                            <th>Nama Atribut</th>
-                                            <th>Harga Atribut</th>
+                                            <th>Nama Kelas</th>
                                             <th>Tahun Ajaran</th>
                                             <th>Diubah pada</th>
                                             <th>Petugas</th>
@@ -62,16 +61,13 @@
                                         @php
                                             $no = 1;
                                         @endphp
-                                        @foreach ($attributes as $item)
+                                        @foreach ($classes as $item)
                                             <tr>
                                                 <td class="text-center">
                                                     {{ $no++ }}
                                                 </td>
-                                                <td>
-                                                    {{ $item->attribute_name }}
-                                                </td>
-                                                <td>
-                                                    Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
+                                                <td class="text-center">
+                                                    {{ $item->class_name }}
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $item->years->year_name }}
@@ -86,11 +82,12 @@
                                                     <div class="d-flex justify-content-center">
                                                         <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
                                                             data-target="#exampleModal{{ $item->id }}">
-                                                            <i class="fas fa-pen" title="Edit Harga"></i>
+                                                            <i class="fas fa-pen" title="Edit Nama Kelas"></i>
                                                         </div>
                                                         <div class="text-danger mx-2 cursor-pointer">
-                                                            <i class="fas attribute-delete fa-trash-alt"
-                                                                data-card-id="{{ $item->id }}" title="delete"></i>
+                                                            <i class="fas class-delete fa-trash-alt"
+                                                                data-card-id="{{ $item->id }}"
+                                                                title="Delete Kelas"></i>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -117,24 +114,18 @@
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Atribut</h5>
+                    <h5 class="modal-title">Tambah Data Kelas</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="attributeForm">
+                <form id="classForm">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="attribute_name">Nama Atribut</label>
-                            <input type="text" class="form-control" name="attribute_name" id="attribute_name"
-                                placeholder="Topi/Dasi/Seragam" autofocus>
+                            <label for="class_name">Nama Kelas</label>
+                            <input type="text" class="form-control" name="class_name" id="class_name"
+                                placeholder="X TKJ A/X TKJ B" autofocus>
                         </div>
-                        <div class="form-group">
-                            <label for="attribute_price">Harga (Tulis : 100000) </label>
-                            <input type="number" class="form-control" name="attribute_price" id="attribute_price"
-                                placeholder="100000">
-                        </div>
-
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -144,29 +135,24 @@
             </div>
         </div>
     </div>
-    @foreach ($attributes as $item)
+    @foreach ($classes as $item)
         <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal{{ $item->id }}">
             <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Data Attribute</h5>
+                        <h5 class="modal-title">Update Data Kelas</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form class="update-form" data-action="{{ url('/setting/attribute/update/' . $item->id) }} }}"
+                    <form class="update-form" data-action="{{ url('/setting/class/update/' . $item->id) }} }}"
                         method="POST">
                         @csrf
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="attribute_name">Nama Atribut</label>
-                                <input type="text" class="form-control" name="attribute_name" id="attribute_name"
-                                    value="{{ $item->attribute_name }}" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="attribute_price">Harga </label>
-                                <input type="number" class="form-control" name="attribute_price" id="attribute_price"
-                                    value="{{ round($item->attribute_price) }}" autofocus>
+                                <label for="class_name">Nama Kelas</label>
+                                <input type="text" class="form-control" name="class_name" id="class_name"
+                                    value="{{ $item->class_name }}">
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -212,32 +198,32 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Tangkap form input tahun
-            const yearForm = document.getElementById('attributeForm');
+            const classForm = document.getElementById('classForm');
 
             // Tambahkan event listener untuk saat form disubmit
-            yearForm.addEventListener('submit', function(event) {
+            classForm.addEventListener('submit', function(event) {
                 event.preventDefault();
 
                 // Ambil data dari form input tahun
-                const formData = new FormData(yearForm);
-                const yearData = {};
+                const formData = new FormData(classForm);
+                const classData = {};
                 formData.forEach((value, key) => {
-                    yearData[key] = value;
+                    classData[key] = value;
                 });
 
                 // Kirim permintaan AJAX ke endpoint untuk menyimpan data tahun baru
-                fetch(`/setting/attribute/add`, {
+                fetch(`/setting/class/add`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(yearData)
+                        body: JSON.stringify(classData)
                     })
                     .then(response => response.json())
                     .then(data => {
                         // Tampilkan notifikasi sukses menggunakan Notiflix
-                        Notiflix.Notify.success("Data Atribut berhasil ditambahkan", {
+                        Notiflix.Notify.success("Data Kelas berhasil ditambahkan", {
                             timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
                         });
 
@@ -251,17 +237,17 @@
             });
         });
 
-        const deleteAttribute = document.querySelectorAll('.attribute-delete');
+        const deleteClass = document.querySelectorAll('.class-delete');
 
         // Tambahkan event listener untuk setiap tombol "Hapus Data"
-        deleteAttribute.forEach(button => {
+        deleteClass.forEach(button => {
             button.addEventListener('click', function() {
                 const cardId = button.dataset.cardId;
 
                 Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
                     'Batal',
                     function() {
-                        fetch(`/setting/attribute/delete/${cardId}`, {
+                        fetch(`/setting/class/delete/${cardId}`, {
                                 method: 'DELETE',
                                 headers: {
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -270,7 +256,7 @@
                             .then(response => response.json())
                             .then(data => {
                                 // Tampilkan notifikasi sukses menggunakan Notiflix
-                                Notiflix.Notify.success("Data Tahun berhasil dihapus.", {
+                                Notiflix.Notify.success("Data Kelas berhasil dihapus.", {
                                     timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
                                 });
 

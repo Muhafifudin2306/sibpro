@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Year;
 use App\Models\Attribute;
 use App\Models\Notification;
+use App\Models\StudentClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -54,6 +55,19 @@ class YearController extends Controller
             Attribute::firstOrCreate([
                 'attribute_name' => $existingAttribute->attribute_name,
                 'attribute_price' => $highestPrice,
+                'year_id' => $year->id,
+                'user_id' => Auth::user()->id
+            ]);
+        }
+
+        // Mendapatkan data kelas yang sudah ada di tabel Attribute
+        $existingClasses = StudentClass::all();
+
+        // Looping untuk menduplikasi data atribut ke tahun baru
+        foreach ($existingClasses as $existingClass) {
+            // Cari atau buat atribut baru di tahun baru dan set harga sesuai harga tertinggi
+            StudentClass::firstOrCreate([
+                'class_name' => $existingClass->class_name,
                 'year_id' => $year->id,
                 'user_id' => Auth::user()->id
             ]);

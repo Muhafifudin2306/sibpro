@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Attribute;
+use App\Models\StudentClass;
 
 class User extends Authenticatable
 {
@@ -46,5 +48,10 @@ class User extends Authenticatable
     public function attributes()
     {
         return $this->hasMany(Attribute::class, 'id_user');
+    }
+
+    public function class()
+    {
+        return $this->hasMany(StudentClass::class, 'id_year');
     }
 }

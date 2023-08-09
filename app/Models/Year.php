@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Attribute;
+use App\Models\StudentClass;
 
 class Year extends Model
 {
@@ -18,5 +19,10 @@ class Year extends Model
     public function attributes()
     {
         return $this->hasMany(Attribute::class, 'id_year');
+    }
+
+    public function class()
+    {
+        return $this->hasMany(StudentClass::class, 'id_year');
     }
 }
