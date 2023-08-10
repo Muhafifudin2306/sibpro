@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attribute;
+use App\Models\Category;
 use App\Models\Year;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -16,15 +17,18 @@ class AttributeController extends Controller
         $this->middleware('auth')->only('store');
     }
     public function index()
-    { // Dapatkan ID tahun yang aktif
+    {
+        // Dapatkan ID tahun yang aktif
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         // Filter data atribut berdasarkan ID tahun aktif
-        $attributes = Attribute::where('year_id', $activeYearId)->orderBy("created_at", "DESC")->get();
+        $attributes = Attribute::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
-        $notifications = Notification::orderBy("created_at", 'DESC')->limit(10)->get();
+        $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
-        return view('setting.attribute.index', compact('attributes', 'notifications'));
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+
+        return view('setting.attribute.index', compact('attributes', 'categories', 'notifications'));
     }
 
     public function store(Request $request)
@@ -49,7 +53,7 @@ class AttributeController extends Controller
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $attributes,
-        ], 201); // 201 Created
+        ], 201); // 201 updated
     }
 
     public function update(Request $request, $id)
@@ -70,7 +74,7 @@ class AttributeController extends Controller
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $attributes,
-        ], 201); // 201 Created
+        ], 201); // 201 updated
     }
 
     public function destroy($id)

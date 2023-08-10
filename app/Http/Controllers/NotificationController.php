@@ -14,8 +14,8 @@ class NotificationController extends Controller
 
     public function index()
     {
-        $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, created_at DESC")->limit(10)->get();
-        $notification_list = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, created_at DESC")->get();
+        $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
+        $notification_list = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->get();
         return view('notification', compact('notifications', 'notification_list'));
     }
     public function store()
@@ -28,7 +28,7 @@ class NotificationController extends Controller
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $notifications,
-        ], 201); // 201 Created
+        ], 201); // 201 updated
     }
 
     public function update($id)

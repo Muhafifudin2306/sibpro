@@ -45,10 +45,20 @@ Route::prefix('setting')->group(function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\AttributeController::class, 'destroy'])->name('deleteAttribute');
     });
 
+    Route::prefix('category')->group(function () {
+        Route::post('/add', [App\Http\Controllers\CategoryController::class, 'store'])->name('storeCategory');
+        Route::post('/update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('updateCategory');
+        Route::delete('/delete/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('deleteCategory');
+    });
+
     Route::prefix('class')->group(function () {
         Route::get('/', [App\Http\Controllers\StudentClassController::class, 'index'])->name('class');
         Route::post('/add', [App\Http\Controllers\StudentClassController::class, 'store'])->name('storeClass');
         Route::post('/update/{id}', [App\Http\Controllers\StudentClassController::class, 'update'])->name('updateClass');
         Route::delete('/delete/{id}', [App\Http\Controllers\StudentClassController::class, 'destroy'])->name('deleteClass');
     });
+
+    // Route::prefix('student')->group(function () {
+    //     Route::get('/', [App\Http\Controllers\StudentController::class, 'index'])->name('class');
+    // });
 });

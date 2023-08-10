@@ -19,8 +19,8 @@ class YearController extends Controller
     }
     public function index()
     {
-        $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, created_at DESC")->limit(10)->get();
-        $years = Year::orderByRaw('year_status = "active" desc, created_at desc')->get();
+        $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
+        $years = Year::orderByRaw('year_status = "active" desc, updated_at desc')->get();
         return view('setting.year.index', compact('years', 'notifications'));
     }
 
@@ -76,7 +76,7 @@ class YearController extends Controller
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $year,
-        ], 201); // 201 Created
+        ], 201); // 201 updated
     }
     public function update(Request $request, $id)
     {

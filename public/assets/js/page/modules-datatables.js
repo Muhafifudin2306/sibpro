@@ -38,19 +38,12 @@ $("[data-checkboxes]").each(function () {
     });
 });
 
-$("#table-1").dataTable({
-    columnDefs: [{ sortable: false, targets: [2, 3] }],
-});
+$("#table-1").dataTable();
 $("#table-2").dataTable({
     columnDefs: [{ sortable: false, targets: [0, 2, 3] }],
 });
 
-$("#table-tagihan-vendor").dataTable({
-    columnDefs: [{ sortable: false, targets: [2, 3] }],
-});
-$("#table-pembayaran-vendor").dataTable({
-    columnDefs: [{ sortable: false, targets: [2, 3] }],
-});
-$("#table-vendor").dataTable({
-    columnDefs: [{ sortable: false, targets: [2, 3] }],
-});
+$("#table-tagihan-vendor").dataTable();
+$("#table-pembayaran-vendor").dataTable();
+$("#table-vendor").dataTable();
+$("#table-category").dataTable();
