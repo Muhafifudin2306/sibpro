@@ -26,10 +26,45 @@ class AttributeController extends Controller
 
         $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
+        $categoriesRelation = Category::has("attributes")->where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 
-        return view('setting.attribute.index', compact('attributes', 'categories', 'notifications'));
+        return view('setting.attribute.index', compact('attributes', 'categories', 'notifications', 'categoriesRelation'));
     }
+
+    public function add()
+    {
+        // Dapatkan ID tahun yang aktif
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+
+        $attributes = Attribute::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+
+        return view('setting.attribute.add', compact('notifications', 'categories', 'attributes'));
+    }
+
+    public function storeRelation(Request $request)
+    {
+        $category = Category::find($request->input('category_id'));
+        $attributeIds = $request->input('attribute_id');
+
+        $category->attributes()->sync($attributeIds);
+
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $years = Year::find($activeYearId);
+
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "Membuat Relasi Data Kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_status' => 0
+        ]);
+        return redirect()->route('attribute')->with('success', 'Relasi Kategori-Atribut berhasil dibuat.');
+    }
+
 
     public function store(Request $request)
     {
@@ -95,5 +130,18 @@ class AttributeController extends Controller
         ]);
 
         return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
+    }
+
+    public function destroyRelation(Category $category)
+    {
+        // Hapus hubungan many-to-many dengan atribut
+        $category->attributes()->detach();
+
+        // Hapus kategori jika tidak memiliki hubungan lain
+        if ($category->attributes()->count() === 0) {
+            $category->delete();
+        }
+
+        return redirect()->route('categories.index')->with('success', 'Kategori dan hubungan atribut berhasil dihapus.');
     }
 }

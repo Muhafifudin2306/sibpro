@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Year;
 use App\Models\User;
+use App\Models\Category;
+
 
 class Attribute extends Model
 {
@@ -24,5 +26,10 @@ class Attribute extends Model
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_has_attribute');
     }
 }

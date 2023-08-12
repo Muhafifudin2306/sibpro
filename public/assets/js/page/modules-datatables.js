@@ -47,3 +47,4 @@ $("#table-tagihan-vendor").dataTable();
 $("#table-pembayaran-vendor").dataTable();
 $("#table-vendor").dataTable();
 $("#table-category").dataTable();
+$("#table-relation").dataTable();

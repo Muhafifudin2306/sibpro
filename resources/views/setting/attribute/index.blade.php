@@ -5,6 +5,7 @@
     <link rel="stylesheet"
         href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
 
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
@@ -20,6 +21,85 @@
                         <div class="breadcrumb-item active">Dashboard</div>
                         <div class="breadcrumb-item active">General Setting</div>
                         <div class="breadcrumb-item">Atribut</div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pb-3">
+                    <div class="title-content">
+                        <h2 class="section-title">Data Kategori Atribut</h2>
+                        <p class="section-lead">
+                            Pilih dan Tambah Data Kategori Atribut
+                        </p>
+                    </div>
+                    <div class="action-content">
+                        <a href="{{ url('/setting/attribute/addRelation') }}">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#relationModal">+ Tambah
+                                Data</button>
+                        </a>
+                    </div>
+                </div>
+
+
+
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{{ __('Tabel Kategori Atribut') }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-relation">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th class="text-center">
+                                                No
+                                            </th>
+                                            <th>Nama Kategori</th>
+                                            <th>Atribut</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($categoriesRelation as $item)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ $no++ }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $item->category_name }}
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-wrap">
+                                                        @foreach ($item->attributes as $attribute)
+                                                            <div class="mb-2 mx-1">
+                                                                <button
+                                                                    class="btn btn-primary">{{ $attribute->attribute_name }}</button>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex justify-content-center">
+                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                            data-target="#categoryModal{{ $item->id }}">
+                                                            <i class="fas fa-pen" title="Edit"></i>
+                                                        </div>
+                                                        <div class="text-danger mx-2 cursor-pointer">
+                                                            <i class="fas category-delete fa-trash-alt"
+                                                                data-card-id="{{ $item->id }}" title="Delete"></i>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -114,8 +194,6 @@
                             Data</button>
                     </div>
                 </div>
-
-
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
@@ -502,4 +580,5 @@
     <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
     <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
+    <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
 @endsection
