@@ -89,9 +89,35 @@
                                                             <i class="fas fa-pen" title="Edit"></i>
                                                         </div>
                                                         <div class="text-danger mx-2 cursor-pointer">
-                                                            <i class="fas category-delete fa-trash-alt"
-                                                                data-card-id="{{ $item->id }}" title="Delete"></i>
+                                                            <form id="form-{{ $item->id }}"
+                                                                action="{{ url('/setting/attribute/deleteRelation', $item->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <i onclick="deleteRelation(event)" class="fas fa-trash-alt"
+                                                                    title="Delete"></i>
+                                                            </form>
                                                         </div>
+                                                        <script>
+                                                            function deleteRelation(event) {
+                                                                event.preventDefault(); // Mencegah pengiriman form
+
+                                                                var form = event.currentTarget.parentElement; // Mengakses elemen form terkait
+                                                                var itemId = form.id.split('-')[1]; // Mendapatkan ID item dari ID form
+
+                                                                Notiflix.Confirm.show(
+                                                                    'Konfirmasi Hapus',
+                                                                    'Apakah Anda yakin ingin menghapus atribut ini?',
+                                                                    'Ya, Hapus',
+                                                                    'Batal',
+                                                                    function() {
+                                                                        // Lanjutkan dengan pengiriman form jika pengguna setuju
+                                                                        document.getElementById("form-" + itemId).submit();
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -389,6 +415,17 @@
     @endforeach
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Notiflix.Notify.success("{{ session('success') }}", {
+                    timeout: 6000
+                });
+            @endif
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
             const updateForms = document.querySelectorAll('.update-form');
 
             updateForms.forEach(form => {
@@ -410,7 +447,7 @@
                                 timeout: 3000
                             });
 
-                            location.reload();
+                            // location.reload();
                         })
                         .catch(error => {
                             Notiflix.Notify.failure('Error:', error);
@@ -451,7 +488,7 @@
                         });
 
                         // Refresh halaman saat ini
-                        location.reload();
+                        // location.reload();
                     })
                     .catch(error => {
                         // Tampilkan notifikasi error menggunakan Notiflix
@@ -484,7 +521,7 @@
                                 });
 
                                 // Refresh halaman saat ini
-                                location.reload();
+                                // location.reload();
                             })
                             .catch(error => {
                                 // Tampilkan notifikasi error menggunakan Notiflix
@@ -529,7 +566,7 @@
                         });
 
                         // Refresh halaman saat ini
-                        location.reload();
+                        // location.reload();
                     })
                     .catch(error => {
                         // Tampilkan notifikasi error menggunakan Notiflix
@@ -562,7 +599,7 @@
                                 });
 
                                 // Refresh halaman saat ini
-                                location.reload();
+                                // location.reload();
                             })
                             .catch(error => {
                                 // Tampilkan notifikasi error menggunakan Notiflix

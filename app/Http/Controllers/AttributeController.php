@@ -131,17 +131,25 @@ class AttributeController extends Controller
 
         return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
     }
-
-    public function destroyRelation(Category $category)
+    public function destroyRelation($id)
     {
-        // Hapus hubungan many-to-many dengan atribut
-        $category->attributes()->detach();
+        try {
 
-        // Hapus kategori jika tidak memiliki hubungan lain
-        if ($category->attributes()->count() === 0) {
-            $category->delete();
+            $category = Category::findOrFail($id);
+
+            // Menghapus semua relasi atribut dari kategori
+            $category->attributes()->detach();
+
+            $activeYearId = Year::where('year_status', 'active')->value('id');
+            $years = Year::find($activeYearId);
+
+            Notification::create([
+                'notification_content' => Auth::user()->name . " " . "Menghapus Relasi Data Kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
+                'notification_status' => 0
+            ]);
+            return redirect()->route('attribute')->with('success', 'Relasi Kategori-Atribut berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        return redirect()->route('categories.index')->with('success', 'Kategori dan hubungan atribut berhasil dihapus.');
     }
 }

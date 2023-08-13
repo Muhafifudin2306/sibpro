@@ -45,6 +45,7 @@ Route::prefix('setting')->group(function () {
         Route::post('/add', [App\Http\Controllers\AttributeController::class, 'store'])->name('storeAttribute');
         Route::post('/update/{id}', [App\Http\Controllers\AttributeController::class, 'update'])->name('updateAttribute');
         Route::delete('/delete/{id}', [App\Http\Controllers\AttributeController::class, 'destroy'])->name('deleteAttribute');
+        Route::delete('/deleteRelation/{category}', [App\Http\Controllers\AttributeController::class, 'destroyRelation'])->name('deleteRelation');
     });
 
     Route::prefix('category')->group(function () {
