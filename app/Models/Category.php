@@ -31,4 +31,10 @@ class Category extends Model
     {
         return $this->belongsToMany(Attribute::class, 'category_has_attribute');
     }
+
+
+    public function attachAttributesWithYear($attributeIds, $yearId)
+    {
+        $this->attributes()->attach($attributeIds, ['year_id' => $yearId]);
+    }
 }

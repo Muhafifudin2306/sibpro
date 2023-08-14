@@ -61,7 +61,7 @@ Route::prefix('setting')->group(function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\StudentClassController::class, 'destroy'])->name('deleteClass');
     });
 
-    // Route::prefix('student')->group(function () {
-    //     Route::get('/', [App\Http\Controllers\StudentController::class, 'index'])->name('class');
-    // });
+    Route::prefix('student')->group(function () {
+        Route::get('/', [App\Http\Controllers\StudentController::class, 'index'])->name('student');
+    });
 });

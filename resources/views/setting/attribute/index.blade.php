@@ -80,14 +80,13 @@
                                                             </div>
                                                         @endforeach
                                                     </div>
-
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-center">
-                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                        {{-- <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
                                                             data-target="#categoryModal{{ $item->id }}">
                                                             <i class="fas fa-pen" title="Edit"></i>
-                                                        </div>
+                                                        </div> --}}
                                                         <div class="text-danger mx-2 cursor-pointer">
                                                             <form id="form-{{ $item->id }}"
                                                                 action="{{ url('/setting/attribute/deleteRelation', $item->id) }}"

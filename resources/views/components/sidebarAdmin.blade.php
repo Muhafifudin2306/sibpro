@@ -81,6 +81,10 @@
                     <li class="{{ Request::segment(2) === 'class' ? 'active' : '' }}"><a
                             href="{{ url('/setting/class') }}">Kelas</a></li>
                 </ul>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::segment(2) === 'student' ? 'active' : '' }}"><a
+                            href="{{ url('/setting/student') }}">Siswa</a></li>
+                </ul>
             </li>
         </ul>
     </aside>

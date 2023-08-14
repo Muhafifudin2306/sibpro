@@ -2,56 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Year;
-use App\Models\Attribute;
-use App\Models\Notification;
-use App\Models\StudentClass;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Models\Attribute;
+use App\Models\Category;
+use App\Models\Notification;
+use App\Models\StudentClass;
+use App\Models\Year;
+
 
 class YearController extends Controller
 {
-
+    // Requied user have to login 
     public function __construct()
     {
         $this->middleware('auth');
     }
+
+    // Year View List
     public function index()
     {
+        // Notification get data
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
+
+        // Year get data
         $years = Year::orderByRaw('year_status = "active" desc, updated_at desc')->get();
+
+        // Parsing data to view
         return view('setting.year.index', compact('years', 'notifications'));
     }
+    // Year View List
 
+
+    // Year Store Data
     public function store(Request $request)
     {
-        // Buat data di tabel Year
+        // Create Data Year Table
         $year = Year::create([
             'year_name' => $request->input('year_name'),
             'year_status' => "nonActive",
             'user_id' => Auth::user()->id
         ]);
 
-        Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Membuat Data Tahun" . " " . $request->input('year_name'),
-            'notification_status' => 0
-        ]);
 
-        // Mendapatkan harga atribut tertinggi dari setiap jenis atribut yang sudah ada
-        $highestPricesByType = Attribute::groupBy('attribute_name')
-            ->select('attribute_name', DB::raw('MAX(attribute_price) as max_price'))
-            ->get();
+        // Create Data Existing Attribute
+        $highestPricesByType = Attribute::groupBy('attribute_name')->select('attribute_name', DB::raw('MAX(attribute_price) as max_price'))->get();
 
-        // Mendapatkan data atribut yang sudah ada di tabel Attribute
         $existingAttributes = Attribute::all();
 
-        // Looping untuk menduplikasi data atribut ke tahun baru
         foreach ($existingAttributes as $existingAttribute) {
-            // Cari harga tertinggi untuk jenis atribut yang sesuai
             $highestPrice = $highestPricesByType->where('attribute_name', $existingAttribute->attribute_name)->first()->max_price;
-
-            // Cari atau buat atribut baru di tahun baru dan set harga sesuai harga tertinggi
             Attribute::firstOrCreate([
                 'attribute_name' => $existingAttribute->attribute_name,
                 'attribute_price' => $highestPrice,
@@ -60,12 +62,21 @@ class YearController extends Controller
             ]);
         }
 
-        // Mendapatkan data kelas yang sudah ada di tabel Attribute
+        // Create Data Existing Category
+        $existingCategory = Category::all();
+
+        foreach ($existingCategory as $existingCategory) {
+            Category::firstOrCreate([
+                'category_name' => $existingCategory->category_name,
+                'year_id' => $year->id,
+                'user_id' => Auth::user()->id
+            ]);
+        }
+
+        // Create Data Existing Class
         $existingClasses = StudentClass::all();
 
-        // Looping untuk menduplikasi data atribut ke tahun baru
         foreach ($existingClasses as $existingClass) {
-            // Cari atau buat atribut baru di tahun baru dan set harga sesuai harga tertinggi
             StudentClass::firstOrCreate([
                 'class_name' => $existingClass->class_name,
                 'year_id' => $year->id,
@@ -73,18 +84,25 @@ class YearController extends Controller
             ]);
         }
 
+        // Notification create to store year data
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "Membuat Data Tahun" . " " . $request->input('year_name'),
+            'notification_status' => 0
+        ]);
+
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $year,
         ], 201); // 201 updated
     }
-    public function update(Request $request, $id)
+    // Year Store Data
+
+
+    // Year Update Data
+    public function update($id)
     {
         try {
-            // Ambil semua tahun dan set status mereka menjadi "nonActive" (tidak aktif)
             Year::where('id', '<>', $id)->update(['year_status' => 'nonActive']);
-
-            // Cari tahun berdasarkan ID dan set statusnya menjadi "active" (aktif)
             $year = Year::findOrFail($id);
             $year->year_status = 'active';
             $year->save();
@@ -92,7 +110,7 @@ class YearController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Status Tahun berhasil diperbarui.',
-                'year' => $year // Tambahkan tahun yang telah diperbarui dalam respon JSON
+                'year' => $year
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -101,7 +119,9 @@ class YearController extends Controller
             ], 500);
         }
     }
+    // Year Update Data
 
+    // Year Delete Data
     public function destroy($id)
     {
         $year = Year::find($id);
@@ -111,6 +131,8 @@ class YearController extends Controller
         }
 
         $year->delete();
+
+        // Create Notification Year Data Delete
         Notification::create([
             'notification_content' => Auth::user()->name . " " . "Menghapus Data Tahun" . " " . $year->year_name,
             'notification_status' => 0
@@ -118,4 +140,5 @@ class YearController extends Controller
 
         return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
     }
+    // Year Delete Data
 }
