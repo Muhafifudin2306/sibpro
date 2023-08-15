@@ -25,14 +25,16 @@
 
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">Data Siswa </h2>
+                        <h2 class="section-title">Data Siswa</h2>
                         <p class="section-lead">
                             Pilih dan Tambah Data Siswa
                         </p>
                     </div>
                     <div class="action-content">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">+ Tambah
-                            Data</button>
+                        <a href="{{ route('addStudent') }}">
+                            <button class="btn btn-primary">+ Tambah
+                                Data</button>
+                        </a>
                     </div>
                 </div>
                 <div class="col-12">
@@ -111,11 +113,51 @@
             <div class="footer-left">
                 Development by Muhammad Afifudin</a>
             </div>
-            <div class="footer-right">
-
-            </div>
         </footer>
     </div>
+    {{-- Add Modal --}}
+    <div class="modal fade" tabindex="-1" role="dialog" id="studentModal">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Data Atribut</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="attributeForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="attribute_name">Nama Atribut</label>
+                            <input type="text" class="form-control" name="attribute_name" id="attribute_name"
+                                placeholder="Topi/Dasi/Seragam" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label>Select2</label>
+                            <select class="form-control select2">
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                                <option>Option 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Notiflix.Notify.success("{{ session('success') }}", {
+                    timeout: 6000
+                });
+            @endif
+        });
+    </script>
 @endsection
 
 @section('script')

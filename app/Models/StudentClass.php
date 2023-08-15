@@ -12,8 +12,6 @@ class StudentClass extends Model
         'year_id',
         'user_id'
     ];
-
-
     public function years()
     {
         return $this->belongsTo(Year::class, 'year_id');

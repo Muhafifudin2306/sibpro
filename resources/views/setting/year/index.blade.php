@@ -5,8 +5,7 @@
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
         <x-sidebarAdmin></x-sidebarAdmin>
-
-        <!-- Main Content -->
+        <!-- Main Content Start -->
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
@@ -17,7 +16,6 @@
                         <div class="breadcrumb-item">Tahun Aktif</div>
                     </div>
                 </div>
-
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
                         <h2 class="section-title">Tahun Pembelajaran Aktif</h2>
@@ -30,7 +28,6 @@
                             Data</button>
                     </div>
                 </div>
-
                 <div class="row">
                     @foreach ($years as $year)
                         @if ($year->year_status == 'active')
@@ -46,7 +43,7 @@
                             </div>
                         @elseif ($year->year_status == 'nonActive')
                             <div class="col-12 col-md-6 col-lg-3">
-                                <div id="{{ $year->id }}" class="card card-danger">
+                                <div class="card card-danger">
                                     <div class="card-header d-flex justify-content-between">
                                         <h4>Non Aktif</h4>
                                         <i class="fas fa-trash card-delete cursor-pointer text-danger"
@@ -59,17 +56,13 @@
                             </div>
                         @endif
                     @endforeach
-
-
                 </div>
             </section>
         </div>
+        <!-- Main Content End -->
         <footer class="main-footer">
             <div class="footer-left">
                 Development by Muhammad Afifudin</a>
-            </div>
-            <div class="footer-right">
-
             </div>
         </footer>
     </div>
@@ -99,16 +92,12 @@
         </div>
     </div>
     <script>
-        // Tangkap semua tombol "Ubah Status"
+        // Update Tahun Aktif
         const updateButtons = document.querySelectorAll('.card-body-off');
 
-        // Tambahkan event listener untuk setiap tombol
         updateButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // Ambil ID card dari atribut data-card-id
                 const cardId = button.dataset.cardId;
-
-                // Kirim permintaan AJAX ke endpoint update-status
                 fetch(`/setting/year/update/${cardId}`, {
                         method: 'POST',
                         headers: {
@@ -118,12 +107,9 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-
                         Notiflix.Notify.success("Data Berhasil Diperbarui", {
-                            timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
+                            timeout: 3000
                         });
-
-                        // Refresh halaman saat ini
                         location.reload();
                     })
                     .catch(error => {
@@ -132,22 +118,17 @@
             });
         });
 
+        // Add Data Year
         document.addEventListener('DOMContentLoaded', function() {
-            // Tangkap form input tahun
             const yearForm = document.getElementById('yearForm');
-
-            // Tambahkan event listener untuk saat form disubmit
             yearForm.addEventListener('submit', function(event) {
                 event.preventDefault();
-
-                // Ambil data dari form input tahun
                 const formData = new FormData(yearForm);
                 const yearData = {};
                 formData.forEach((value, key) => {
                     yearData[key] = value;
                 });
 
-                // Kirim permintaan AJAX ke endpoint untuk menyimpan data tahun baru
                 fetch(`/setting/year/add`, {
                         method: 'POST',
                         headers: {
@@ -158,24 +139,20 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        // Tampilkan notifikasi sukses menggunakan Notiflix
                         Notiflix.Notify.success("Data Tahun berhasil ditambahkan", {
-                            timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
+                            timeout: 3000
                         });
-
-                        // Refresh halaman saat ini
                         location.reload();
                     })
                     .catch(error => {
-                        // Tampilkan notifikasi error menggunakan Notiflix
                         Notiflix.Notify.failure('Error:', error);
                     });
             });
         });
 
+        // Delete Data Year
         const deleteButtons = document.querySelectorAll('.card-delete');
 
-        // Tambahkan event listener untuk setiap tombol "Hapus Data"
         deleteButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const cardId = button.dataset.cardId;
@@ -191,16 +168,12 @@
                             })
                             .then(response => response.json())
                             .then(data => {
-                                // Tampilkan notifikasi sukses menggunakan Notiflix
                                 Notiflix.Notify.success("Data Tahun berhasil dihapus.", {
-                                    timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
+                                    timeout: 3000
                                 });
-
-                                // Refresh halaman saat ini
                                 location.reload();
                             })
                             .catch(error => {
-                                // Tampilkan notifikasi error menggunakan Notiflix
                                 Notiflix.Notify.failure('Error:', error);
                             });
                     });

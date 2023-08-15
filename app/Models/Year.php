@@ -16,11 +16,13 @@ class Year extends Model
         'user_id'
     ];
 
+    // One to Many Relation
     public function attributes()
     {
         return $this->hasMany(Attribute::class, 'id_year');
     }
 
+    // One to Many Relation
     public function class()
     {
         return $this->hasMany(StudentClass::class, 'id_year');

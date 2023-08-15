@@ -63,5 +63,7 @@ Route::prefix('setting')->group(function () {
 
     Route::prefix('student')->group(function () {
         Route::get('/', [App\Http\Controllers\StudentController::class, 'index'])->name('student');
+        Route::get('/add', [App\Http\Controllers\StudentController::class, 'add'])->name('addStudent');
+        Route::post('/store', [App\Http\Controllers\StudentController::class, 'store'])->name('storeStudent');
     });
 });
