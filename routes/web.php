@@ -66,5 +66,8 @@ Route::prefix('setting')->group(function () {
         Route::get('/add', [App\Http\Controllers\StudentController::class, 'add'])->name('addStudent');
         Route::post('/store', [App\Http\Controllers\StudentController::class, 'store'])->name('storeStudent');
         Route::delete('/delete/{id}', [App\Http\Controllers\StudentController::class, 'destroy'])->name('deleteStudent');
+        Route::post('/update/{id}', [App\Http\Controllers\StudentController::class, 'update'])->name('updateStudent');
+        Route::post('/update/allClass/{id}', [App\Http\Controllers\StudentController::class, 'updateAllClass'])->name('updateAllClass');
+        Route::delete('/delete/allStudent/{id}', [App\Http\Controllers\StudentController::class, 'destroyAllStudent'])->name('deleteAllStudent');
     });
 });

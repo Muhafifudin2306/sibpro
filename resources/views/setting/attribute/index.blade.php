@@ -446,7 +446,7 @@
                                 timeout: 3000
                             });
 
-                            // location.reload();
+                            location.reload();
                         })
                         .catch(error => {
                             Notiflix.Notify.failure('Error:', error);
@@ -483,7 +483,7 @@
                             'Field tidak boleh kosong atau nama sejenis telah digunakan');
                     } else {
                         Notiflix.Notify.success('Success:', 'Attribute created successfully.');
-                        location.reload();
+                        // location.reload();
                     }
                 } catch (error) {
                     Notiflix.Notify.failure('Error:',
@@ -517,7 +517,7 @@
                                 });
 
                                 // Refresh halaman saat ini
-                                // location.reload();
+                                location.reload();
                             })
                             .catch(error => {
                                 // Tampilkan notifikasi error menggunakan Notiflix
@@ -562,7 +562,7 @@
                         });
 
                         // Refresh halaman saat ini
-                        // location.reload();
+                        location.reload();
                     })
                     .catch(error => {
                         // Tampilkan notifikasi error menggunakan Notiflix
@@ -595,7 +595,7 @@
                                 });
 
                                 // Refresh halaman saat ini
-                                // location.reload();
+                                location.reload();
                             })
                             .catch(error => {
                                 // Tampilkan notifikasi error menggunakan Notiflix
