@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Attribute;
 use App\Models\Category;
-use App\Models\Year;
 use App\Models\Notification;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Year;
 
 class AttributeController extends Controller
 {
@@ -16,62 +17,44 @@ class AttributeController extends Controller
         // Tambahkan middleware autentikasi ke metode 'store'
         $this->middleware('auth')->only('store');
     }
+
     public function index()
     {
-        // Dapatkan ID tahun yang aktif
+        // ID from active year
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-        // Filter data atribut berdasarkan ID tahun aktif
+        // Get Data Attribute
         $attributes = Attribute::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
+        // Get Data Category
         $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
+        // Get Data Category - Attribute Relation
         $categoriesRelation = Category::has("attributes")->where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
+        // Get Data Notification
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 
+        // Parsing data to view
         return view('setting.attribute.index', compact('attributes', 'categories', 'notifications', 'categoriesRelation'));
     }
 
-    public function add()
-    {
-        // Dapatkan ID tahun yang aktif
-        $activeYearId = Year::where('year_status', 'active')->value('id');
-
-        $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
-
-        $attributes = Attribute::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
-
-        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
-
-        return view('setting.attribute.add', compact('notifications', 'categories', 'attributes'));
-    }
-
-    public function storeRelation(Request $request)
-    {
-        $category = Category::find($request->input('category_id'));
-        $attributeIds = $request->input('attribute_id');
-
-        $category->attributes()->sync($attributeIds);
-
-        $activeYearId = Year::where('year_status', 'active')->value('id');
-
-        $years = Year::find($activeYearId);
-
-        Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Membuat Relasi Data Kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
-            'notification_status' => 0
-        ]);
-        return redirect()->route('attribute')->with('success', 'Relasi Kategori-Atribut berhasil dibuat.');
-    }
-
-
+    // Attribute Control Start
     public function store(Request $request)
     {
-        // Dapatkan ID tahun aktif dari tabel Year
+        // ID from active year
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-        // Simpan data atribut untuk tahun aktif
+        // Create data attribute
+        $validator = Validator::make($request->all(), [
+            'attribute_name' => 'required|unique:attributes,attribute_name,null,id,year_id,' . $activeYearId,
+            'attribute_price' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->toArray()], 422);
+        }
+
         $attributes = Attribute::create([
             'attribute_name' => $request->input('attribute_name'),
             'attribute_price' => $request->input('attribute_price'),
@@ -79,16 +62,18 @@ class AttributeController extends Controller
             'user_id' => Auth::user()->id
         ]);
 
+        // Create data notification
         $years = Year::find($activeYearId);
 
         Notification::create([
             'notification_content' => Auth::user()->name . " " . "Membuat Data Atribut" . " " . $request->input('attribute_name') . " " . "dengan harga" . " " . "Rp" . $request->input('attribute_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
+
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $attributes,
-        ], 201); // 201 updated
+        ], 201);
     }
 
     public function update(Request $request, $id)
@@ -131,6 +116,41 @@ class AttributeController extends Controller
 
         return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
     }
+    // Attribute Control End
+
+    public function add()
+    {
+        // Dapatkan ID tahun yang aktif
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+
+        $attributes = Attribute::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+
+        return view('setting.attribute.add', compact('notifications', 'categories', 'attributes'));
+    }
+
+    public function storeRelation(Request $request)
+    {
+        $category = Category::find($request->input('category_id'));
+        $attributeIds = $request->input('attribute_id');
+
+        $category->attributes()->sync($attributeIds);
+
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $years = Year::find($activeYearId);
+
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "Membuat Relasi Data Kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_status' => 0
+        ]);
+        return redirect()->route('attribute')->with('success', 'Relasi Kategori-Atribut berhasil dibuat.');
+    }
+
+
     public function destroyRelation($id)
     {
         try {

@@ -79,9 +79,9 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="inputAddress">Nama Tahun Pelajaran ( Misal : 2022/2023 )</label>
-                            <input type="text" class="form-control" name="year_name" placeholder="2022/2023">
+                            <input type="text" class="form-control" name="year_name" placeholder="2022/2023" required
+                                autofocus>
                         </div>
-
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -118,10 +118,9 @@
             });
         });
 
-        // Add Data Year
         document.addEventListener('DOMContentLoaded', function() {
             const yearForm = document.getElementById('yearForm');
-            yearForm.addEventListener('submit', function(event) {
+            yearForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
                 const formData = new FormData(yearForm);
                 const yearData = {};
@@ -129,24 +128,34 @@
                     yearData[key] = value;
                 });
 
-                fetch(`/setting/year/add`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(yearData)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        Notiflix.Notify.success("Data Tahun berhasil ditambahkan", {
-                            timeout: 3000
-                        });
-                        location.reload();
-                    })
-                    .catch(error => {
-                        Notiflix.Notify.failure('Error:', error);
+                const response = await fetch(`/setting/year/add`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(yearData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (errorData.hasOwnProperty('errors')) {
+                        const errorMessages = Object.values(errorData.errors).join('\n');
+                        Notiflix.Notify.failure(
+                            'Error: Nama Tahun tidak boleh kosong atau nama sejenis telah digunakan', {
+                                timeout: 3000
+                            });
+                    } else {
+                        Notiflix.Notify.failure('Error:',
+                            'Terjadi kesalahan saat memproses permintaan.');
+                    }
+                } else {
+                    const responseData = await response.json();
+                    Notiflix.Notify.success("Data Tahun berhasil ditambahkan", {
+                        timeout: 3000
                     });
+                    location.reload();
+                }
             });
         });
 

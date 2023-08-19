@@ -455,46 +455,43 @@
             });
         });
 
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Tangkap form input tahun
-            const yearForm = document.getElementById('attributeForm');
-
-            // Tambahkan event listener untuk saat form disubmit
-            yearForm.addEventListener('submit', function(event) {
+            const attributeForm = document.getElementById('attributeForm');
+            attributeForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
-
-                // Ambil data dari form input tahun
-                const formData = new FormData(yearForm);
-                const yearData = {};
+                const formData = new FormData(attributeForm);
+                const attributeData = {};
                 formData.forEach((value, key) => {
-                    yearData[key] = value;
+                    attributeData[key] = value;
                 });
 
-                // Kirim permintaan AJAX ke endpoint untuk menyimpan data tahun baru
-                fetch(`/setting/attribute/add`, {
+                try {
+                    const response = await fetch(`/setting/attribute/add`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(yearData)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Tampilkan notifikasi sukses menggunakan Notiflix
-                        Notiflix.Notify.success("Data Atribut berhasil ditambahkan", {
-                            timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
-                        });
-
-                        // Refresh halaman saat ini
-                        // location.reload();
-                    })
-                    .catch(error => {
-                        // Tampilkan notifikasi error menggunakan Notiflix
-                        Notiflix.Notify.failure('Error:', error);
+                        body: JSON.stringify(attributeData)
                     });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        const errorMessages = Object.values(errorData.errors).join('\n');
+                        Notiflix.Notify.failure(
+                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                    } else {
+                        Notiflix.Notify.success('Success:', 'Attribute created successfully.');
+                        location.reload();
+                    }
+                } catch (error) {
+                    Notiflix.Notify.failure('Error:',
+                        'An error occurred while processing the request.');
+                }
             });
         });
+
 
         const deleteAttribute = document.querySelectorAll('.attribute-delete');
 

@@ -17,8 +17,11 @@ class StudentController extends Controller
 
         $students = Student::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
+        $classes = StudentClass::with('students')->where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('setting.student.index', compact('notifications', 'students'));
+        return view('setting.student.index', compact('classes', 'notifications', 'students'));
+        // dd($classes);
     }
 
     public function add()
@@ -56,4 +59,25 @@ class StudentController extends Controller
             'message' => 'Data inserted successfully'
         ], 201);
     }
+
+    // Year Delete Data
+    public function destroy($id)
+    {
+        $student = Student::find($id);
+
+        if (!$student) {
+            return response()->json(['message' => 'Data Siswa tidak ditemukan.'], 404);
+        }
+
+        $student->delete();
+
+        // Create Notification Year Data Delete
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "Menghapus Data Siswa" . " " . $student->student_name,
+            'notification_status' => 0
+        ]);
+
+        return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
+    }
+    // Year Delete Data
 }

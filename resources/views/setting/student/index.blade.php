@@ -37,78 +37,82 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Siswa') }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-tagihan-vendor">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">
-                                                No
-                                            </th>
-                                            <th>NIS</th>
-                                            <th>Nama Siswa</th>
-                                            <th>Kelas</th>
-                                            <th>Tahun Ajaran</th>
-                                            <th>Diubah pada</th>
-                                            <th>Petugas</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($students as $item)
-                                            <tr>
-                                                <td class="text-center">
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->nis }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->student_name }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->classes->class_name }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->years->year_name }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->users->name }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                            data-target="#exampleModal{{ $item->id }}">
-                                                            <i class="fas fa-pen" title="Edit Nama Kelas"></i>
-                                                        </div>
-                                                        <div class="text-danger mx-2 cursor-pointer">
-                                                            <i class="fas class-delete fa-trash-alt"
-                                                                data-card-id="{{ $item->id }}"
-                                                                title="Delete Kelas"></i>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                @foreach ($classes as $class)
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4> Tabel Siswa {{ $class->class_name }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-siswa-{{ $class->id }}">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th class="text-center">
+                                                    No
+                                                </th>
+                                                <th>NIS</th>
+                                                <th>Nama Siswa</th>
+                                                <th>Kelas</th>
+                                                <th>Tahun Ajaran</th>
+                                                <th>Diubah pada</th>
+                                                <th>Petugas</th>
+                                                <th>Action</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            @foreach ($class->students as $item)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        {{ $no++ }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->nis }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $item->student_name }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $class->class_name }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->years->year_name }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->updated_at->format('d F Y') }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->users->name }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center">
+                                                            <div class="text-warning mx-2 cursor-pointer"
+                                                                data-toggle="modal"
+                                                                data-target="#exampleModal{{ $item->id }}">
+                                                                <i class="fas fa-pen" title="Edit Siswa"></i>
+                                                            </div>
+                                                            <div class="text-danger mx-2 cursor-pointer">
+                                                                <i class="fas data-delete fa-trash-alt"
+                                                                    data-card-id="{{ $item->id }}"
+                                                                    title="Delete Siswa"></i>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </section>
         </div>
+
         <footer class="main-footer">
             <div class="footer-left">
                 Development by Muhammad Afifudin</a>
@@ -150,12 +154,34 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                Notiflix.Notify.success("{{ session('success') }}", {
-                    timeout: 6000
-                });
-            @endif
+        // Delete Data Student
+        const deleteButtons = document.querySelectorAll('.data-delete');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const cardId = button.dataset.cardId;
+
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                    'Batal',
+                    function() {
+                        fetch(`/setting/student/delete/${cardId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Notiflix.Notify.success("Data Siswa berhasil dihapus.", {
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure('Error:', error);
+                            });
+                    });
+            });
         });
     </script>
 @endsection
@@ -165,5 +191,10 @@
     <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
     <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
+    @foreach ($classes as $class)
+        <script>
+            "use strict";
+            $("#table-siswa-" + "{{ $class->id }}").dataTable();
+        </script>
+    @endforeach
 @endsection

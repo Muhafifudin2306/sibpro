@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\Attribute;
 use App\Models\Category;
@@ -30,7 +32,7 @@ class YearController extends Controller
         // Year get data
         $years = Year::orderByRaw('year_status = "active" desc, updated_at desc')->get();
 
-        // Parsing data to view
+        // Parsing data to vie
         return view('setting.year.index', compact('years', 'notifications'));
     }
     // Year View List
@@ -40,6 +42,19 @@ class YearController extends Controller
     public function store(Request $request)
     {
         // Create Data Year Table
+        $validator = Validator::make($request->all(), [
+            'year_name' => [
+                'required',
+                Rule::unique('years')->where(function ($query) {
+                    return $query->where('user_id', Auth::user()->id);
+                })
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->toArray()], 422);
+        }
+
         $year = Year::create([
             'year_name' => $request->input('year_name'),
             'year_status' => "nonActive",
@@ -93,7 +108,7 @@ class YearController extends Controller
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $year,
-        ], 201); // 201 updated
+        ], 201);
     }
     // Year Store Data
 
