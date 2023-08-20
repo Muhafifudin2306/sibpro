@@ -13,7 +13,8 @@ class Student extends Model
         'nis',
         'class_id',
         'year_id',
-        'user_id'
+        'user_id',
+        'category_id'
     ];
 
 
@@ -25,9 +26,13 @@ class Student extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
     public function classes()
     {
         return $this->belongsTo(StudentClass::class, 'class_id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

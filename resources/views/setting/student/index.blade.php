@@ -70,9 +70,9 @@
                                                 <th>NIS</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
+                                                <th>Kategori</th>
                                                 <th>Tahun Ajaran</th>
                                                 <th>Diubah pada</th>
-                                                <th>Petugas</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -95,13 +95,13 @@
                                                         {{ $class->class_name }}
                                                     </td>
                                                     <td class="text-center">
+                                                        {{ $item->categories->category_name }}
+                                                    </td>
+                                                    <td class="text-center">
                                                         {{ $item->years->year_name }}
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $item->updated_at->format('d F Y') }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $item->users->name }}
                                                     </td>
                                                     <td>
                                                         <div class="d-flex justify-content-center">
@@ -196,6 +196,17 @@
                                     <label for="student_name">Nama Siswa</label>
                                     <input type="text" class="form-control" name="student_name" id="student_name"
                                         value="{{ $item->student_name }}" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label for="student_name">Kategori</label>
+                                    <select class="form-control select2" name="category_id">
+                                        <option>-- Pilih --</option>
+                                        @foreach ($category as $part)
+                                            <option value="{{ $part->id }}"
+                                                {{ $item->category_id == $part->id ? 'selected' : '' }}>
+                                                {{ $part->category_name }} </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="student_name">Kelas</label>

@@ -43,18 +43,30 @@
                                 <div class="section-title">Data Siswa</div>
                                 <div id="studentFields">
                                     <div class="row student-row">
-                                        <div class="col-5 col-md-4">
+                                        <div class="col-4 col-md-3">
                                             <div class="form-group">
                                                 <label for="nis-input">NIS</label>
                                                 <input type="text" class="form-control" name="nis"
                                                     placeholder="NIS Siswa ke-i">
                                             </div>
                                         </div>
-                                        <div class="col-5 col-md-6">
+                                        <div class="col-4 col-md-4">
                                             <div class="form-group">
                                                 <label for="student-input">Nama Siswa</label>
                                                 <input type="text" class="form-control" name="student_name"
                                                     placeholder="Nama Siswa ke-i">
+                                            </div>
+                                        </div>
+                                        <div class="col-2 col-md-3">
+                                            <div class="form-group">
+                                                <label for="student-input">Kategori</label>
+                                                <select class="form-control select2" name="category_id">
+                                                    <option>-- Pilih --</option>
+                                                    @foreach ($category as $item)
+                                                        <option value="{{ $item->id }}"> {{ $item->category_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-2 col-md-2">
@@ -80,12 +92,7 @@
             </div>
         </footer>
     </div>
-    <div class="col-2 col-md-2">
-        <div class="form-group">
-            <label>Tambah Field</label>
-            <button id="addButton" class="btn btn-success w-100"><i class="fas fa-plus"></i></button>
-        </div>
-    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const addButton = document.getElementById("addButton");
@@ -95,16 +102,28 @@
                 const newStudentRow = document.createElement("div");
                 newStudentRow.className = "row student-row";
                 newStudentRow.innerHTML = `
-                <div class="col-5 col-md-4">
+                <div class="col-4 col-md-3">
                     <div class="form-group">
                         <label for="nis-input">NIS</label>
                         <input type="text" class="form-control" name="nis" placeholder="NIS Siswa ke-i">
                     </div>
                 </div>
-                <div class="col-5 col-md-6">
+                <div class="col-4 col-md-4">
                     <div class="form-group">
                         <label for="student-input">Nama Siswa</label>
                         <input type="text" class="form-control" name="student_name" placeholder="Nama Siswa ke-i">
+                    </div>
+                </div>
+                <div class="col-2 col-md-3">
+                    <div class="form-group">
+                        <label for="student-input">Kategori</label>
+                        <select class="form-control select2" name="category_id">
+                            <option>-- Pilih --</option>
+                            @foreach ($category as $item)
+                                <option value="{{ $item->id }}"> {{ $item->category_name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="col-2 col-md-2">
@@ -137,7 +156,8 @@
 
                 const students = Array.from(studentRows).map(row => ({
                     nis: row.querySelector('input[name="nis"]').value,
-                    student_name: row.querySelector('input[name="student_name"]').value
+                    student_name: row.querySelector('input[name="student_name"]').value,
+                    category_id: row.querySelector('select[name="category_id"]').value
                 }));
 
                 const data = {

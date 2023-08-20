@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Notification;
 use App\Models\Year;
 use App\Models\Student;
+use App\Models\Category;
 use App\Models\StudentClass;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,9 +20,10 @@ class StudentController extends Controller
 
         $classes = StudentClass::with('students')->where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
         $classList = StudentClass::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $category = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('setting.student.index', compact('classes', 'notifications', 'students', 'classList'));
+        return view('setting.student.index', compact('category', 'classes', 'notifications', 'students', 'classList'));
         // dd($classes);
     }
 
@@ -31,9 +33,10 @@ class StudentController extends Controller
 
         $students = Student::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
         $class = StudentClass::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $category = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('setting.student.add', compact('notifications', 'students', 'class'));
+        return view('setting.student.add', compact('notifications', 'students', 'class', 'category'));
     }
 
     public function store(Request $request)
@@ -43,6 +46,7 @@ class StudentController extends Controller
             'class_id' => 'required',
             'students' => 'required|array', // Array of students
             'students.*.nis' => 'required|string',
+            'students.*.category_id' => 'required',
             'students.*.student_name' => 'required|string',
         ]);
 
@@ -51,6 +55,7 @@ class StudentController extends Controller
             $student->class_id = $data['class_id'];
             $student->nis = $studentData['nis'];
             $student->student_name = $studentData['student_name'];
+            $student->category_id = $studentData['category_id'];
             $student->year_id = $activeYearId;
             $student->user_id = Auth::user()->id;
             $student->save();
@@ -90,6 +95,7 @@ class StudentController extends Controller
             "student_name" =>  $request->input('student_name'),
             "nis" =>  $request->input('nis'),
             "class_id" =>  $request->input('class_id'),
+            "category_id" =>  $request->input('category_id'),
             'user_id' => Auth::user()->id
         ]);
         $activeYearId = Year::where('year_status', 'active')->value('id');
