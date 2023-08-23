@@ -21,7 +21,7 @@ class StudentClassController extends Controller
 
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         // Filter data kelas berdasarkan ID tahun aktif
-        $classes = StudentClass::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $classes = StudentClass::orderBy("updated_at", "DESC")->get();
 
         return view('setting.class.index', compact("notifications", "classes"));
     }
@@ -33,7 +33,6 @@ class StudentClassController extends Controller
         // Simpan data kelas untuk tahun aktif
         $classes = StudentClass::create([
             'class_name' => $request->input('class_name'),
-            'year_id' => $activeYearId,
             'user_id' => Auth::user()->id
         ]);
 
@@ -46,7 +45,7 @@ class StudentClassController extends Controller
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $classes,
-        ], 201); // 201 updated
+        ], 201);
     }
 
     public function update(Request $request, $id)

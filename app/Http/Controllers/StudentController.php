@@ -12,15 +12,20 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-        $students = Student::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $students = Student::orderBy("updated_at", "DESC")->get();
 
-        $classes = StudentClass::with('students')->where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
-        $classList = StudentClass::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
-        $category = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $classes = StudentClass::orderBy("updated_at", "DESC")->get();
+
+        $classList = StudentClass::orderBy("updated_at", "DESC")->get();
+        $category = Category::orderBy("updated_at", "DESC")->get();
 
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         return view('setting.student.index', compact('category', 'classes', 'notifications', 'students', 'classList'));
@@ -31,9 +36,9 @@ class StudentController extends Controller
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-        $students = Student::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
-        $class = StudentClass::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
-        $category = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $students = Student::orderBy("updated_at", "DESC")->get();
+        $class = StudentClass::orderBy("updated_at", "DESC")->get();
+        $category = Category::orderBy("updated_at", "DESC")->get();
 
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         return view('setting.student.add', compact('notifications', 'students', 'class', 'category'));
@@ -56,7 +61,6 @@ class StudentController extends Controller
             $student->nis = $studentData['nis'];
             $student->student_name = $studentData['student_name'];
             $student->category_id = $studentData['category_id'];
-            $student->year_id = $activeYearId;
             $student->user_id = Auth::user()->id;
             $student->save();
         }

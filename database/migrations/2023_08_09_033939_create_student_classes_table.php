@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('student_classes', function (Blueprint $table) {
             $table->id();
             $table->string('class_name');
-            $table->unsignedBigInteger('year_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('year_id')->references('id')->on('years')->onUpdate('cascade')
-                ->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->timestamps();

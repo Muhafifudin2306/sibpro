@@ -16,10 +16,7 @@ return new class extends Migration
             $table->string('student_name');
             $table->string('nis')->unique();
             $table->unsignedBigInteger('class_id')->nullable();
-            $table->unsignedBigInteger('year_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('year_id')->references('id')->on('years')->onUpdate('cascade')
-                ->onDelete('cascade');
             $table->foreign('class_id')->references('id')->on('student_classes')->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')

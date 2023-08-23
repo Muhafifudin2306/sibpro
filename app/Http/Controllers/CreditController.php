@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class CreditController extends Controller
 {
+    public function __construct()
+    {
+        // Tambahkan middleware autentikasi ke metode 'store'
+        $this->middleware('auth')->only('store');
+    }
+
     public function store(Request $request)
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
@@ -18,8 +24,7 @@ class CreditController extends Controller
             'credit_name'   => $request->input('credit_name'),
             'credit_price'  => $request->input('credit_price'),
             'semester'      => $request->input('semester'),
-            'user_id'       => Auth::user()->id,
-            'year_id'       => $activeYearId
+            'user_id'       => Auth::user()->id
         ]);
         // Create data notification
         $years = Year::find($activeYearId);
@@ -61,6 +66,7 @@ class CreditController extends Controller
         $credit = Credit::find($id);
 
         $credit->update([
+            'credit_name' => $request->input('credit_name'),
             'credit_price' => $request->input('credit_price'),
             'semester' => $request->input('semester'),
             'user_id' => Auth::user()->id

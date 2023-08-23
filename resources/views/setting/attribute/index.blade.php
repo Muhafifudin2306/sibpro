@@ -156,7 +156,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>{{ __('Tabel Atribut') }}</h4>
+                            <h4>{{ __('Tabel Atribut Daftar Ulang') }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -168,7 +168,6 @@
                                             </th>
                                             <th>Nama Atribut</th>
                                             <th>Harga Atribut</th>
-                                            <th>Tahun Ajaran</th>
                                             <th>Diubah pada</th>
                                             <th>Petugas</th>
                                             <th>Action</th>
@@ -188,9 +187,6 @@
                                                 </td>
                                                 <td>
                                                     Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->years->year_name }}
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $item->updated_at->format('d F Y') }}
@@ -235,7 +231,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>{{ __('Tabel Atribut') }}</h4>
+                            <h4>{{ __('Tabel Atribut SPP') }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -248,7 +244,6 @@
                                             <th>Nama Atribut</th>
                                             <th>Harga Atribut</th>
                                             <th>Semester</th>
-                                            <th>Tahun Ajaran</th>
                                             <th>Diubah pada</th>
                                             <th>Petugas</th>
                                             <th>Action</th>
@@ -271,9 +266,6 @@
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $item->semester }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->years->year_name }}
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $item->updated_at->format('d F Y') }}
@@ -328,7 +320,6 @@
                                                 No
                                             </th>
                                             <th>Nama Kategori</th>
-                                            <th>Tahun Ajaran</th>
                                             <th>Diubah pada</th>
                                             <th>Petugas</th>
                                             <th>Action</th>
@@ -345,9 +336,6 @@
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $item->category_name }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->years->year_name }}
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $item->updated_at->format('d F Y') }}
@@ -498,7 +486,7 @@
                             <div class="form-group">
                                 <label for="attribute_name">Nama Atribut</label>
                                 <input type="text" class="form-control" name="attribute_name" id="attribute_name"
-                                    value="{{ $item->attribute_name }}" disabled>
+                                    value="{{ $item->attribute_name }}">
                             </div>
                             <div class="form-group">
                                 <label for="attribute_price">Harga </label>
@@ -533,7 +521,7 @@
                             <div class="form-group">
                                 <label for="credit_name">Nama Atribut</label>
                                 <input type="text" class="form-control" name="credit_name" id="credit_name"
-                                    value="{{ $item->credit_name }}" disabled>
+                                    value="{{ $item->credit_name }}">
                             </div>
                             <div class="form-group">
                                 <label for="credit_price">Harga </label>
@@ -728,7 +716,7 @@
                             .then(response => response.json())
                             .then(data => {
                                 // Tampilkan notifikasi sukses menggunakan Notiflix
-                                Notiflix.Notify.success("Data Tahun berhasil dihapus.", {
+                                Notiflix.Notify.success("Data Atribut berhasil dihapus.", {
                                     timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
                                 });
 

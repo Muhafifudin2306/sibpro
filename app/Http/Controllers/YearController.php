@@ -10,8 +10,10 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\Credit;
 use App\Models\Notification;
 use App\Models\StudentClass;
+use App\Models\Student;
 use App\Models\Year;
 
 
@@ -60,44 +62,6 @@ class YearController extends Controller
             'year_status' => "nonActive",
             'user_id' => Auth::user()->id
         ]);
-
-
-        // Create Data Existing Attribute
-        $highestPricesByType = Attribute::groupBy('attribute_name')->select('attribute_name', DB::raw('MAX(attribute_price) as max_price'))->get();
-
-        $existingAttributes = Attribute::all();
-
-        foreach ($existingAttributes as $existingAttribute) {
-            $highestPrice = $highestPricesByType->where('attribute_name', $existingAttribute->attribute_name)->first()->max_price;
-            Attribute::firstOrCreate([
-                'attribute_name' => $existingAttribute->attribute_name,
-                'attribute_price' => $highestPrice,
-                'year_id' => $year->id,
-                'user_id' => Auth::user()->id
-            ]);
-        }
-
-        // Create Data Existing Category
-        $existingCategory = Category::all();
-
-        foreach ($existingCategory as $existingCategory) {
-            Category::firstOrCreate([
-                'category_name' => $existingCategory->category_name,
-                'year_id' => $year->id,
-                'user_id' => Auth::user()->id
-            ]);
-        }
-
-        // Create Data Existing Class
-        $existingClasses = StudentClass::all();
-
-        foreach ($existingClasses as $existingClass) {
-            StudentClass::firstOrCreate([
-                'class_name' => $existingClass->class_name,
-                'year_id' => $year->id,
-                'user_id' => Auth::user()->id
-            ]);
-        }
 
         // Notification create to store year data
         Notification::create([

@@ -12,14 +12,9 @@ class Credit extends Model
         'credit_name',
         'credit_price',
         'semester',
-        'year_id',
         'user_id'
     ];
 
-    public function years()
-    {
-        return $this->belongsTo(Year::class, 'year_id');
-    }
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');

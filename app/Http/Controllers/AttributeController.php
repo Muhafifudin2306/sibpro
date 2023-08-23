@@ -25,16 +25,16 @@ class AttributeController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         // Get Data Attribute
-        $attributes = Attribute::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $attributes = Attribute::orderBy("updated_at", "DESC")->get();
 
         // Get Data Category
-        $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $categories = Category::orderBy("updated_at", "DESC")->get();
 
         // Get Data Credit
-        $credits = Credit::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $credits = Credit::orderBy("updated_at", "DESC")->get();
 
         // Get Data Category - Attribute Relation
-        $categoriesRelation = Category::has("attributes")->where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $categoriesRelation = Category::has("attributes")->orderBy("updated_at", "DESC")->get();
 
         // Get Data Notification
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
@@ -51,7 +51,7 @@ class AttributeController extends Controller
 
         // Create data attribute
         $validator = Validator::make($request->all(), [
-            'attribute_name' => 'required|unique:attributes,attribute_name,null,id,year_id,' . $activeYearId,
+            'attribute_name' => 'required|unique:attributes,attribute_name,null',
             'attribute_price' => 'required'
         ]);
 
@@ -62,7 +62,6 @@ class AttributeController extends Controller
         $attributes = Attribute::create([
             'attribute_name' => $request->input('attribute_name'),
             'attribute_price' => $request->input('attribute_price'),
-            'year_id' => $activeYearId,
             'user_id' => Auth::user()->id
         ]);
 
@@ -85,6 +84,7 @@ class AttributeController extends Controller
         $attributes = Attribute::find($id);
 
         $attributes->update([
+            "attribute_name" =>  $request->input('attribute_name'),
             "attribute_price" =>  $request->input('attribute_price'),
             'user_id' => Auth::user()->id
         ]);
@@ -98,7 +98,7 @@ class AttributeController extends Controller
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $attributes,
-        ], 201); // 201 updated
+        ], 201);
     }
 
     public function destroy($id)
@@ -127,11 +127,11 @@ class AttributeController extends Controller
         // Dapatkan ID tahun yang aktif
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-        $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $categories = Category::orderBy("updated_at", "DESC")->get();
 
-        $attributes = Attribute::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $attributes = Attribute::orderBy("updated_at", "DESC")->get();
 
-        $credits = Credit::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+        $credits = Credit::orderBy("updated_at", "DESC")->get();
 
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 

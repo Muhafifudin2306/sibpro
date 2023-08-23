@@ -24,7 +24,6 @@ class CategoryController extends Controller
         // Simpan data atribut untuk tahun aktif
         $categories = Category::create([
             'category_name' => $request->input('category_name'),
-            'year_id' => $activeYearId,
             'user_id' => Auth::user()->id
         ]);
 

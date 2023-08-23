@@ -71,7 +71,6 @@
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
                                                 <th>Kategori</th>
-                                                <th>Tahun Ajaran</th>
                                                 <th>Diubah pada</th>
                                                 <th>Action</th>
                                             </tr>
@@ -96,9 +95,6 @@
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $item->categories->category_name }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $item->years->year_name }}
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $item->updated_at->format('d F Y') }}
