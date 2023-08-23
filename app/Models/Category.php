@@ -20,7 +20,6 @@ class Category extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'category_has_attribute');
@@ -28,9 +27,5 @@ class Category extends Model
     public function credits()
     {
         return $this->belongsToMany(Credit::class, 'category_has_credit');
-    }
-    public function attachAttributesWithYear($attributeIds, $yearId)
-    {
-        $this->attributes()->attach($attributeIds, ['year_id' => $yearId]);
     }
 }

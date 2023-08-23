@@ -8,13 +8,8 @@ class StudentClass extends Model
 {
     protected $table = "student_classes";
     protected $fillable = [
-        'class_name',
-        'user_id'
+        'class_name'
     ];
-    public function users()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     public function students()
     {
