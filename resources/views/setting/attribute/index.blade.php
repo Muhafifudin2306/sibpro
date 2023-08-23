@@ -55,7 +55,8 @@
                                                 No
                                             </th>
                                             <th>Nama Kategori</th>
-                                            <th>Atribut</th>
+                                            <th>Atribut Daftar Ulang</th>
+                                            <th>Atribut SPP</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -77,6 +78,16 @@
                                                             <div class="mb-2 mx-1">
                                                                 <button
                                                                     class="btn btn-primary">{{ $attribute->attribute_name }}</button>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-wrap">
+                                                        @foreach ($item->credits as $credit)
+                                                            <div class="mb-2 mx-1">
+                                                                <button
+                                                                    class="btn btn-warning">{{ $credit->credit_name }}</button>
                                                             </div>
                                                         @endforeach
                                                     </div>

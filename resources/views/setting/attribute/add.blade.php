@@ -40,10 +40,18 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Atribut</label>
+                                    <label>Atribut Daftar Ulang</label>
                                     <select class="form-control select2" name="attribute_id[]" multiple="">
                                         @foreach ($attributes as $item)
                                             <option value="{{ $item->id }}">{{ $item->attribute_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Atribut SPP</label>
+                                    <select class="form-control select2" name="credit_id[]" multiple="">
+                                        @foreach ($credits as $item)
+                                            <option value="{{ $item->id }}">{{ $item->credit_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

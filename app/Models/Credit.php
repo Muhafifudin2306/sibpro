@@ -24,4 +24,8 @@ class Credit extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_has_credit');
+    }
 }

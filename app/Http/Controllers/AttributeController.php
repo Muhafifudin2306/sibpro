@@ -131,17 +131,21 @@ class AttributeController extends Controller
 
         $attributes = Attribute::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
+        $credits = Credit::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 
-        return view('setting.attribute.add', compact('notifications', 'categories', 'attributes'));
+        return view('setting.attribute.add', compact('credits', 'notifications', 'categories', 'attributes'));
     }
 
     public function storeRelation(Request $request)
     {
         $category = Category::find($request->input('category_id'));
         $attributeIds = $request->input('attribute_id');
+        $creditIds = $request->input('credit_id');
 
         $category->attributes()->sync($attributeIds);
+        $category->credits()->sync($creditIds);
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
@@ -158,11 +162,11 @@ class AttributeController extends Controller
     public function destroyRelation($id)
     {
         try {
-
             $category = Category::findOrFail($id);
 
             // Menghapus semua relasi atribut dari kategori
             $category->attributes()->detach();
+            $category->credits()->detach();
 
             $activeYearId = Year::where('year_status', 'active')->value('id');
             $years = Year::find($activeYearId);
