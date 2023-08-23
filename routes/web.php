@@ -70,4 +70,10 @@ Route::prefix('setting')->group(function () {
         Route::post('/update/allClass/{id}', [App\Http\Controllers\StudentController::class, 'updateAllClass'])->name('updateAllClass');
         Route::delete('/delete/allStudent/{id}', [App\Http\Controllers\StudentController::class, 'destroyAllStudent'])->name('deleteAllStudent');
     });
+
+    Route::prefix('credit')->group(function () {
+        Route::post('/add', [App\Http\Controllers\CreditController::class, 'store'])->name('storeCredit');
+        Route::post('/update/{id}', [App\Http\Controllers\CreditController::class, 'update'])->name('updateCredit');
+        Route::delete('/delete/{id}', [App\Http\Controllers\CreditController::class, 'destroy'])->name('deleteCredit');
+    });
 });

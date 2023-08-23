@@ -48,3 +48,4 @@ $("#table-pembayaran-vendor").dataTable();
 $("#table-vendor").dataTable();
 $("#table-category").dataTable();
 $("#table-relation").dataTable();
+$("#table-credit").dataTable();

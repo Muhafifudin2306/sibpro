@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\Credit;
 use App\Models\Notification;
 use App\Models\Year;
 
@@ -29,6 +30,9 @@ class AttributeController extends Controller
         // Get Data Category
         $categories = Category::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
+        // Get Data Credit
+        $credits = Credit::where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
+
         // Get Data Category - Attribute Relation
         $categoriesRelation = Category::has("attributes")->where('year_id', $activeYearId)->orderBy("updated_at", "DESC")->get();
 
@@ -36,7 +40,7 @@ class AttributeController extends Controller
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 
         // Parsing data to view
-        return view('setting.attribute.index', compact('attributes', 'categories', 'notifications', 'categoriesRelation'));
+        return view('setting.attribute.index', compact('credits', 'attributes', 'categories', 'notifications', 'categoriesRelation'));
     }
 
     // Attribute Control Start

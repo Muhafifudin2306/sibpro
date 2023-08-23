@@ -207,6 +207,90 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="d-flex justify-content-between align-items-center pb-3">
+                    <div class="title-content">
+                        <h2 class="section-title">Data Atribut SPP</h2>
+                        <p class="section-lead">
+                            Pilih dan Tambah Data Atribut SPP
+                        </p>
+                    </div>
+                    <div class="action-content">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#creditModal">+ Tambah
+                            Data</button>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{{ __('Tabel Atribut') }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-credit">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th class="text-center">
+                                                No
+                                            </th>
+                                            <th>Nama Atribut</th>
+                                            <th>Harga Atribut</th>
+                                            <th>Semester</th>
+                                            <th>Tahun Ajaran</th>
+                                            <th>Diubah pada</th>
+                                            <th>Petugas</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($credits as $item)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ $no++ }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->credit_name }}
+                                                </td>
+                                                <td>
+                                                    Rp{{ number_format($item->credit_price, 0, ',', '.') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $item->semester }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $item->years->year_name }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $item->updated_at->format('d F Y') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $item->users->name }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex justify-content-center">
+                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                            data-target="#creditEdit{{ $item->id }}">
+                                                            <i class="fas fa-pen" title="Edit Harga"></i>
+                                                        </div>
+                                                        <div class="text-danger mx-2 cursor-pointer">
+                                                            <i class="fas credit-delete fa-trash-alt"
+                                                                data-card-id="{{ $item->id }}" title="delete"></i>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
                         <h2 class="section-title">Data Kategori</h2>
@@ -295,7 +379,7 @@
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Atribut</h5>
+                    <h5 class="modal-title">Tambah Data Atribut Daftar Ulang</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -311,6 +395,45 @@
                             <label for="attribute_price">Harga (Tulis : 100000) </label>
                             <input type="number" class="form-control" name="attribute_price" id="attribute_price"
                                 placeholder="100000">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="creditModal">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Data Atribut SPP</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="creditForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="credit_name">Nama Atribut</label>
+                            <input type="text" class="form-control" name="credit_name" id="credit_name"
+                                placeholder="SPP Juni" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label for="credit_price">Harga (Tulis : 100000) </label>
+                            <input type="number" class="form-control" name="credit_price" id="credit_price"
+                                placeholder="80000">
+                        </div>
+                        <div class="form-group">
+                            <label>Semester</label>
+                            <select class="form-control select2" name="semester">
+                                <option>-- Pilih Kategori --</option>
+                                <option value="Genap">Genap</option>
+                                <option value="Ganjil">Ganjil</option>
+                            </select>
                         </div>
 
                     </div>
@@ -352,7 +475,7 @@
             <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Data Attribute</h5>
+                        <h5 class="modal-title">Update Data Attribute Daftar Ulang</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -370,6 +493,53 @@
                                 <label for="attribute_price">Harga </label>
                                 <input type="number" class="form-control" name="attribute_price" id="attribute_price"
                                     value="{{ round($item->attribute_price) }}" autofocus>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    @foreach ($credits as $item)
+        <div class="modal fade" tabindex="-1" role="dialog" id="creditEdit{{ $item->id }}">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Data Attribute SPP</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form class="update-form" data-action="{{ url('/setting/credit/update/' . $item->id) }} }}"
+                        method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="credit_name">Nama Atribut</label>
+                                <input type="text" class="form-control" name="credit_name" id="credit_name"
+                                    value="{{ $item->credit_name }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="credit_price">Harga </label>
+                                <input type="number" class="form-control" name="credit_price" id="credit_price"
+                                    value="{{ round($item->credit_price) }}" autofocus>
+                            </div>
+                            <div class="form-group">
+                                <label>Semester</label>
+                                <select class="form-control select2" name="semester">
+                                    @if ($item->semester == 'Genap')
+                                        <option value="Genap" selected>Genap</option>
+                                        <option value="Ganjil">Ganjil</option>
+                                    @elseif($item->semester == 'Ganjil')
+                                        <option value="Genap">Genap</option>
+                                        <option value="Ganjil" selected>Ganjil</option>
+                                    @endif
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -483,7 +653,7 @@
                             'Field tidak boleh kosong atau nama sejenis telah digunakan');
                     } else {
                         Notiflix.Notify.success('Success:', 'Attribute created successfully.');
-                        // location.reload();
+                        location.reload();
                     }
                 } catch (error) {
                     Notiflix.Notify.failure('Error:',
@@ -492,6 +662,41 @@
             });
         });
 
+        document.addEventListener('DOMContentLoaded', function() {
+            const creditForm = document.getElementById('creditForm');
+            creditForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(creditForm);
+                const creditData = {};
+                formData.forEach((value, key) => {
+                    creditData[key] = value;
+                });
+
+                try {
+                    const response = await fetch(`/setting/credit/add`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(creditData)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        const errorMessages = Object.values(errorData.errors).join('\n');
+                        Notiflix.Notify.failure(
+                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                    } else {
+                        Notiflix.Notify.success('Success:', 'credit created successfully.');
+                        location.reload();
+                    }
+                } catch (error) {
+                    Notiflix.Notify.failure('Error:',
+                        'An error occurred while processing the request.');
+                }
+            });
+        });
 
         const deleteAttribute = document.querySelectorAll('.attribute-delete');
 
@@ -513,6 +718,40 @@
                             .then(data => {
                                 // Tampilkan notifikasi sukses menggunakan Notiflix
                                 Notiflix.Notify.success("Data Tahun berhasil dihapus.", {
+                                    timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
+                                });
+
+                                // Refresh halaman saat ini
+                                location.reload();
+                            })
+                            .catch(error => {
+                                // Tampilkan notifikasi error menggunakan Notiflix
+                                Notiflix.Notify.failure('Error:', error);
+                            });
+                    });
+            });
+        });
+
+        const deleteCredit = document.querySelectorAll('.credit-delete');
+
+        // Tambahkan event listener untuk setiap tombol "Hapus Data"
+        deleteCredit.forEach(button => {
+            button.addEventListener('click', function() {
+                const cardId = button.dataset.cardId;
+
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                    'Batal',
+                    function() {
+                        fetch(`/setting/credit/delete/${cardId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Tampilkan notifikasi sukses menggunakan Notiflix
+                                Notiflix.Notify.success("Data Credit berhasil dihapus.", {
                                     timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
                                 });
 
