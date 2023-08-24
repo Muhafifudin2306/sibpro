@@ -4,16 +4,10 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
-use App\Models\Attribute;
-use App\Models\Category;
-use App\Models\Credit;
 use App\Models\Notification;
-use App\Models\StudentClass;
-use App\Models\Student;
 use App\Models\Year;
 
 
@@ -46,10 +40,7 @@ class YearController extends Controller
         // Create Data Year Table
         $validator = Validator::make($request->all(), [
             'year_name' => [
-                'required',
-                Rule::unique('years')->where(function ($query) {
-                    return $query->where('user_id', Auth::user()->id);
-                })
+                'required'
             ]
         ]);
 
@@ -60,6 +51,7 @@ class YearController extends Controller
         $year = Year::create([
             'year_name' => $request->input('year_name'),
             'year_status' => "nonActive",
+            'semester' => $request->input('semester'),
             'user_id' => Auth::user()->id
         ]);
 

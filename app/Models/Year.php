@@ -12,6 +12,7 @@ class Year extends Model
 
     protected $fillable = [
         'year_name',
+        'semester',
         'year_status',
         'user_id'
     ];

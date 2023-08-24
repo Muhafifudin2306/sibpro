@@ -34,9 +34,8 @@
                     <span>Pemasukan</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="components-article.html">Daftar Ulang</a></li>
-                    <li><a class="nav-link" href="components-avatar.html">Sponsor dan Donasi</a>
+                    <li><a class="nav-link" href="components-avatar.html">SPP</a>
                     </li>
-                    <li><a class="nav-link" href="components-chat-box.html">Pendapatan Lainnya</a></li>
                 </ul>
             </li>
             {{-- 
