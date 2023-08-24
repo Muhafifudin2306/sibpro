@@ -429,9 +429,9 @@
                         <div class="form-group">
                             <label>Semester</label>
                             <select class="form-control select2" name="semester">
-                                <option>-- Pilih Kategori --</option>
+                                <option>-- Pilih Semester --</option>
                                 <option value="Genap">Genap</option>
-                                <option value="Ganjil">Ganjil</option>
+                                <option value="Gasal">Gasal</option>
                             </select>
                         </div>
 
@@ -533,10 +533,10 @@
                                 <select class="form-control select2" name="semester">
                                     @if ($item->semester == 'Genap')
                                         <option value="Genap" selected>Genap</option>
-                                        <option value="Ganjil">Ganjil</option>
-                                    @elseif($item->semester == 'Ganjil')
+                                        <option value="Gasal">Gasal</option>
+                                    @elseif($item->semester == 'Gasal')
                                         <option value="Genap">Genap</option>
-                                        <option value="Ganjil" selected>Ganjil</option>
+                                        <option value="Gasal" selected>Gasal</option>
                                     @endif
                                 </select>
                             </div>
