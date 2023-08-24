@@ -15,7 +15,9 @@ class YearSeeder extends Seeder
         DB::table('years')->insert([
             'year_name' => '2022/2023',
             'year_status' => 'active',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
     }
 }

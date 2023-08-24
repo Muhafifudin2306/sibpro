@@ -1,8 +1,6 @@
 @extends('layouts.admin.app')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
-
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
@@ -36,7 +34,7 @@
                             <div class="col-12 col-md-6 col-lg-3">
                                 <div class="card card-success">
                                     <div class="card-header">
-                                        <h4>{{ 'Semester' . ' ' . $year->semester . ' ' . '( Aktif )' }}</h4>
+                                        <h4>{{ 'Tahun Aktif' }}</h4>
                                     </div>
                                     <div class="card-body">
                                         <p>Tahun Pelajaran {{ $year->year_name }}</p>
@@ -47,7 +45,7 @@
                             <div class="col-12 col-md-6 col-lg-3">
                                 <div class="card card-danger">
                                     <div class="card-header d-flex justify-content-between">
-                                        <h4>{{ 'Semester' . ' ' . $year->semester }}</h4>
+                                        <h4>{{ 'Non Aktif' }}</h4>
                                         <i class="fas fa-trash card-delete cursor-pointer text-danger"
                                             data-card-id="{{ $year->id }}"></i>
                                     </div>
@@ -83,14 +81,6 @@
                             <label for="inputAddress">Nama Tahun Pelajaran ( Misal : 2022/2023 )</label>
                             <input type="text" class="form-control" name="year_name" placeholder="2022/2023" required
                                 autofocus>
-                        </div>
-                        <div class="form-group">
-                            <label>Semester</label>
-                            <select class="form-control select2" name="semester">
-                                <option>-- Pilih Semester --</option>
-                                <option value="Genap">Genap</option>
-                                <option value="Ganjil">Ganjil</option>
-                            </select>
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
@@ -199,9 +189,4 @@
             });
         });
     </script>
-@endsection
-
-
-@section('script')
-    <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
 @endsection

@@ -16,85 +16,97 @@ class CreditSeeder extends Seeder
             'credit_name' => 'SPP Agustus',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP September',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP Oktober',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP November',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP Desember',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP Maret',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP April',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP Mei',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP Juni',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'SPP Desember',
             'credit_price' => '80000',
             'semester' => 'Gasal',
-            'user_id' => '1'
-        ]);
-        DB::table('credits')->insert([
-            'credit_name' => 'SPP Desember',
-            'credit_price' => '80000',
-            'semester' => 'Gasal',
-            'user_id' => '1'
-        ]);
-        DB::table('credits')->insert([
-            'credit_name' => 'SPP Desember',
-            'credit_price' => '80000',
-            'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'Gratis All',
             'credit_price' => '0',
             'semester' => 'Gasal',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
         DB::table('credits')->insert([
             'credit_name' => 'Gratis All',
             'credit_price' => '0',
             'semester' => 'Genap',
-            'user_id' => '1'
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
         ]);
     }
 }

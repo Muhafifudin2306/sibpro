@@ -51,7 +51,6 @@ class YearController extends Controller
         $year = Year::create([
             'year_name' => $request->input('year_name'),
             'year_status' => "nonActive",
-            'semester' => $request->input('semester'),
             'user_id' => Auth::user()->id
         ]);
 
