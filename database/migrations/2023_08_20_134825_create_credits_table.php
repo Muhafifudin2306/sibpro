@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('credit_name');
             $table->decimal('credit_price', 10, 2)->nullable();
-            $table->enum('semester', ['Ganjil', 'Genap']);
+            $table->enum('semester', ['Gasal', 'Genap']);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')
                 ->onDelete('cascade');

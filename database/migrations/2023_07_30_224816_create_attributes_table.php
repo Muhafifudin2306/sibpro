@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('attribute_name');
             $table->decimal('attribute_price', 10, 2)->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
