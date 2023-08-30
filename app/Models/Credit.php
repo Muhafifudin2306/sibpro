@@ -23,4 +23,14 @@ class Credit extends Model
     {
         return $this->belongsToMany(Category::class, 'category_has_credit');
     }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'student_has_credit');
+    }
+
+    public function credits()
+    {
+        return $this->belongsToMany(Credit::class, 'category_has_credit', 'category_id');
+    }
 }

@@ -89,5 +89,12 @@ class AtributeSeeder extends Seeder
             'created_at' => '2023-08-24 21:33:36',
             'updated_at' => '2023-08-24 21:33:36'
         ]);
+        DB::table('attributes')->insert([
+            'attribute_name' => 'Gratis All',
+            'attribute_price' => '0',
+            'user_id' => '1',
+            'created_at' => '2023-08-24 21:33:36',
+            'updated_at' => '2023-08-24 21:33:36'
+        ]);
     }
 }

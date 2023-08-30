@@ -44,9 +44,9 @@ class StudentController extends Controller
         return view('setting.student.add', compact('notifications', 'students', 'class', 'category'));
     }
 
+
     public function store(Request $request)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
         $data = $request->validate([
             'class_id' => 'required',
             'students' => 'required|array', // Array of students
@@ -63,8 +63,14 @@ class StudentController extends Controller
             $student->category_id = $studentData['category_id'];
             $student->user_id = Auth::user()->id;
             $student->save();
-        }
 
+            // Dapatkan id_credit yang sesuai dari tabel category_has_credit
+            $category = Category::findOrFail($studentData['category_id']);
+            $creditIds = $category->credits->pluck('id')->toArray();
+
+            // Simpan relasi antara siswa dan kredit dalam UserHasCredit
+            $student->credits()->sync($creditIds);
+        }
         return response()->json([
             'message' => 'Data inserted successfully'
         ], 201);
@@ -133,10 +139,7 @@ class StudentController extends Controller
 
     public function destroyAllStudent($id)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
-
         Student::where('class_id', $id)
-            ->where('year_id', $activeYearId)
             ->delete();
 
         return response()->json([

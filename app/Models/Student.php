@@ -28,4 +28,9 @@ class Student extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
+    public function credits()
+    {
+        return $this->belongsToMany(Credit::class, 'student_has_credit');
+    }
 }

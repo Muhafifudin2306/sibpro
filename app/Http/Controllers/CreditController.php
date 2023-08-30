@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Credit;
 use App\Models\Notification;
+use App\Models\StudentClass;
+use App\Models\Student;
 use App\Models\Year;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,6 +16,28 @@ class CreditController extends Controller
     {
         // Tambahkan middleware autentikasi ke metode 'store'
         $this->middleware('auth')->only('store');
+    }
+
+    public function index()
+    {
+        // Get Data Notification
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+
+        return view('credit.index', compact('notifications', 'studentClasses'));
+    }
+
+    public function detail($id)
+    {
+        // Get Data Notification
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $students = Student::where('class_id', $id)->whereNotNull('category_id')->with(['credits' => function ($query) {
+            $query->select('credits.id', 'credit_name', 'status', 'student_has_credit.credit_price');
+        }])->get();
+        $class = StudentClass::find($id);
+
+        return view('credit.detail', compact('notifications', 'students', 'class'));
+        // dd($students);
     }
 
     public function store(Request $request)

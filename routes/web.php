@@ -27,7 +27,11 @@ Route::prefix('pengeluaran')->group(function () {
     Route::get('/vendor', [App\Http\Controllers\VendorController::class, 'index'])->name('vendor');
 });
 
-Route::prefix('setting')->group(function () {
+Route::prefix('income')->group(function () {
+    Route::prefix('credit')->group(function () {
+        Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
+        Route::get('/detail/{id}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
+    });
 });
 
 Route::prefix('setting')->group(function () {

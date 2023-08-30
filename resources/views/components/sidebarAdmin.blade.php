@@ -29,13 +29,13 @@
                             Operasional</a></li>
                 </ul>
             </li>
-            <li class="dropdown">
+            <li class="dropdown {{ Request::is('income*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-dollar-sign"></i>
                     <span>Pemasukan</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="components-article.html">Daftar Ulang</a></li>
-                    <li><a class="nav-link" href="components-avatar.html">SPP</a>
-                    </li>
+                    <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
+                            href="{{ url('income/credit') }}">SPP</a></li>
                 </ul>
             </li>
             {{-- 
