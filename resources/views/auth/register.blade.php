@@ -1,4 +1,7 @@
 @extends('layouts.auth.app')
+
+@section('title_page', 'Register')
+
 @section('content')
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
@@ -10,7 +13,6 @@
                         <div class="card-header">
                             <h4>{{ __('Register SIBPRO') }}</h4>
                         </div>
-
                         <div class="card-body">
                             <form method="POST" action="{{ route('register') }}">
                                 @csrf
@@ -74,6 +76,9 @@
                                 </div>
                             </form>
                         </div>
+                    </div>
+                    <div class="mt-5 text-center">
+                        Sudah punya akun? <a href="{{ url('/register') }}">Login Sekarang</a>
                     </div>
                 </div>
             </div>

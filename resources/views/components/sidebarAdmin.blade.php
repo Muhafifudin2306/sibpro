@@ -57,11 +57,12 @@
                         Konsolidasi</span></a>
             </li> --}}
             <li class="menu-header">Pengaturan</li>
-            <li class="dropdown">
+            <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i>
                     <span>Account Setting</span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="auth-forgot-password.html">Users</a></li>
+                    <li class="{{ Request::segment(2) === 'profile' ? 'active' : '' }}"><a
+                            href="{{ url('/account/profile') }}">Users</a></li>
                     <li><a href="auth-login.html">Roles</a></li>
                 </ul>
             </li>

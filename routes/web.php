@@ -34,6 +34,12 @@ Route::prefix('income')->group(function () {
     });
 });
 
+Route::prefix('account')->group(function () {
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
+    });
+});
+
 Route::prefix('setting')->group(function () {
     Route::prefix('year')->group(function () {
         Route::get('/', [App\Http\Controllers\YearController::class, 'index'])->name('year');
