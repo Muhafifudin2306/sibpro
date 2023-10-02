@@ -57,9 +57,11 @@
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::user()->name }} </div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="{{ url('/account/profile') }}" class="dropdown-item has-icon">
-                    <i class="far fa-user"></i> Profile
-                </a>
+                @can('access-userProfile')
+                    <a href="{{ url('/account/profile') }}" class="dropdown-item has-icon">
+                        <i class="far fa-user"></i> Profile
+                    </a>
+                @endcan
                 <a href="#" id="logOutFunction" class="dropdown-item has-icon text-danger">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>

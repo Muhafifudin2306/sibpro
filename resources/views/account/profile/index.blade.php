@@ -32,10 +32,8 @@
                         </p>
                     </div>
                     <div class="action-content">
-                        <a href="{{ route('addStudent') }}">
-                            <button class="btn btn-primary">+ Tambah
-                                Data</button>
-                        </a>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#usersModal">+ Tambah
+                            Data</button>
                     </div>
                 </div>
                 <div class="col-12">
@@ -71,18 +69,26 @@
                                                 <td class="text-center">
                                                     {{ $no++ }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $item->name }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $item->email }}
                                                 </td>
                                                 <td class="text-center">
                                                     @foreach ($item->roles as $role)
-                                                        {{ $role->name }}
+                                                        @if ($role->name == 'Superadmin')
+                                                            <span class="fw-bold text-danger">
+                                                                {{ $role->name }}
+                                                            </span>
+                                                        @else
+                                                            <span class="fw-bold text-warning">
+                                                                {{ $role->name }}
+                                                            </span>
+                                                        @endif
                                                     @endforeach
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $item->updated_at->format('d F Y') }}
                                                 </td>
                                                 <td>
@@ -116,11 +122,11 @@
         </footer>
     </div>
     {{-- Add Modal --}}
-    <div class="modal fade" tabindex="-1" role="dialog" id="studentModal">
+    <div class="modal fade" tabindex="-1" role="dialog" id="usersModal">
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Atribut</h5>
+                    <h5 class="modal-title">Tambah Data Users</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -128,17 +134,26 @@
                 <form id="attributeForm">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="attribute_name">Nama Atribut</label>
-                            <input type="text" class="form-control" name="attribute_name" id="attribute_name"
-                                placeholder="Topi/Dasi/Seragam" autofocus>
+                            <label for="name">Nama User</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="John Doe">
                         </div>
                         <div class="form-group">
-                            <label>Select2</label>
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" name="email" id="email"
+                                placeholder="johndoe@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Role</label>
                             <select class="form-control select2">
-                                <option>Option 1</option>
-                                <option>Option 2</option>
-                                <option>Option 3</option>
+                                @foreach ($roles as $role)
+                                    <option>{{ $role->name }}</option>
+                                @endforeach
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Email</label>
+                            <input type="password" class="form-control" name="password" id="password"
+                                placeholder="*********">
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
