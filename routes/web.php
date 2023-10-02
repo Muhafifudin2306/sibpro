@@ -37,7 +37,12 @@ Route::prefix('income')->group(function () {
 Route::prefix('account')->group(function () {
     Route::prefix('users')->group(function () {
         Route::group(['middleware' => ['can:access-userList']], function () {
-            Route::get('/', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
+            Route::get('/', [App\Http\Controllers\ProfileController::class, 'users'])->name('users');
+        });
+    });
+    Route::prefix('profile')->group(function () {
+        Route::group(['middleware' => ['can:access-userProfile']], function () {
+            Route::get('/', [App\Http\Controllers\ProfileController::class, 'profile'])->name('profile');
         });
     });
 });

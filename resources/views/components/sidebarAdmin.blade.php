@@ -56,38 +56,43 @@
             <li><a class="nav-link" href="blank.html"><i class="fas fa-file-invoice-dollar"></i><span>Laporan
                         Konsolidasi</span></a>
             </li> --}}
-            <li class="menu-header">Pengaturan</li>
+
+            <li class="menu-header">Utilitas</li>
             <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i>
-                    <span>Account Setting</span></a>
+                    <span>Account</span></a>
                 <ul class="dropdown-menu">
+                    <li class="{{ Request::segment(2) === 'profile' ? 'active' : '' }}"><a
+                            href="{{ url('/account/profile') }}">Profile</a></li>
                     @can('access-userList')
                         <li class="{{ Request::segment(2) === 'users' ? 'active' : '' }}"><a
                                 href="{{ url('/account/users') }}">Users</a></li>
+                        <li><a href="auth-login.html">Roles and Permission</a></li>
                     @endcan
-                    <li><a href="auth-login.html">Roles and Permission</a></li>
                 </ul>
             </li>
-            <li class="dropdown {{ Request::is('setting*') ? 'active' : '' }}">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i>
-                    <span>General Setting</span></a>
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'year' ? 'active' : '' }}"><a
-                            href="{{ url('/setting/year') }}">Tahun Aktif</a></li>
-                </ul>
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'attribute' ? 'active' : '' }}"><a
-                            href="{{ url('/setting/attribute') }}">Atribut</a></li>
-                </ul>
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'class' ? 'active' : '' }}"><a
-                            href="{{ url('/setting/class') }}">Kelas</a></li>
-                </ul>
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'student' ? 'active' : '' }}"><a
-                            href="{{ url('/setting/student') }}">Siswa</a></li>
-                </ul>
-            </li>
+            @can('access-userList')
+                <li class="dropdown {{ Request::is('setting*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i>
+                        <span>General Setting</span></a>
+                    <ul class="dropdown-menu">
+                        <li class="{{ Request::segment(2) === 'year' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/year') }}">Tahun Aktif</a></li>
+                    </ul>
+                    <ul class="dropdown-menu">
+                        <li class="{{ Request::segment(2) === 'attribute' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/attribute') }}">Atribut</a></li>
+                    </ul>
+                    <ul class="dropdown-menu">
+                        <li class="{{ Request::segment(2) === 'class' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/class') }}">Kelas</a></li>
+                    </ul>
+                    <ul class="dropdown-menu">
+                        <li class="{{ Request::segment(2) === 'student' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/student') }}">Siswa</a></li>
+                    </ul>
+                </li>
+            @endcan
         </ul>
     </aside>
 </div>

@@ -57,6 +57,7 @@
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::user()->name }} </div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-title">Logged in {{ session('last_login') }}</div>
                 @can('access-userProfile')
                     <a href="{{ url('/account/profile') }}" class="dropdown-item has-icon">
                         <i class="far fa-user"></i> Profile

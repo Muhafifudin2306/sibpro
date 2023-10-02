@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('student_name');
             $table->string('nis')->unique();
+            $table->string('gender')->nullable();
             $table->unsignedBigInteger('class_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
