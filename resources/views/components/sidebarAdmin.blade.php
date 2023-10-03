@@ -62,12 +62,17 @@
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i>
                     <span>Account</span></a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'profile' ? 'active' : '' }}"><a
-                            href="{{ url('/account/profile') }}">Profile</a></li>
+                    @can('access-userProfile')
+                        <li class="{{ Request::segment(2) === 'profile' ? 'active' : '' }}"><a
+                                href="{{ url('/account/profile') }}">Profile</a></li>
+                    @endcan
                     @can('access-userList')
                         <li class="{{ Request::segment(2) === 'users' ? 'active' : '' }}"><a
                                 href="{{ url('/account/users') }}">Users</a></li>
-                        <li><a href="auth-login.html">Roles and Permission</a></li>
+                    @endcan
+                    @can('access-permissionList')
+                        <li class="{{ Request::segment(3) === 'permission' ? 'active' : '' }}"><a
+                                href="{{ url('/account/security/permission') }}">Permission</a></li>
                     @endcan
                 </ul>
             </li>

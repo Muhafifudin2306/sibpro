@@ -40,6 +40,20 @@ Route::prefix('account')->group(function () {
             Route::get('/', [App\Http\Controllers\ProfileController::class, 'users'])->name('users');
         });
     });
+    Route::prefix('security')->group(function () {
+        Route::group(['middleware' => ['can:access-permissionList']], function () {
+            Route::get('/permission', [App\Http\Controllers\SecurityController::class, 'permissionList'])->name('permission');
+        });
+        Route::group(['middleware' => ['can:access-permissionAdd']], function () {
+            Route::post('/permission/add', [App\Http\Controllers\SecurityController::class, 'storePermission'])->name('storePermission');
+        });
+        Route::group(['middleware' => ['can:access-permissionDelete']], function () {
+            Route::delete('/permission/delete/{id}', [App\Http\Controllers\SecurityController::class, 'destroyPermission'])->name('deletePermission');
+        });
+        Route::group(['middleware' => ['can:access-permissionUpdate']], function () {
+            Route::post('/permission/update/{id}', [App\Http\Controllers\SecurityController::class, 'updatePermission'])->name('updatePermission');
+        });
+    });
     Route::prefix('profile')->group(function () {
         Route::group(['middleware' => ['can:access-userProfile']], function () {
             Route::get('/', [App\Http\Controllers\ProfileController::class, 'profile'])->name('profile');

@@ -13,6 +13,11 @@ use Spatie\Permission\Models\Role;
 
 class ProfileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function users()
     {
         $users = User::with('roles')->get();

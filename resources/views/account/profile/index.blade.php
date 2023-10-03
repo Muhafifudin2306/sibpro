@@ -1,14 +1,6 @@
 @extends('layouts.admin.app')
 
 @section('content')
-    @push('styles')
-        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-        <link rel="stylesheet"
-            href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
-    @endpush
-
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
@@ -17,10 +9,10 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>Profile</h1>
+                    <h1>{{ __('Profile') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('Account Setting') }}</div>
+                        <div class="breadcrumb-item">{{ __('Account') }}</div>
                         <div class="breadcrumb-item active">{{ __('Profile') }}</div>
                     </div>
                 </div>
