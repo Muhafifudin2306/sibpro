@@ -53,6 +53,22 @@ Route::prefix('account')->group(function () {
         Route::group(['middleware' => ['can:access-permissionUpdate']], function () {
             Route::post('/permission/update/{id}', [App\Http\Controllers\SecurityController::class, 'updatePermission'])->name('updatePermission');
         });
+
+        Route::group(['middleware' => ['can:access-roleList']], function () {
+            Route::get('/role', [App\Http\Controllers\SecurityController::class, 'roleList'])->name('role');
+        });
+        Route::group(['middleware' => ['can:access-roleAdd']], function () {
+            Route::post('/role/add', [App\Http\Controllers\SecurityController::class, 'storeRole'])->name('storeRole');
+        });
+        Route::group(['middleware' => ['can:access-roleDelete']], function () {
+            Route::delete('/role/delete/{id}', [App\Http\Controllers\SecurityController::class, 'destroyRole'])->name('deleteRole');
+        });
+        Route::group(['middleware' => ['can:access-roleEdit']], function () {
+            Route::get('/role/edit/{id}', [App\Http\Controllers\SecurityController::class, 'editRole'])->name('editRole');
+        });
+        Route::group(['middleware' => ['can:access-roleUpdate']], function () {
+            Route::post('/role/update/{id}', [App\Http\Controllers\SecurityController::class, 'updateRole'])->name('updateRole');
+        });
     });
     Route::prefix('profile')->group(function () {
         Route::group(['middleware' => ['can:access-userProfile']], function () {

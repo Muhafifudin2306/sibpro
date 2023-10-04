@@ -70,9 +70,13 @@
                         <li class="{{ Request::segment(2) === 'users' ? 'active' : '' }}"><a
                                 href="{{ url('/account/users') }}">Users</a></li>
                     @endcan
+                    @can('access-roleList')
+                        <li class="{{ Request::segment(3) === 'role' ? 'active' : '' }}"><a
+                                href="{{ url('/account/security/role') }}">Roles</a></li>
+                    @endcan
                     @can('access-permissionList')
                         <li class="{{ Request::segment(3) === 'permission' ? 'active' : '' }}"><a
-                                href="{{ url('/account/security/permission') }}">Permission</a></li>
+                                href="{{ url('/account/security/permission') }}">Permissions</a></li>
                     @endcan
                 </ul>
             </li>
