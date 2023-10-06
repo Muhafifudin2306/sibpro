@@ -1,5 +1,7 @@
 @extends('layouts.admin.app')
 
+@section('title_page', 'Permission List')
+
 @section('content')
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
@@ -78,14 +80,14 @@
                                                         @can('access-permissionUpdate')
                                                             <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
                                                                 data-target="#updateModal{{ $item->id }}">
-                                                                <i class="fas fa-pen" title="Edit Siswa"></i>
+                                                                <i class="fas fa-pen" title="Edit Permission"></i>
                                                             </div>
                                                         @endcan
                                                         @can('access-permissionDelete')
                                                             <div class="text-danger mx-2 cursor-pointer permission-delete"
                                                                 data-card-id="{{ $item->id }}">
                                                                 <i class="fas data-delete fa-trash-alt"
-                                                                    title="Delete Siswa"></i>
+                                                                    title="Delete Permission"></i>
                                                             </div>
                                                         @endcan
                                                     </div>
@@ -168,112 +170,118 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addForm = document.getElementById('addForm');
-            addForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const formData = new FormData(addForm);
-                const attributeData = {};
-                formData.forEach((value, key) => {
-                    attributeData[key] = value;
-                });
-
-                try {
-                    const response = await fetch(`/account/security/permission/add`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(attributeData)
+    @can('access-permissionAdd')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const addForm = document.getElementById('addForm');
+                addForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(addForm);
+                    const attributeData = {};
+                    formData.forEach((value, key) => {
+                        attributeData[key] = value;
                     });
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        const errorMessages = Object.values(errorData.errors).join('\n');
-                        Notiflix.Notify.failure(
-                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
-                    } else {
-                        Notiflix.Notify.success('Success: Permission created successfully.');
-                        location.reload();
+                    try {
+                        const response = await fetch(`/account/security/permission/add`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(attributeData)
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            const errorMessages = Object.values(errorData.errors).join('\n');
+                            Notiflix.Notify.failure(
+                                'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                        } else {
+                            Notiflix.Notify.success('Data permission berhasil dibuat!');
+                            location.reload();
+                        }
+                    } catch (error) {
+                        Notiflix.Notify.failure('Error:',
+                            'An error occurred while processing the request.');
                     }
-                } catch (error) {
-                    Notiflix.Notify.failure('Error:',
-                        'An error occurred while processing the request.');
-                }
+                });
             });
-        });
-    </script>
+        </script>
+    @endcan
 
-    <script>
-        const deletePermission = document.querySelectorAll('.permission-delete');
+    @can('access-permissionDelete')
+        <script>
+            const deletePermission = document.querySelectorAll('.permission-delete');
 
-        deletePermission.forEach(button => {
-            button.addEventListener('click', function() {
-                const cardId = button.dataset.cardId;
+            deletePermission.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardId = button.dataset.cardId;
 
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
-                    'Batal',
-                    function() {
-                        fetch(`/account/security/permission/delete/${cardId}`, {
-                                method: 'DELETE',
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            fetch(`/account/security/permission/delete/${cardId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success("Data permission berhasil dihapus!", {
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
+                                });
+                        });
+                });
+            });
+        </script>
+    @endcan
+
+    @can('access-permissionUpdate', $post)
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const updateForms = document.querySelectorAll('.update-form');
+
+                updateForms.forEach(form => {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+
+                        const formData = new FormData(form);
+
+                        fetch(form.getAttribute('data-action'), {
+                                method: 'POST',
                                 headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: formData
                             })
                             .then(response => response.json())
                             .then(data => {
-                                Notiflix.Notify.success("Data permission berhasil dihapus.", {
+                                Notiflix.Notify.success("Data permission berhasil diperbarui!", {
                                     timeout: 3000
                                 });
+
                                 location.reload();
                             })
                             .catch(error => {
                                 Notiflix.Notify.failure('Error:', error);
                             });
                     });
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const updateForms = document.querySelectorAll('.update-form');
-
-            updateForms.forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-
-                    const formData = new FormData(form);
-
-                    fetch(form.getAttribute('data-action'), {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            Notiflix.Notify.success("Data Berhasil Diperbarui", {
-                                timeout: 3000
-                            });
-
-                            location.reload();
-                        })
-                        .catch(error => {
-                            Notiflix.Notify.failure('Error:', error);
-                        });
                 });
             });
-        });
-    </script>
+        </script>
+    @endcan
 
-    <script>
-        $("#table-permissions").dataTable();
-    </script>
+    @can('access-permissionList')
+        <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+        <script>
+            $("#table-permissions").dataTable();
+        </script>
+    @endcan
 @endpush

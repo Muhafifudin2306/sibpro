@@ -169,7 +169,7 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            Notiflix.Notify.success("Data Berhasil Diperbarui", {
+                            Notiflix.Notify.success("Data userebrhasil diperbarui!", {
                                 timeout: 3000
                             });
 

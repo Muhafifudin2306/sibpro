@@ -304,7 +304,7 @@
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    Notiflix.Notify.success("Data user berhasil dihapus.", {
+                                    Notiflix.Notify.success("Data user berhasil dihapus!", {
                                         timeout: 3000
                                     });
                                     location.reload();

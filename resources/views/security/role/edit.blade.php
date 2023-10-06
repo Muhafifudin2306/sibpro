@@ -1,9 +1,12 @@
 @extends('layouts.admin.app')
 
+@section('title_page', 'Edit Role')
+
 @section('content')
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
     @endpush
+
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
@@ -12,21 +15,21 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Roles') }}</h1>
+                    <h1>{{ __('Edit User') }}</h1>
                     <div class="section-header-breadcrumb">
-                        <div class="breadcrumb-role">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-role">{{ __('Account') }}</div>
-                        <div class="breadcrumb-role active">{{ __('Roles') }}</div>
+                        <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
+                        <div class="breadcrumb-item">{{ __('Account') }}</div>
+                        <div class="breadcrumb-item">{{ __('Roles') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Edit') }}</div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-roles-center pb-3">
-                    <div class="title-content">
-                        <h2 class="section-title">{{ __('Edit Data Roles') }}</h2>
-                    </div>
-                </div>
-                <div class="col-12 col-md-8">
+                <div class="col-md-8">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-header d-flex justify-content-between">
+                            <h4>{{ __('Edit User') }}</h4>
+                            <a href="{{ url('/account/security/role') }}"> {{ __('Close') }} </a>
+                        </div>
+                        <div class="card-body pb-5">
                             <form class="update-form"
                                 data-action="{{ url('account/security/role/update/' . $role->id) }} }}" method="POST">
                                 @csrf
@@ -62,39 +65,44 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
+    @can('access-roleEdit')
+        <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
+    @endcan
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const updateForms = document.querySelectorAll('.update-form');
+    @can('access-roleUpdate')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const updateForms = document.querySelectorAll('.update-form');
 
-            updateForms.forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
+                updateForms.forEach(form => {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
 
-                    const formData = new FormData(form);
+                        const formData = new FormData(form);
 
-                    fetch(form.getAttribute('data-action'), {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            Notiflix.Notify.success("Data Berhasil Diperbarui", {
-                                timeout: 3000
+                        fetch(form.getAttribute('data-action'), {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Notiflix.Notify.success("Data role berhasil diperbarui!", {
+                                    timeout: 3000
+                                });
+
+                                location.href = "{{ url('account/security/role') }}";
+
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure('Error:', error);
                             });
-
-                            location.href = "{{ url('account/security/role') }}";
-
-                        })
-                        .catch(error => {
-                            Notiflix.Notify.failure('Error:', error);
-                        });
+                    });
                 });
             });
-        });
-    </script>
+        </script>
+    @endcan
+
 @endpush

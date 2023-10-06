@@ -1,5 +1,7 @@
 @extends('layouts.admin.app')
 
+@section('title_page', 'Role List')
+
 @section('content')
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
@@ -89,15 +91,14 @@
                                                         @can('access-roleEdit')
                                                             <a href="{{ url('account/security/role/edit/' . $item->id) }}">
                                                                 <div class="text-warning mx-2 cursor-pointer">
-                                                                    <i class="fas fa-pen" title="Edit Siswa"></i>
+                                                                    <i class="fas fa-pen" title="Edit Role"></i>
                                                                 </div>
                                                             </a>
                                                         @endcan
                                                         @can('access-roleDelete')
                                                             <div class="text-danger mx-2 cursor-pointer">
                                                                 <i class="fas data-delete fa-trash-alt role-delete"
-                                                                    data-card-id="{{ $item->id }}"
-                                                                    title="Delete Siswa"></i>
+                                                                    data-card-id="{{ $item->id }}" title="Delete Role"></i>
                                                             </div>
                                                         @endcan
                                                     </div>
@@ -148,79 +149,86 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-
-    <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addForm = document.getElementById('addForm');
-            addForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const formData = new FormData(addForm);
-                const attributeData = {};
-                formData.forEach((value, key) => {
-                    attributeData[key] = value;
-                });
-
-                try {
-                    const response = await fetch(`/account/security/role/add`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(attributeData)
+    @can('access-roleAdd')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const addForm = document.getElementById('addForm');
+                addForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(addForm);
+                    const attributeData = {};
+                    formData.forEach((value, key) => {
+                        attributeData[key] = value;
                     });
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        const errorMessages = Object.values(errorData.errors).join('\n');
-                        Notiflix.Notify.failure(
-                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
-                    } else {
-                        Notiflix.Notify.success('Success: Role created successfully.');
-                        location.reload();
+                    try {
+                        const response = await fetch(`/account/security/role/add`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(attributeData)
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            const errorMessages = Object.values(errorData.errors).join('\n');
+                            Notiflix.Notify.failure(
+                                'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                        } else {
+                            Notiflix.Notify.success('Data role berhasil dibuat!');
+                            location.reload();
+                        }
+                    } catch (error) {
+                        Notiflix.Notify.failure('Error:',
+                            'An error occurred while processing the request.');
                     }
-                } catch (error) {
-                    Notiflix.Notify.failure('Error:',
-                        'An error occurred while processing the request.');
-                }
+                });
             });
-        });
-    </script>
+        </script>
+    @endcan
 
-    <script>
-        const deletePermission = document.querySelectorAll('.role-delete');
+    @can('access-roleDelete')
+        <script>
+            const deletePermission = document.querySelectorAll('.role-delete');
 
-        deletePermission.forEach(button => {
-            button.addEventListener('click', function() {
-                const cardId = button.dataset.cardId;
+            deletePermission.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardId = button.dataset.cardId;
 
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
-                    'Batal',
-                    function() {
-                        fetch(`/account/security/role/delete/${cardId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                Notiflix.Notify.success("Data role berhasil dihapus.", {
-                                    timeout: 3000
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            fetch(`/account/security/role/delete/${cardId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success("Data role berhasil dihapus!", {
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
                                 });
-                                location.reload();
-                            })
-                            .catch(error => {
-                                Notiflix.Notify.failure('Error:', error);
-                            });
-                    });
+                        });
+                });
             });
-        });
-    </script>
+        </script>
+    @endcan
 
-    <script>
-        $("#table-users").dataTable();
-    </script>
+
+    @can('access-roleList')
+        <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+
+        <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
+        <script>
+            $("#table-users").dataTable();
+        </script>
+    @endcan
 @endpush
