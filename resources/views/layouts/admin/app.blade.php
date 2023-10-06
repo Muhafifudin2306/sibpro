@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>SIBPRO</title>
+    <title> @yield('title_page') | SIBPRO</title>
     <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/notiflix/src/notiflix.css') }}">
@@ -37,7 +37,6 @@
         });
     </script>
     @stack('scripts')
-    <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script>
     <script src="{{ asset('assets/js/scripts.js') }}"></script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 </body>

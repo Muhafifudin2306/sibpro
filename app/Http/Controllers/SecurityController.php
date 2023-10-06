@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
-use App\Models\Permission;
-use App\Models\Role;
+//use App\Models\Permission;
+//use App\Models\Role;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Traits\HasPermissions;
+
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class SecurityController extends Controller
 {
@@ -145,26 +149,37 @@ class SecurityController extends Controller
     }
     public function updateRole(Request $request, $id)
     {
-        $roles = role::find($id);
+        $role = Role::find($id);
 
-        $roles->update([
-            "name" =>  $request->input('name'),
+        // Perbarui nama peran jika diperlukan
+        $role->update([
+            "name" => $request->input('name'),
         ]);
 
+        // Ambil ID izin yang dipilih dari input form
         $permissionIds = $request->input('permission_id');
 
-        $roles->permissions()->sync($permissionIds);
+        // Synchronize izin untuk peran tersebut
+        $role->permissions()->sync($permissionIds);
 
+        // Buat atau perbarui pemberitahuan jika diperlukan
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "mengedit data role" . " " . $roles->name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "mengedit data role" . " " . $role->name . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
+
+        // Berikan izin kepada peran tersebut (gunakan loop jika perlu)
+        foreach ($permissionIds as $permissionId) {
+            $permission = Permission::find($permissionId);
+            $role->givePermissionTo($permission);
+        }
+
         return response()->json([
-            'message' => 'Data inserted successfully',
-            'data' => $roles,
-        ], 201);
+            'message' => 'Data updated successfully',
+            'data' => $role,
+        ], 200);
     }
 }

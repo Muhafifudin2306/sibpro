@@ -18,6 +18,14 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('nis')->unique();
+            $table->string('gender')->nullable();
+            $table->unsignedBigInteger('class_id')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('class_id')->references('id')->on('student_classes')->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

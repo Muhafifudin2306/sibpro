@@ -37,7 +37,19 @@ Route::prefix('income')->group(function () {
 Route::prefix('account')->group(function () {
     Route::prefix('users')->group(function () {
         Route::group(['middleware' => ['can:access-userList']], function () {
-            Route::get('/', [App\Http\Controllers\ProfileController::class, 'users'])->name('users');
+            Route::get('/', [App\Http\Controllers\ProfileController::class, 'userList'])->name('usersList');
+        });
+        Route::group(['middleware' => ['can:access-userAdd']], function () {
+            Route::post('/add', [App\Http\Controllers\ProfileController::class, 'storeUser'])->name('storeUser');
+        });
+        Route::group(['middleware' => ['can:access-userDelete']], function () {
+            Route::delete('/delete/{id}', [App\Http\Controllers\ProfileController::class, 'destroyUser'])->name('deleteUser');
+        });
+        Route::group(['middleware' => ['can:access-userEdit']], function () {
+            Route::get('/edit/{id}', [App\Http\Controllers\ProfileController::class, 'editUser'])->name('editUser');
+        });
+        Route::group(['middleware' => ['can:access-userUpdate']], function () {
+            Route::post('/update/{id}', [App\Http\Controllers\ProfileController::class, 'updateUser'])->name('updateUser');
         });
     });
     Route::prefix('security')->group(function () {

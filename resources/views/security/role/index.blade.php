@@ -3,9 +3,6 @@
 @section('content')
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-        <link rel="stylesheet"
-            href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
     @endpush
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
@@ -152,11 +149,7 @@
 
 @push('scripts')
     <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script>
-        $("#table-users").dataTable();
-    </script>
+
     <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -225,5 +218,9 @@
                     });
             });
         });
+    </script>
+
+    <script>
+        $("#table-users").dataTable();
     </script>
 @endpush

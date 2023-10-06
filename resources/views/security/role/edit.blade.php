@@ -2,9 +2,6 @@
 
 @section('content')
     @push('styles')
-        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-        <link rel="stylesheet"
-            href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
     @endpush
     <div class="main-wrapper main-wrapper-1">

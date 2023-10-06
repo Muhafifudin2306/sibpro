@@ -25,6 +25,10 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'nis' => ['required'],
+            'class_id' => ['required'],
+            'category_id' => ['required'],
+            'gender' => ['required']
         ]);
     }
     protected function create(array $data)
@@ -33,6 +37,10 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'nis' => $data['nis'],
+            'class_id' => $data['class_id'],
+            'category_id' => $data['category_id'],
+            'gender' => $data['gender'],
         ]);
         $studentRole = Role::where('name', 'Student')->first();
         $user->assignRole($studentRole);

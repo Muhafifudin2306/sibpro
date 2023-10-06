@@ -29,6 +29,65 @@
                                         </span>
                                     @enderror
                                 </div>
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <label for="nis">{{ __('NIS') }} <span class="text-danger">*</span></label>
+                                        <input id="nis" type="text"
+                                            class="form-control @error('nis') is-invalid @enderror" name="nis"
+                                            value="{{ old('nis') }}" placeholder="992883" required autocomplete="nis"
+                                            autofocus>
+                                        @error('nis')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="gender">{{ __('Gender') }} <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="gender">
+                                            <option selected disabled>{{ __('-- Pilih Gender --') }}</option>
+                                            <option value="Laki-Laki">{{ __('Laki-Laki') }}</option>
+                                            <option value="Perempuan">{{ __('Perempuan') }}</option>
+                                        </select>
+                                        @error('gender')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <label for="nis">{{ __('Kelas') }} <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-control" name="class_id">
+                                            <option selected disabled>{{ __('-- Pilih Kelas --') }}</option>
+                                            @foreach ($classes as $item)
+                                                <option value="{{ $item->id }}">{{ $item->class_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('class_id')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="gender">{{ __('Kategori') }} <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-control" name="category_id">
+                                            <option selected disabled>{{ __('-- Pilih Kategori --') }}</option>
+                                            @foreach ($categories as $item)
+                                                <option value="{{ $item->id }}">{{ $item->category_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('category_id')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="email">{{ __('Email') }} <span class="text-danger">*</span></label>
                                     <input id="email" type="email"
@@ -83,7 +142,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="mt-5 text-center">
+                    <div class="pb-5 text-center">
                         {{ __('Sudah punya akun?') }} <a href="{{ url('/login') }}">{{ __('Login Sekarang') }}</a>
                     </div>
                 </div>
