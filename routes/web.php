@@ -91,10 +91,18 @@ Route::prefix('account')->group(function () {
 
 Route::prefix('setting')->group(function () {
     Route::prefix('year')->group(function () {
-        Route::get('/', [App\Http\Controllers\YearController::class, 'index'])->name('year');
-        Route::post('/add', [App\Http\Controllers\YearController::class, 'store'])->name('storeYear');
-        Route::post('/update/{id}', [App\Http\Controllers\YearController::class, 'update'])->name('updateYear');
-        Route::delete('/delete/{id}', [App\Http\Controllers\YearController::class, 'destroy'])->name('deleteYear');
+        Route::group(['middleware' => ['can:access-yearList']], function () {
+            Route::get('/', [App\Http\Controllers\YearController::class, 'index'])->name('year');
+        });
+        Route::group(['middleware' => ['can:access-yearDelete']], function () {
+            Route::delete('/delete/{id}', [App\Http\Controllers\YearController::class, 'destroy'])->name('deleteYear');
+        });
+        Route::group(['middleware' => ['can:access-yearAdd']], function () {
+            Route::post('/add', [App\Http\Controllers\YearController::class, 'store'])->name('storeYear');
+        });
+        Route::group(['middleware' => ['can:access-yearUpdate']], function () {
+            Route::post('/update/{id}', [App\Http\Controllers\YearController::class, 'update'])->name('updateYear');
+        });
     });
 
     Route::prefix('attribute')->group(function () {

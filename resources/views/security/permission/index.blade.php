@@ -243,7 +243,7 @@
         </script>
     @endcan
 
-    @can('access-permissionUpdate', $post)
+    @can('access-permissionUpdate')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const updateForms = document.querySelectorAll('.update-form');

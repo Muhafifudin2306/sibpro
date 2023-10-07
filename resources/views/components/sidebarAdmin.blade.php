@@ -85,8 +85,10 @@
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i>
                         <span>General Setting</span></a>
                     <ul class="dropdown-menu">
-                        <li class="{{ Request::segment(2) === 'year' ? 'active' : '' }}"><a
-                                href="{{ url('/setting/year') }}">Tahun Aktif</a></li>
+                        @can('access-yearList')
+                            <li class="{{ Request::segment(2) === 'year' ? 'active' : '' }}"><a
+                                    href="{{ url('/setting/year') }}">Tahun Aktif</a></li>
+                        @endcan
                     </ul>
                     <ul class="dropdown-menu">
                         <li class="{{ Request::segment(2) === 'attribute' ? 'active' : '' }}"><a
