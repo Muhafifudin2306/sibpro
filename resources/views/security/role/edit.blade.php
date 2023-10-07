@@ -15,7 +15,7 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Edit User') }}</h1>
+                    <h1>{{ __('Edit Role') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
                         <div class="breadcrumb-item">{{ __('Account') }}</div>
@@ -26,7 +26,7 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h4>{{ __('Edit User') }}</h4>
+                            <h4>{{ __('Edit Role') }}</h4>
                             <a href="{{ url('/account/security/role') }}"> {{ __('Close') }} </a>
                         </div>
                         <div class="card-body pb-5">
