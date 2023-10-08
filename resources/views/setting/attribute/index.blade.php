@@ -1,29 +1,27 @@
 @extends('layouts.admin.app')
 
+@section('title_page', 'Attribute List');
+
 @section('content')
-    <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
+    @endpush
 
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
         <x-sidebarAdmin></x-sidebarAdmin>
-
-        <!-- Main Content -->
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Data Atribut') }}</h1>
+                    <h1>{{ __('Kelas') }}</h1>
                     <div class="section-header-breadcrumb">
-                        <div class="breadcrumb-item active">Dashboard</div>
-                        <div class="breadcrumb-item active">General Setting</div>
-                        <div class="breadcrumb-item">Atribut</div>
+                        <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
+                        <div class="breadcrumb-item">{{ __('General Setting') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Kelas') }}</div>
                     </div>
                 </div>
-
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
                         <h2 class="section-title">Data Kategori Atribut</h2>
@@ -38,13 +36,10 @@
                         </a>
                     </div>
                 </div>
-
-
-
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>{{ __('Tabel Kategori Atribut') }}</h4>
+                            <h4>{{ __('Tabel Kelas') }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -54,7 +49,7 @@
                                             <th class="text-center">
                                                 No
                                             </th>
-                                            <th>Nama Kategori</th>
+                                            <th>{{ __('Nama Kategori') }}</th>
                                             <th>Atribut Daftar Ulang</th>
                                             <th>Atribut SPP</th>
                                             <th>Action</th>
@@ -215,162 +210,175 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center pb-3">
-                    <div class="title-content">
-                        <h2 class="section-title">Data Atribut SPP</h2>
-                        <p class="section-lead">
-                            Pilih dan Tambah Data Atribut SPP
-                        </p>
-                    </div>
-                    <div class="action-content">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#creditModal">+ Tambah
-                            Data</button>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Atribut SPP') }}</h4>
+                @can('access-creditList')
+                    <div class="d-flex justify-content-between align-items-center pb-3">
+                        <div class="title-content">
+                            <h2 class="section-title">{{ __('Data Atribut SPP') }}</h2>
+                            <p class="section-lead">
+                                {{ __('Pilih dan Tambah Data Atribut SPP') }}
+                            </p>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-credit">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">
-                                                No
-                                            </th>
-                                            <th>Nama Atribut</th>
-                                            <th>Harga Atribut</th>
-                                            <th>Semester</th>
-                                            <th>Diubah pada</th>
-                                            <th>Petugas</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($credits as $item)
-                                            <tr>
-                                                <td class="text-center">
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->credit_name }}
-                                                </td>
-                                                <td>
-                                                    Rp{{ number_format($item->credit_price, 0, ',', '.') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->semester }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->users->name }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                            data-target="#creditEdit{{ $item->id }}">
-                                                            <i class="fas fa-pen" title="Edit Harga"></i>
-                                                        </div>
-                                                        <div class="text-danger mx-2 cursor-pointer">
-                                                            <i class="fas credit-delete fa-trash-alt"
-                                                                data-card-id="{{ $item->id }}" title="delete"></i>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                        @can('access-creditAdd')
+                            <div class="action-content">
+                                <button class="btn btn-primary" data-toggle="modal"
+                                    data-target="#creditModal">{{ __('+ Tambah Data') }}</button>
+                            </div>
+                        @endcan
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{ __('Tabel Atribut SPP') }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-credit">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th class="text-center">
+                                                    {{ __('No') }}
+                                                </th>
+                                                <th>{{ __('Nama Atribut') }}</th>
+                                                <th>{{ __('Harga Atribut') }}</th>
+                                                <th>{{ __('Semester') }}</th>
+                                                <th>{{ __('Diubah pada') }}</th>
+                                                <th>{{ __('Petugas') }}</th>
+                                                <th>{{ __('Action') }}</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            @foreach ($credits as $item)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        {{ $no++ }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $item->credit_name }}
+                                                    </td>
+                                                    <td>
+                                                        Rp{{ number_format($item->credit_price, 0, ',', '.') }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->semester }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->updated_at->format('d F Y') }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->users->name }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center">
+                                                            @can('access-creditUpdate')
+                                                                <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                                    data-target="#creditEdit{{ $item->id }}">
+                                                                    <i class="fas fa-pen" title="Edit Credit"></i>
+                                                                </div>
+                                                            @endcan
+                                                            @can('access-creditDelete')
+                                                                <div class="text-danger mx-2 cursor-pointer">
+                                                                    <i class="fas credit-delete fa-trash-alt"
+                                                                        data-card-id="{{ $item->id }}"
+                                                                        title="Delete Credit"></i>
+                                                                </div>
+                                                            @endcan
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endcan
 
-                <div class="d-flex justify-content-between align-items-center pb-3">
-                    <div class="title-content">
-                        <h2 class="section-title">Data Kategori</h2>
-                        <p class="section-lead">
-                            Pilih dan Tambah Data Kategori
-                        </p>
-                    </div>
-                    <div class="action-content">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#categoryModal">+ Tambah
-                            Data</button>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Kategori') }}</h4>
+                @can('access-categoryList')
+                    <div class="d-flex justify-content-between align-items-center pb-3">
+                        <div class="title-content">
+                            <h2 class="section-title">{{ __('Data Kategori') }}</h2>
+                            <p class="section-lead">
+                                {{ __('Pilih dan Tambah Data Kategori') }}
+                            </p>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-category">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">
-                                                No
-                                            </th>
-                                            <th>Nama Kategori</th>
-                                            <th>Diubah pada</th>
-                                            <th>Petugas</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($categories as $item)
-                                            <tr>
-                                                <td class="text-center">
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->category_name }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->users->name }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                            data-target="#categoryModal{{ $item->id }}">
-                                                            <i class="fas fa-pen" title="Edit"></i>
-                                                        </div>
-                                                        <div class="text-danger mx-2 cursor-pointer">
-                                                            <i class="fas category-delete fa-trash-alt"
-                                                                data-card-id="{{ $item->id }}" title="Delete"></i>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                        @can('access-categoryAdd')
+                            <div class="action-content">
+                                <button class="btn btn-primary" data-toggle="modal"
+                                    data-target="#categoryModal">{{ __('+ Tambah Data') }}</button>
+                            </div>
+                        @endcan
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{ __('Tabel Kategori') }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-category">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th class="text-center">
+                                                    {{ __('No') }}
+                                                </th>
+                                                <th>{{ __('Nama Kategori') }}</th>
+                                                <th>{{ __('Diubah pada') }}</th>
+                                                <th>{{ __('Petugas') }}</th>
+                                                <th>{{ __('Action') }}</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            @foreach ($categories as $item)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        {{ $no++ }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->category_name }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->updated_at->format('d F Y') }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->users->name }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center">
+                                                            @can('access-categoryUpdate')
+                                                                <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                                    data-target="#categoryModal{{ $item->id }}">
+                                                                    <i class="fas fa-pen" title="Edit Category"></i>
+                                                                </div>
+                                                            @endcan
+                                                            @can('access-categoryDelete')
+                                                                <div class="text-danger mx-2 cursor-pointer">
+                                                                    <i class="fas category-delete fa-trash-alt"
+                                                                        data-card-id="{{ $item->id }}" title="Delete"></i>
+                                                                </div>
+                                                            @endcan
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endcan
             </section>
         </div>
         <footer class="main-footer">
             <div class="footer-left">
-                Development by Muhammad Afifudin</a>
-            </div>
-            <div class="footer-right">
-
+                {{ __('Development by Muhammad Afifudin') }}</a>
             </div>
         </footer>
     </div>
@@ -405,70 +413,79 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="creditModal">
-        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Atribut SPP</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="creditForm">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="credit_name">Nama Atribut</label>
-                            <input type="text" class="form-control" name="credit_name" id="credit_name"
-                                placeholder="SPP Juni" autofocus>
-                        </div>
-                        <div class="form-group">
-                            <label for="credit_price">Harga (Tulis : 100000) </label>
-                            <input type="number" class="form-control" name="credit_price" id="credit_price"
-                                placeholder="80000">
-                        </div>
-                        <div class="form-group">
-                            <label>Semester</label>
-                            <select class="form-control select2" name="semester">
-                                <option>-- Pilih Semester --</option>
-                                <option value="Genap">Genap</option>
-                                <option value="Gasal">Gasal</option>
-                            </select>
-                        </div>
 
+    @can('access-creditAdd')
+        <div class="modal fade" tabindex="-1" role="dialog" id="creditModal">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Tambah Data Atribut SPP') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="modal-footer bg-whitesmoke br">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="categoryModal">
-        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Kategori</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="categoryForm">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="category_name">Nama Kategori</label>
-                            <input type="text" class="form-control" name="category_name" id="category_name"
-                                placeholder="Reguler" autofocus>
+                    <form id="creditForm">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="credit_name">{{ __('Nama Atribut') }}</label>
+                                <input type="text" class="form-control" name="credit_name" id="credit_name"
+                                    placeholder="SPP Juni" autofocus>
+                            </div>
+                            <div class="form-group">
+                                <label for="credit_price">{{ __('Harga (Tulis : 100000)') }} </label>
+                                <input type="number" class="form-control" name="credit_price" id="credit_price"
+                                    placeholder="80000">
+                            </div>
+                            <div class="form-group">
+                                <label>{{ __('Semester') }}</label>
+                                <select class="form-control select2" name="semester">
+                                    <option>{{ __('-- Pilih Semester --') }}</option>
+                                    <option value="Genap">{{ __('Genap') }}</option>
+                                    <option value="Gasal">{{ __('Gasal') }}</option>
+                                </select>
+                            </div>
+
                         </div>
-                    </div>
-                    <div class="modal-footer bg-whitesmoke br">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                    </div>
-                </form>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    @endcan
+
+    @can('access-categoryAdd')
+        <div class="modal fade" tabindex="-1" role="dialog" id="categoryModal">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Tambah Data Kategori') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="categoryForm">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="category_name">{{ __('Nama Kategori') }}</label>
+                                <input type="text" class="form-control" name="category_name" id="category_name"
+                                    placeholder="Reguler" autofocus>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endcan
+
     @foreach ($attributes as $item)
         <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal{{ $item->id }}">
             <div class="modal-dialog modal-md modal-dialog-centered" role="document">
@@ -504,83 +521,89 @@
         </div>
     @endforeach
 
-    @foreach ($credits as $item)
-        <div class="modal fade" tabindex="-1" role="dialog" id="creditEdit{{ $item->id }}">
-            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Update Data Attribute SPP</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+    @can('access-creditUpdate')
+        @foreach ($credits as $item)
+            <div class="modal fade" tabindex="-1" role="dialog" id="creditEdit{{ $item->id }}">
+                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ __('Update Data Attribute SPP') }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form class="update-form" data-action="{{ url('/setting/credit/update/' . $item->id) }} }}"
+                            method="POST">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="credit_name">{{ __('Nama Atribut') }}</label>
+                                    <input type="text" class="form-control" name="credit_name" id="credit_name"
+                                        value="{{ $item->credit_name }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="credit_price">{{ __('Harga') }}</label>
+                                    <input type="number" class="form-control" name="credit_price" id="credit_price"
+                                        value="{{ round($item->credit_price) }}" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label>Semester</label>
+                                    <select class="form-control select2" name="semester">
+                                        @if ($item->semester == 'Genap')
+                                            <option value="Genap" selected>{{ __('Genap') }}</option>
+                                            <option value="Gasal">{{ __('Gasal') }}</option>
+                                        @elseif($item->semester == 'Gasal')
+                                            <option value="Genap">{{ __('Genap') }}</option>
+                                            <option value="Gasal" selected>{{ __('Gasal') }}</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-whitesmoke br">
+                                <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                            </div>
+                        </form>
                     </div>
-                    <form class="update-form" data-action="{{ url('/setting/credit/update/' . $item->id) }} }}"
-                        method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="credit_name">Nama Atribut</label>
-                                <input type="text" class="form-control" name="credit_name" id="credit_name"
-                                    value="{{ $item->credit_name }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="credit_price">Harga </label>
-                                <input type="number" class="form-control" name="credit_price" id="credit_price"
-                                    value="{{ round($item->credit_price) }}" autofocus>
-                            </div>
-                            <div class="form-group">
-                                <label>Semester</label>
-                                <select class="form-control select2" name="semester">
-                                    @if ($item->semester == 'Genap')
-                                        <option value="Genap" selected>Genap</option>
-                                        <option value="Gasal">Gasal</option>
-                                    @elseif($item->semester == 'Gasal')
-                                        <option value="Genap">Genap</option>
-                                        <option value="Gasal" selected>Gasal</option>
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer bg-whitesmoke br">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
-                        </div>
-                    </form>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    @endcan
 
-    {{-- Category --}}
-    @foreach ($categories as $item)
-        <div class="modal fade" tabindex="-1" role="dialog" id="categoryModal{{ $item->id }}">
-            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Update Data Kategori</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form class="update-form" data-action="{{ url('/setting/category/update/' . $item->id) }} }}"
-                        method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="category_name">Nama Kategori</label>
-                                <input type="text" class="form-control" name="category_name" id="category_name"
-                                    value="{{ $item->category_name }}" autofocus>
+    @can('access-categoryUpdate')
+        @foreach ($categories as $item)
+            <div class="modal fade" tabindex="-1" role="dialog" id="categoryModal{{ $item->id }}">
+                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ __('Update Data Kategori') }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form class="update-form" data-action="{{ url('/setting/category/update/' . $item->id) }} }}"
+                            method="POST">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="category_name">{{ __('Nama Kategori') }}</label>
+                                    <input type="text" class="form-control" name="category_name" id="category_name"
+                                        value="{{ $item->category_name }}" autofocus="">
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer bg-whitesmoke br">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
-                        </div>
-                    </form>
+                            <div class="modal-footer bg-whitesmoke br">
+                                <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    @endcan
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if (session('success'))
@@ -593,38 +616,6 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const updateForms = document.querySelectorAll('.update-form');
-
-            updateForms.forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-
-                    const formData = new FormData(form);
-
-                    fetch(form.getAttribute('data-action'), {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            Notiflix.Notify.success("Data Berhasil Diperbarui", {
-                                timeout: 3000
-                            });
-
-                            location.reload();
-                        })
-                        .catch(error => {
-                            Notiflix.Notify.failure('Error:', error);
-                        });
-                });
-            });
-        });
-
-
         document.addEventListener('DOMContentLoaded', function() {
             const attributeForm = document.getElementById('attributeForm');
             attributeForm.addEventListener('submit', async function(event) {
@@ -661,41 +652,7 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const creditForm = document.getElementById('creditForm');
-            creditForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const formData = new FormData(creditForm);
-                const creditData = {};
-                formData.forEach((value, key) => {
-                    creditData[key] = value;
-                });
 
-                try {
-                    const response = await fetch(`/setting/credit/add`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(creditData)
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        const errorMessages = Object.values(errorData.errors).join('\n');
-                        Notiflix.Notify.failure(
-                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
-                    } else {
-                        Notiflix.Notify.success('Success:', 'credit created successfully.');
-                        location.reload();
-                    }
-                } catch (error) {
-                    Notiflix.Notify.failure('Error:',
-                        'An error occurred while processing the request.');
-                }
-            });
-        });
 
         const deleteAttribute = document.querySelectorAll('.attribute-delete');
 
@@ -730,126 +687,197 @@
                     });
             });
         });
-
-        const deleteCredit = document.querySelectorAll('.credit-delete');
-
-        // Tambahkan event listener untuk setiap tombol "Hapus Data"
-        deleteCredit.forEach(button => {
-            button.addEventListener('click', function() {
-                const cardId = button.dataset.cardId;
-
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
-                    'Batal',
-                    function() {
-                        fetch(`/setting/credit/delete/${cardId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                // Tampilkan notifikasi sukses menggunakan Notiflix
-                                Notiflix.Notify.success("Data Credit berhasil dihapus.", {
-                                    timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
-                                });
-
-                                // Refresh halaman saat ini
-                                location.reload();
-                            })
-                            .catch(error => {
-                                // Tampilkan notifikasi error menggunakan Notiflix
-                                Notiflix.Notify.failure('Error:', error);
-                            });
-                    });
-            });
-        });
     </script>
 
     {{-- Category Action --}}
+
+@endsection
+
+@push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Tangkap form input tahun
-            const categoryForm = document.getElementById('categoryForm');
+            const updateForms = document.querySelectorAll('.update-form');
 
-            // Tambahkan event listener untuk saat form disubmit
-            categoryForm.addEventListener('submit', function(event) {
-                event.preventDefault();
+            updateForms.forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
 
-                // Ambil data dari form input tahun
-                const formData = new FormData(categoryForm);
-                const yearData = {};
-                formData.forEach((value, key) => {
-                    yearData[key] = value;
-                });
+                    const formData = new FormData(form);
 
-                // Kirim permintaan AJAX ke endpoint untuk menyimpan data tahun baru
-                fetch(`/setting/category/add`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(yearData)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Tampilkan notifikasi sukses menggunakan Notiflix
-                        Notiflix.Notify.success("Data Atribut berhasil ditambahkan", {
-                            timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
-                        });
-
-                        // Refresh halaman saat ini
-                        location.reload();
-                    })
-                    .catch(error => {
-                        // Tampilkan notifikasi error menggunakan Notiflix
-                        Notiflix.Notify.failure('Error:', error);
-                    });
-            });
-        });
-
-        const deleteCategory = document.querySelectorAll('.category-delete');
-
-        // Tambahkan event listener untuk setiap tombol "Hapus Data"
-        deleteCategory.forEach(button => {
-            button.addEventListener('click', function() {
-                const cardId = button.dataset.cardId;
-
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
-                    'Batal',
-                    function() {
-                        fetch(`/setting/category/delete/${cardId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                // Tampilkan notifikasi sukses menggunakan Notiflix
-                                Notiflix.Notify.success("Data Kategori berhasil dihapus.", {
-                                    timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
-                                });
-
-                                // Refresh halaman saat ini
-                                location.reload();
-                            })
-                            .catch(error => {
-                                // Tampilkan notifikasi error menggunakan Notiflix
-                                Notiflix.Notify.failure('Error:', error);
+                    fetch(form.getAttribute('data-action'), {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Notiflix.Notify.success("Data berhasil diperbarui!", {
+                                timeout: 3000
                             });
-                    });
+
+                            location.reload();
+                        })
+                        .catch(error => {
+                            Notiflix.Notify.failure('Error:', error);
+                        });
+                });
             });
         });
     </script>
-@endsection
 
-@section('script')
+    @can('access-categoryAdd')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const categoryForm = document.getElementById('categoryForm');
+                categoryForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    const formData = new FormData(categoryForm);
+                    const yearData = {};
+                    formData.forEach((value, key) => {
+                        yearData[key] = value;
+                    });
+
+                    fetch(`/setting/category/add`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(yearData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Notiflix.Notify.success("Data kategori berhasil dibuat!", {
+                                timeout: 3000
+                            });
+
+                            location.reload();
+                        })
+                        .catch(error => {
+                            Notiflix.Notify.failure('Error:', error);
+                        });
+                });
+            });
+        </script>
+    @endcan
+
+    @can('access-categoryDelete')
+        <script>
+            const deleteCategory = document.querySelectorAll('.category-delete');
+
+            deleteCategory.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardId = button.dataset.cardId;
+
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            fetch(`/setting/category/delete/${cardId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success("Data kategori berhasil dihapus!", {
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
+                                });
+                        });
+                });
+            });
+        </script>
+    @endcan
+
+    @can('access-creditAdd')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const creditForm = document.getElementById('creditForm');
+                creditForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(creditForm);
+                    const creditData = {};
+                    formData.forEach((value, key) => {
+                        creditData[key] = value;
+                    });
+
+                    try {
+                        const response = await fetch(`/setting/credit/add`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(creditData)
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            const errorMessages = Object.values(errorData.errors).join('\n');
+                            Notiflix.Notify.failure(
+                                'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                        } else {
+                            Notiflix.Notify.success('Data atribut SPP berhasil dibuat!');
+                            location.reload();
+                        }
+                    } catch (error) {
+                        Notiflix.Notify.failure('Error:',
+                            'An error occurred while processing the request.');
+                    }
+                });
+            });
+        </script>
+    @endcan
+
+    @can('access-creditDelete')
+        <script>
+            const deleteCredit = document.querySelectorAll('.credit-delete');
+
+            deleteCredit.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardId = button.dataset.cardId;
+
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            fetch(`/setting/credit/delete/${cardId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success("Data atribut SPP berhasil dihapus!", {
+                                        timeout: 3000
+                                    });
+
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
+                                });
+                        });
+                });
+            });
+        </script>
+    @endcan
+
+
     <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
     <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
-@endsection
+
+    <script>
+        $("#table-relation").dataTable();
+        $("#table-category").dataTable();
+        $("#table-credit").dataTable();
+    </script>
+@endpush

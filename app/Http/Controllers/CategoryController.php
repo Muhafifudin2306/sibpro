@@ -12,16 +12,13 @@ class CategoryController extends Controller
 {
     public function __construct()
     {
-        // Tambahkan middleware autentikasi ke metode 'store'
-        $this->middleware('auth')->only('store');
+        $this->middleware('auth');
     }
 
     public function store(Request $request)
     {
-        // Dapatkan ID tahun aktif dari tabel Year
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-        // Simpan data atribut untuk tahun aktif
         $categories = Category::create([
             'category_name' => $request->input('category_name'),
             'user_id' => Auth::user()->id
@@ -77,6 +74,6 @@ class CategoryController extends Controller
         return response()->json([
             'message' => 'Data inserted successfully',
             'data' => $category,
-        ], 201); // 201 updated
+        ], 201);
     }
 }

@@ -272,10 +272,10 @@
                 });
             </script>
         @endcan
-    @endpush
 
-    @can('access-classList')
-        <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-        <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
-    @endcan
+        @can('access-classList')
+            <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+            <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
+        @endcan
+    @endpush
 @endsection

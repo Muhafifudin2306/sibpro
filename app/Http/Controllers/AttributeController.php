@@ -15,41 +15,23 @@ class AttributeController extends Controller
 {
     public function __construct()
     {
-        // Tambahkan middleware autentikasi ke metode 'store'
-        $this->middleware('auth')->only('store');
+        $this->middleware('auth');
     }
 
     public function index()
     {
-        // ID from active year
         $activeYearId = Year::where('year_status', 'active')->value('id');
-
-        // Get Data Attribute
         $attributes = Attribute::orderBy("updated_at", "DESC")->get();
-
-        // Get Data Category
         $categories = Category::orderBy("updated_at", "DESC")->get();
-
-        // Get Data Credit
         $credits = Credit::orderBy("updated_at", "DESC")->get();
-
-        // Get Data Category - Attribute Relation
         $categoriesRelation = Category::has("attributes")->orderBy("updated_at", "DESC")->get();
-
-        // Get Data Notification
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
-
-        // Parsing data to view
         return view('setting.attribute.index', compact('credits', 'attributes', 'categories', 'notifications', 'categoriesRelation'));
     }
 
-    // Attribute Control Start
     public function store(Request $request)
     {
-        // ID from active year
         $activeYearId = Year::where('year_status', 'active')->value('id');
-
-        // Create data attribute
         $validator = Validator::make($request->all(), [
             'attribute_name' => 'required|unique:attributes,attribute_name,null',
             'attribute_price' => 'required'
@@ -65,7 +47,6 @@ class AttributeController extends Controller
             'user_id' => Auth::user()->id
         ]);
 
-        // Create data notification
         $years = Year::find($activeYearId);
 
         Notification::create([
@@ -120,11 +101,9 @@ class AttributeController extends Controller
 
         return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
     }
-    // Attribute Control End
 
     public function add()
     {
-        // Dapatkan ID tahun yang aktif
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $categories = Category::orderBy("updated_at", "DESC")->get();
@@ -163,8 +142,6 @@ class AttributeController extends Controller
     {
         try {
             $category = Category::findOrFail($id);
-
-            // Menghapus semua relasi atribut dari kategori
             $category->attributes()->detach();
             $category->credits()->detach();
 

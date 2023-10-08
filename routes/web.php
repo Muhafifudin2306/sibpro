@@ -116,9 +116,15 @@ Route::prefix('setting')->group(function () {
     });
 
     Route::prefix('category')->group(function () {
-        Route::post('/add', [App\Http\Controllers\CategoryController::class, 'store'])->name('storeCategory');
-        Route::post('/update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('updateCategory');
-        Route::delete('/delete/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('deleteCategory');
+        Route::group(['middleware' => ['can:access-categoryAdd']], function () {
+            Route::post('/add', [App\Http\Controllers\CategoryController::class, 'store'])->name('storeCategory');
+        });
+        Route::group(['middleware' => ['can:access-categoryDelete']], function () {
+            Route::delete('/delete/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('deleteCategory');
+        });
+        Route::group(['middleware' => ['can:access-categoryUpdate']], function () {
+            Route::post('/update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('updateCategory');
+        });
     });
 
     Route::prefix('class')->group(function () {
@@ -147,8 +153,14 @@ Route::prefix('setting')->group(function () {
     });
 
     Route::prefix('credit')->group(function () {
-        Route::post('/add', [App\Http\Controllers\CreditController::class, 'store'])->name('storeCredit');
-        Route::post('/update/{id}', [App\Http\Controllers\CreditController::class, 'update'])->name('updateCredit');
-        Route::delete('/delete/{id}', [App\Http\Controllers\CreditController::class, 'destroy'])->name('deleteCredit');
+        Route::group(['middleware' => ['can:access-creditAdd']], function () {
+            Route::post('/add', [App\Http\Controllers\CreditController::class, 'store'])->name('storeCredit');
+        });
+        Route::group(['middleware' => ['can:access-creditDelete']], function () {
+            Route::delete('/delete/{id}', [App\Http\Controllers\CreditController::class, 'destroy'])->name('deleteCredit');
+        });
+        Route::group(['middleware' => ['can:access-creditUpdate']], function () {
+            Route::post('/update/{id}', [App\Http\Controllers\CreditController::class, 'update'])->name('updateCredit');
+        });
     });
 });
