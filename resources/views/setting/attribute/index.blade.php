@@ -1,11 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title_page', 'Attribute List');
+@section('title_page', 'Package List')
 
 @section('content')
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
     @endpush
 
     <div class="main-wrapper main-wrapper-1">
@@ -15,200 +14,191 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Kelas') }}</h1>
+                    <h1>{{ __('Paket') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
                         <div class="breadcrumb-item">{{ __('General Setting') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Kelas') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Paket') }}</div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center pb-3">
-                    <div class="title-content">
-                        <h2 class="section-title">Data Kategori Atribut</h2>
-                        <p class="section-lead">
-                            Pilih dan Tambah Data Kategori Atribut
-                        </p>
-                    </div>
-                    <div class="action-content">
-                        <a href="{{ url('/setting/attribute/addRelation') }}">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#relationModal">+ Tambah
-                                Data</button>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Kelas') }}</h4>
+                @can('access-packageList')
+                    <div class="d-flex justify-content-between align-items-center pb-3">
+                        <div class="title-content">
+                            <h2 class="section-title">{{ __('Data Paket') }}</h2>
+                            <p class="section-lead">
+                                {{ __('Pilih dan Tambah Data Paket') }}
+                            </p>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-relation">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">
-                                                No
-                                            </th>
-                                            <th>{{ __('Nama Kategori') }}</th>
-                                            <th>Atribut Daftar Ulang</th>
-                                            <th>Atribut SPP</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($categoriesRelation as $item)
-                                            <tr>
-                                                <td class="text-center">
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->category_name }}
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="d-flex flex-wrap">
-                                                        @foreach ($item->attributes as $attribute)
-                                                            <div class="mb-2 mx-1">
-                                                                <button
-                                                                    class="btn btn-primary">{{ $attribute->attribute_name }}</button>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="d-flex flex-wrap">
-                                                        @foreach ($item->credits as $credit)
-                                                            <div class="mb-2 mx-1">
-                                                                <button
-                                                                    class="btn btn-warning">{{ $credit->credit_name }}</button>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        {{-- <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                            data-target="#categoryModal{{ $item->id }}">
-                                                            <i class="fas fa-pen" title="Edit"></i>
-                                                        </div> --}}
-                                                        <div class="text-danger mx-2 cursor-pointer">
-                                                            <form id="form-{{ $item->id }}"
-                                                                action="{{ url('/setting/attribute/deleteRelation', $item->id) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <i onclick="deleteRelation(event)" class="fas fa-trash-alt"
-                                                                    title="Delete"></i>
-                                                            </form>
-                                                        </div>
-                                                        <script>
-                                                            function deleteRelation(event) {
-                                                                event.preventDefault(); // Mencegah pengiriman form
-
-                                                                var form = event.currentTarget.parentElement; // Mengakses elemen form terkait
-                                                                var itemId = form.id.split('-')[1]; // Mendapatkan ID item dari ID form
-
-                                                                Notiflix.Confirm.show(
-                                                                    'Konfirmasi Hapus',
-                                                                    'Apakah Anda yakin ingin menghapus atribut ini?',
-                                                                    'Ya, Hapus',
-                                                                    'Batal',
-                                                                    function() {
-                                                                        // Lanjutkan dengan pengiriman form jika pengguna setuju
-                                                                        document.getElementById("form-" + itemId).submit();
-                                                                    }
-                                                                );
-                                                            }
-                                                        </script>
-
-                                                    </div>
-                                                </td>
+                        <div class="action-content">
+                            @can('access-packageAdd')
+                                <a href="{{ url('/setting/packages/add') }}">
+                                    <button class="btn btn-primary" data-toggle="modal"
+                                        data-target="#relationModal">{{ __('+ Tambah
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Data') }}</button>
+                                </a>
+                            @endcan
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{ __('Tabel Paket') }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-relation">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th class="text-center">
+                                                    {{ __('No') }}
+                                                </th>
+                                                <th>{{ __('Nama Paket') }}</th>
+                                                <th>{{ __('Atribut Daftar Ulang') }}</th>
+                                                <th>{{ __('Atribut SPP') }}</th>
+                                                <th>{{ __('Action') }}</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            @foreach ($categoriesRelation as $item)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        {{ $no++ }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->category_name }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="d-flex flex-wrap">
+                                                            @foreach ($item->attributes as $attribute)
+                                                                <div class="mb-2 mx-1">
+                                                                    <button
+                                                                        class="btn btn-primary">{{ $attribute->attribute_name }}</button>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="d-flex flex-wrap">
+                                                            @foreach ($item->credits as $credit)
+                                                                <div class="mb-2 mx-1">
+                                                                    <button
+                                                                        class="btn btn-warning">{{ $credit->credit_name }}</button>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center">
+                                                            @can('access-packageEdit')
+                                                                <a href="{{ url('setting/packages/edit/' . $item->id) }}">
+                                                                    <div class="text-warning mx-2 cursor-pointer">
+                                                                        <i class="fas fa-pen" title="Edit"></i>
+                                                                    </div>
+                                                                </a>
+                                                            @endcan
+                                                            @can('access-packageDelete')
+                                                                <div class="text-danger mx-2 cursor-pointer">
+                                                                    <i class="fas package-delete fa-trash-alt"
+                                                                        data-card-id="{{ $item->id }}" title="Delete"></i>
+                                                                </div>
+                                                            @endcan
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endcan
 
-                <div class="d-flex justify-content-between align-items-center pb-3">
-                    <div class="title-content">
-                        <h2 class="section-title">Data Atribut Daftar Ulang</h2>
-                        <p class="section-lead">
-                            Pilih dan Tambah Data Atribut Daftar Ulang
-                        </p>
-                    </div>
-                    <div class="action-content">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">+ Tambah
-                            Data</button>
-                    </div>
-                </div>
-
-
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Atribut Daftar Ulang') }}</h4>
+                @can('access-attributeList')
+                    <div class="d-flex justify-content-between align-items-center pb-3">
+                        <div class="title-content">
+                            <h2 class="section-title">{{ __('Data Atribut Daftar Ulang') }}</h2>
+                            <p class="section-lead">
+                                {{ __('Pilih dan Tambah Data Atribut Daftar Ulang') }}
+                            </p>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-tagihan-vendor">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">
-                                                No
-                                            </th>
-                                            <th>Nama Atribut</th>
-                                            <th>Harga Atribut</th>
-                                            <th>Diubah pada</th>
-                                            <th>Petugas</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($attributes as $item)
-                                            <tr>
-                                                <td class="text-center">
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->attribute_name }}
-                                                </td>
-                                                <td>
-                                                    Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->users->name }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                            data-target="#exampleModal{{ $item->id }}">
-                                                            <i class="fas fa-pen" title="Edit Harga"></i>
-                                                        </div>
-                                                        <div class="text-danger mx-2 cursor-pointer">
-                                                            <i class="fas attribute-delete fa-trash-alt"
-                                                                data-card-id="{{ $item->id }}" title="delete"></i>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                        @can('access-attributeAdd')
+                            <div class="action-content">
+                                <button class="btn btn-primary" data-toggle="modal"
+                                    data-target="#attributeModal">{{ __('+ Tambah Data') }}</button>
+                            </div>
+                        @endcan
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{ __('Tabel Atribut Daftar Ulang') }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-attribute">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th class="text-center">
+                                                    {{ __('No') }}
+                                                </th>
+                                                <th>{{ __('Nama Atribut') }}</th>
+                                                <th>{{ __('Harga Atribut') }}</th>
+                                                <th>{{ __('Diubah pada') }}</th>
+                                                <th>{{ __('Petugas') }}</th>
+                                                <th>{{ __('Action') }}</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            @foreach ($attributes as $item)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        {{ $no++ }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $item->attribute_name }}
+                                                    </td>
+                                                    <td>
+                                                        Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->updated_at->format('d F Y') }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $item->users->name }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center">
+                                                            @can('access-attributeUpdate')
+                                                                <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                                    data-target="#exampleModal{{ $item->id }}">
+                                                                    <i class="fas fa-pen" title="Edit Atribut"></i>
+                                                                </div>
+                                                            @endcan
+                                                            @can('access-attributeDelete')
+                                                                <div class="text-danger mx-2 cursor-pointer">
+                                                                    <i class="fas attribute-delete fa-trash-alt"
+                                                                        data-card-id="{{ $item->id }}" title="delete"></i>
+                                                                </div>
+                                                            @endcan
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endcan
 
                 @can('access-creditList')
                     <div class="d-flex justify-content-between align-items-center pb-3">
@@ -382,37 +372,41 @@
             </div>
         </footer>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
-        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Atribut Daftar Ulang</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="attributeForm">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="attribute_name">Nama Atribut</label>
-                            <input type="text" class="form-control" name="attribute_name" id="attribute_name"
-                                placeholder="Topi/Dasi/Seragam" autofocus>
-                        </div>
-                        <div class="form-group">
-                            <label for="attribute_price">Harga (Tulis : 100000) </label>
-                            <input type="number" class="form-control" name="attribute_price" id="attribute_price"
-                                placeholder="100000">
-                        </div>
 
+    @can('access-attributeAdd')
+        <div class="modal fade" tabindex="-1" role="dialog" id="attributeModal">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Tambah Data Atribut Daftar Ulang') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="modal-footer bg-whitesmoke br">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                    </div>
-                </form>
+                    <form id="attributeForm">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="attribute_name">{{ __('Nama Atribut') }}</label>
+                                <input type="text" class="form-control" name="attribute_name" id="attribute_name"
+                                    placeholder="Topi/Dasi/Seragam" autofocus>
+                            </div>
+                            <div class="form-group">
+                                <label for="attribute_price">{{ __('Harga (Tulis : 100000)') }} </label>
+                                <input type="number" class="form-control" name="attribute_price" id="attribute_price"
+                                    placeholder="100000">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    @endcan
 
     @can('access-creditAdd')
         <div class="modal fade" tabindex="-1" role="dialog" id="creditModal">
@@ -486,40 +480,43 @@
         </div>
     @endcan
 
-    @foreach ($attributes as $item)
-        <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal{{ $item->id }}">
-            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Update Data Attribute Daftar Ulang</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+    @can('access-attributeUpdate')
+        @foreach ($attributes as $item)
+            <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal{{ $item->id }}">
+                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ __('Update Data Attribute Daftar Ulang') }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form class="update-form" data-action="{{ url('/setting/attribute/update/' . $item->id) }} }}"
+                            method="POST">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="attribute_name">{{ __('Nama Atribut') }}</label>
+                                    <input type="text" class="form-control" name="attribute_name" id="attribute_name"
+                                        value="{{ $item->attribute_name }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="attribute_price">{{ __('Harga (Tulis : 100000)') }} </label>
+                                    <input type="number" class="form-control" name="attribute_price" id="attribute_price"
+                                        value="{{ round($item->attribute_price) }}" autofocus>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-whitesmoke br">
+                                <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                            </div>
+                        </form>
                     </div>
-                    <form class="update-form" data-action="{{ url('/setting/attribute/update/' . $item->id) }} }}"
-                        method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="attribute_name">Nama Atribut</label>
-                                <input type="text" class="form-control" name="attribute_name" id="attribute_name"
-                                    value="{{ $item->attribute_name }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="attribute_price">Harga </label>
-                                <input type="number" class="form-control" name="attribute_price" id="attribute_price"
-                                    value="{{ round($item->attribute_price) }}" autofocus>
-                            </div>
-                        </div>
-                        <div class="modal-footer bg-whitesmoke br">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
-                        </div>
-                    </form>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    @endcan
 
     @can('access-creditUpdate')
         @foreach ($credits as $item)
@@ -603,94 +600,6 @@
             </div>
         @endforeach
     @endcan
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                Notiflix.Notify.success("{{ session('success') }}", {
-                    timeout: 6000
-                });
-            @endif
-        });
-    </script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const attributeForm = document.getElementById('attributeForm');
-            attributeForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const formData = new FormData(attributeForm);
-                const attributeData = {};
-                formData.forEach((value, key) => {
-                    attributeData[key] = value;
-                });
-
-                try {
-                    const response = await fetch(`/setting/attribute/add`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(attributeData)
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        const errorMessages = Object.values(errorData.errors).join('\n');
-                        Notiflix.Notify.failure(
-                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
-                    } else {
-                        Notiflix.Notify.success('Success:', 'Attribute created successfully.');
-                        location.reload();
-                    }
-                } catch (error) {
-                    Notiflix.Notify.failure('Error:',
-                        'An error occurred while processing the request.');
-                }
-            });
-        });
-
-
-
-        const deleteAttribute = document.querySelectorAll('.attribute-delete');
-
-        // Tambahkan event listener untuk setiap tombol "Hapus Data"
-        deleteAttribute.forEach(button => {
-            button.addEventListener('click', function() {
-                const cardId = button.dataset.cardId;
-
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
-                    'Batal',
-                    function() {
-                        fetch(`/setting/attribute/delete/${cardId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                // Tampilkan notifikasi sukses menggunakan Notiflix
-                                Notiflix.Notify.success("Data Atribut berhasil dihapus.", {
-                                    timeout: 3000 // Waktu dalam milidetik (3 detik dalam contoh ini)
-                                });
-
-                                // Refresh halaman saat ini
-                                location.reload();
-                            })
-                            .catch(error => {
-                                // Tampilkan notifikasi error menggunakan Notiflix
-                                Notiflix.Notify.failure('Error:', error);
-                            });
-                    });
-            });
-        });
-    </script>
-
-    {{-- Category Action --}}
-
 @endsection
 
 @push('scripts')
@@ -727,6 +636,80 @@
         });
     </script>
 
+    @can('access-attributeAdd')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const attributeForm = document.getElementById('attributeForm');
+                attributeForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(attributeForm);
+                    const attributeData = {};
+                    formData.forEach((value, key) => {
+                        attributeData[key] = value;
+                    });
+
+                    try {
+                        const response = await fetch(`/setting/attribute/add`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(attributeData)
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            const errorMessages = Object.values(errorData.errors).join('\n');
+                            Notiflix.Notify.failure(
+                                'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                        } else {
+                            Notiflix.Notify.success('Data atribut Daftar Ulang berhasi dibuat!');
+                            location.reload();
+                        }
+                    } catch (error) {
+                        Notiflix.Notify.failure('Error:',
+                            'An error occurred while processing the request.');
+                    }
+                });
+            });
+        </script>
+    @endcan
+
+    @can('access-attributeDelete')
+        <script>
+            const deleteAttribute = document.querySelectorAll('.attribute-delete');
+
+            deleteAttribute.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardId = button.dataset.cardId;
+
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            fetch(`/setting/attribute/delete/${cardId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success(
+                                        "Data atribut Daftar Ulang berhasil dihapus!", {
+                                            timeout: 3000
+                                        });
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
+                                });
+                        });
+                });
+            });
+        </script>
+    @endcan
+
     @can('access-categoryAdd')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -758,6 +741,39 @@
                         })
                         .catch(error => {
                             Notiflix.Notify.failure('Error:', error);
+                        });
+                });
+            });
+        </script>
+    @endcan
+
+    @can('access-packageDelete')
+        <script>
+            const deletePackage = document.querySelectorAll('.package-delete');
+
+            deletePackage.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardId = button.dataset.cardId;
+
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            fetch(`/setting/packages/delete/${cardId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success("Data paket berhasil dihapus!", {
+                                        timeout: 3000
+                                    });
+                                    location.href = "{{ url('setting/packages') }}";
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
+                                });
                         });
                 });
             });
@@ -873,11 +889,11 @@
 
 
     <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
 
     <script>
         $("#table-relation").dataTable();
         $("#table-category").dataTable();
         $("#table-credit").dataTable();
+        $("#table-attribute").dataTable();
     </script>
 @endpush

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title_page', 'Packages Add');
+@section('title_page', 'Packages Edit');
 
 @section('content')
     @push('styles')
@@ -14,28 +14,30 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Tambah Paket') }}</h1>
+                    <h1>{{ __('Edit Paket') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
                         <div class="breadcrumb-item">{{ __('General Setting') }}</div>
                         <div class="breadcrumb-item">{{ __('Paket') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Tambah') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Edit') }}</div>
                     </div>
                 </div>
 
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h4>{{ __('Tambah Paket') }}</h4>
+                            <h4>{{ __('Edit Paket') }}</h4>
                             <a href="{{ url('/setting/packages') }}"> {{ __('Close') }} </a>
                         </div>
                         <div class="card-body pb-5">
-                            <form class="store-form" data-action="{{ url('setting/packages/store') }}" method="POST">
+                            <form class="update-form" data-action="{{ url('setting/packages/update/' . $category->id) }}"
+                                method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label>{{ __('Nama Paket') }}</label>
                                     <select class="form-control select2" name="category_id">
-                                        <option>{{ __('-- Pilih Kategori --') }}</option>
+                                        <option value="{{ $category->id }}" selected>{{ $category->category_name }}
+                                        </option>
                                         @foreach ($categories as $item)
                                             <option value="{{ $item->id }}">{{ $item->category_name }}</option>
                                         @endforeach
@@ -44,16 +46,22 @@
                                 <div class="form-group">
                                     <label>{{ __('Atribut Daftar Ulang') }}</label>
                                     <select class="form-control select2" name="attribute_id[]" multiple="">
-                                        @foreach ($attributes as $item)
-                                            <option value="{{ $item->id }}">{{ $item->attribute_name }}</option>
+                                        @foreach ($allAttribute as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ in_array($item->id, $attributes->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                {{ $item->attribute_name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>{{ __('Atribut SPP') }}</label>
                                     <select class="form-control select2" name="credit_id[]" multiple="">
-                                        @foreach ($credits as $item)
-                                            <option value="{{ $item->id }}">{{ $item->credit_name }}</option>
+                                        @foreach ($allCredit as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ in_array($item->id, $credits->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                {{ $item->credit_name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -74,13 +82,13 @@
 
 
 @push('scripts')
-    @can('access-packageAdd')
+    @can('access-packageEdit')
         <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
     @endcan
-    @can('access-packageStore')
+    @can('access-packageUpdate')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const updateForms = document.querySelectorAll('.store-form');
+                const updateForms = document.querySelectorAll('.update-form');
 
                 updateForms.forEach(form => {
                     form.addEventListener('submit', function(event) {
@@ -97,7 +105,7 @@
                             })
                             .then(response => response.json())
                             .then(data => {
-                                Notiflix.Notify.success("Data paket berhasil dibuat!", {
+                                Notiflix.Notify.success("Data paket berhasil diperbarui!", {
                                     timeout: 3000
                                 });
 

@@ -90,10 +90,12 @@
                                     href="{{ url('/setting/year') }}">Tahun Aktif</a></li>
                         @endcan
                     </ul>
+                    @can('access-packageList')
                     <ul class="dropdown-menu">
-                        <li class="{{ Request::segment(2) === 'attribute' ? 'active' : '' }}"><a
-                                href="{{ url('/setting/attribute') }}">Atribut</a></li>
+                        <li class="{{ Request::segment(2) === 'packages' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/packages') }}">Paket</a></li>
                     </ul>
+                    @endcan
                     @can('access-classList')
                         <ul class="dropdown-menu">
                             <li class="{{ Request::segment(2) === 'class' ? 'active' : '' }}"><a

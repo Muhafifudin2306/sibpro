@@ -151,18 +151,14 @@ class SecurityController extends Controller
     {
         $role = Role::find($id);
 
-        // Perbarui nama peran jika diperlukan
         $role->update([
             "name" => $request->input('name'),
         ]);
 
-        // Ambil ID izin yang dipilih dari input form
         $permissionIds = $request->input('permission_id');
 
-        // Synchronize izin untuk peran tersebut
         $role->permissions()->sync($permissionIds);
 
-        // Buat atau perbarui pemberitahuan jika diperlukan
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
 
@@ -171,7 +167,6 @@ class SecurityController extends Controller
             'notification_status' => 0
         ]);
 
-        // Berikan izin kepada peran tersebut (gunakan loop jika perlu)
         foreach ($permissionIds as $permissionId) {
             $permission = Permission::find($permissionId);
             $role->givePermissionTo($permission);

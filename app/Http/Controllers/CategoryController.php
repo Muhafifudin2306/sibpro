@@ -41,7 +41,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            return response()->json(['message' => 'Data Tahun tidak ditemukan.'], 404);
+            return response()->json(['message' => 'Data kategori tidak ditemukan.'], 404);
         }
 
         $category->delete();
@@ -53,7 +53,7 @@ class CategoryController extends Controller
             'notification_staus' => 0
         ]);
 
-        return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
+        return response()->json(['message' => 'Data kategori berhasil dihapus.']);
     }
 
     public function update(Request $request, $id)

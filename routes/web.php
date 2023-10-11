@@ -106,13 +106,36 @@ Route::prefix('setting')->group(function () {
     });
 
     Route::prefix('attribute')->group(function () {
-        Route::get('/', [App\Http\Controllers\AttributeController::class, 'index'])->name('attribute');
-        Route::get('/addRelation', [App\Http\Controllers\AttributeController::class, 'add'])->name('addRelation');
-        Route::post('/storeRelation', [App\Http\Controllers\AttributeController::class, 'storeRelation'])->name('storeRelation');
-        Route::post('/add', [App\Http\Controllers\AttributeController::class, 'store'])->name('storeAttribute');
-        Route::post('/update/{id}', [App\Http\Controllers\AttributeController::class, 'update'])->name('updateAttribute');
-        Route::delete('/delete/{id}', [App\Http\Controllers\AttributeController::class, 'destroy'])->name('deleteAttribute');
-        Route::delete('/deleteRelation/{category}', [App\Http\Controllers\AttributeController::class, 'destroyRelation'])->name('deleteRelation');
+        Route::group(['middleware' => ['can:access-attributeAdd']], function () {
+            Route::post('/add', [App\Http\Controllers\AttributeController::class, 'store'])->name('storeAttribute');
+        });
+        Route::group(['middleware' => ['can:access-attributeDelete']], function () {
+            Route::delete('/delete/{id}', [App\Http\Controllers\AttributeController::class, 'destroy'])->name('deleteAttribute');
+        });
+        Route::group(['middleware' => ['can:access-attributeUpdate']], function () {
+            Route::post('/update/{id}', [App\Http\Controllers\AttributeController::class, 'update'])->name('updateAttribute');
+        });
+    });
+
+    Route::prefix('packages')->group(function () {
+        Route::group(['middleware' => ['can:access-packageList']], function () {
+            Route::get('/', [App\Http\Controllers\PackageController::class, 'index'])->name('packages');
+        });
+        Route::group(['middleware' => ['can:access-packageAdd']], function () {
+            Route::get('/add', [App\Http\Controllers\PackageController::class, 'add'])->name('addPackage');
+        });
+        Route::group(['middleware' => ['can:access-packageStore']], function () {
+            Route::post('/store', [App\Http\Controllers\PackageController::class, 'store'])->name('storePackage');
+        });
+        Route::group(['middleware' => ['can:access-packageDelete']], function () {
+            Route::delete('/delete/{id}', [App\Http\Controllers\PackageController::class, 'destroy'])->name('deletePackage');
+        });
+        Route::group(['middleware' => ['can:access-packageEdit']], function () {
+            Route::get('/edit/{id}', [App\Http\Controllers\PackageController::class, 'edit'])->name('editPackage');
+        });
+        Route::group(['middleware' => ['can:access-packageUpdate']], function () {
+            Route::post('/update/{id}', [App\Http\Controllers\PackageController::class, 'update'])->name('updatePackage');
+        });
     });
 
     Route::prefix('category')->group(function () {

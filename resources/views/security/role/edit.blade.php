@@ -94,7 +94,6 @@
                                 });
 
                                 location.href = "{{ url('account/security/role') }}";
-
                             })
                             .catch(error => {
                                 Notiflix.Notify.failure('Error:', error);
