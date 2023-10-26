@@ -62,7 +62,7 @@
                                         @endphp
                                         @foreach ($students as $item)
                                             <tr>
-                                                <td>
+                                                <td class="text-center">
                                                     {{ $no++ }}
                                                 </td>
                                                 <td>

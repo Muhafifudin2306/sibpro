@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Credit;
 use App\Models\Notification;
@@ -31,13 +32,13 @@ class CreditController extends Controller
     {
         // Get Data Notification
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
-        $students = Student::where('class_id', $id)->whereNotNull('category_id')->with(['credits' => function ($query) {
-            $query->select('credits.id', 'credit_name', 'status', 'student_has_credit.credit_price');
+        $students = User::where('class_id', $id)->whereNotNull('category_id')->with(['credits' => function ($query) {
+            $query->select('credits.id', 'credit_name', 'status', 'user_has_credit.credit_price');
         }])->get();
         $class = StudentClass::find($id);
 
         return view('credit.detail', compact('notifications', 'students', 'class'));
-        // dd($students);
+        //dd($students);
     }
 
     public function store(Request $request)

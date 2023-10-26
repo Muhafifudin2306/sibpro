@@ -64,4 +64,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
+
+    public function credits()
+    {
+        return $this->belongsToMany(Credit::class, 'user_has_credit');
+    }
 }

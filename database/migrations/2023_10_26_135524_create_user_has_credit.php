@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_has_credit', function (Blueprint $table) {
+        Schema::create('user_has_credit', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('credit_id')->nullable();
             $table->enum('status', ['Paid', 'Unpaid'])->default('Unpaid');
             $table->decimal('credit_price', 10, 2)->default(0);
-            $table->foreign('student_id')->references('id')->on('students')->onUpdate('cascade')
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreign('credit_id')->references('id')->on('credits')->onUpdate('cascade')
                 ->onDelete('cascade');

@@ -15,18 +15,14 @@ class Credit extends Model
         'user_id'
     ];
 
-    public function users()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'category_has_credit');
     }
 
-    public function students()
+    public function users()
     {
-        return $this->belongsToMany(Student::class, 'student_has_credit');
+        return $this->belongsToMany(User::class, 'user_has_credit');
     }
 
     public function credits()
