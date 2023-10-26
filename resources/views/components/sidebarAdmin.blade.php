@@ -91,10 +91,10 @@
                         @endcan
                     </ul>
                     @can('access-packageList')
-                    <ul class="dropdown-menu">
-                        <li class="{{ Request::segment(2) === 'packages' ? 'active' : '' }}"><a
-                                href="{{ url('/setting/packages') }}">Paket</a></li>
-                    </ul>
+                        <ul class="dropdown-menu">
+                            <li class="{{ Request::segment(2) === 'packages' ? 'active' : '' }}"><a
+                                    href="{{ url('/setting/packages') }}">Paket</a></li>
+                        </ul>
                     @endcan
                     @can('access-classList')
                         <ul class="dropdown-menu">
@@ -102,10 +102,12 @@
                                     href="{{ url('/setting/class') }}">Kelas</a></li>
                         </ul>
                     @endcan
-                    <ul class="dropdown-menu">
-                        <li class="{{ Request::segment(2) === 'student' ? 'active' : '' }}"><a
-                                href="{{ url('/setting/student') }}">Siswa</a></li>
-                    </ul>
+                    @can('access-studentList')
+                        <ul class="dropdown-menu">
+                            <li class="{{ Request::segment(2) === 'student' ? 'active' : '' }}"><a
+                                    href="{{ url('/setting/student') }}">Siswa</a></li>
+                        </ul>
+                    @endcan
                 </li>
             @endcan
         </ul>

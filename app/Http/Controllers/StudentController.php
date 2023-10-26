@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 use App\Models\Year;
@@ -18,18 +19,39 @@ class StudentController extends Controller
     }
     public function index()
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
 
-        $students = Student::orderBy("updated_at", "DESC")->get();
+        return view('setting.student.index', compact('notifications', 'studentClasses'));
+    }
 
+    public function detail($id)
+    {
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $students = User::where('class_id', $id)->get();
+        $class = StudentClass::find($id);
         $classes = StudentClass::orderBy("updated_at", "DESC")->get();
 
-        $classList = StudentClass::orderBy("updated_at", "DESC")->get();
-        $category = Category::orderBy("updated_at", "DESC")->get();
+        return view('setting.student.detail', compact('notifications', 'students', 'class', 'classes'));
+    }
 
-        $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('setting.student.index', compact('category', 'classes', 'notifications', 'students', 'classList'));
-        // dd($classes);
+    public function updateAll(Request $request, $id)
+    {
+        $students = User::where('class_id', $id);
+        $students->update(['class_id' => $request->input('class_id')]);
+
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $years = Year::find($activeYearId);
+
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "Mengedit Data siswa pada tahun ajaran" . " " . $years->year_name,
+            'notification_status' => 0
+        ]);
+        return response()->json([
+            'message' => 'Data inserted successfully',
+            'data' => $students,
+        ], 201);
     }
 
     public function add()
@@ -122,15 +144,26 @@ class StudentController extends Controller
         ], 201); // 201 updated
     }
 
+    public function updatePartialClass(Request $request)
+    {
+        $classId = $request->input('class_id');
+        $selectedUsers = $request->input('selected_users', []);
+
+        // Perbarui entitas User berdasarkan checkbox yang dipilih
+        User::whereIn('id', $selectedUsers)->update(['class_id' => $classId]);
+
+        return response()->json([
+            'message' => 'Data updated successfully'
+        ], 201); // 201 updated
+    }
+
     public function updateAllClass(Request $request, $id)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
-
-        Student::where('class_id', $id)
-            ->where('year_id', $activeYearId)
-            ->update([
-                'class_id' => $request->input('class_id')
-            ]);
+        $users = User::where('class_id', $id)->get();
+        foreach ($users as $user) {
+            $user->class_id = $request->input('class_id');
+            $user->save();
+        }
 
         return response()->json([
             'message' => 'Data updated successfully'
@@ -139,11 +172,11 @@ class StudentController extends Controller
 
     public function destroyAllStudent($id)
     {
-        Student::where('class_id', $id)
+        User::where('class_id', $id)
             ->delete();
 
         return response()->json([
-            'message' => 'Data updated successfully'
-        ], 201); // 201 updated
+            'message' => 'Data deleted successfully'
+        ], 201);
     }
 }

@@ -18,7 +18,7 @@ class Category extends Model
 
     public function users()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(User::class, 'category_id');
     }
     public function attributes()
     {

@@ -55,8 +55,13 @@ class User extends Authenticatable
         return $this->hasMany(Attribute::class, 'id_user');
     }
 
-    public function class()
+    public function classes()
     {
-        return $this->hasMany(StudentClass::class, 'id_year');
+        return $this->belongsTo(StudentClass::class, 'id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

@@ -52,7 +52,6 @@
                                             </th>
                                             <th>{{ __('Nama Kelas') }}</th>
                                             <th>{{ __('Diubah pada') }}</th>
-                                            <th>{{ __('Petugas') }}</th>
                                             <th>{{ __('Action') }}</th>
                                         </tr>
                                     </thead>
@@ -70,9 +69,6 @@
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->users->name }}
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-center">

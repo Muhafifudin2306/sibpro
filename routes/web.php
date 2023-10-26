@@ -166,13 +166,18 @@ Route::prefix('setting')->group(function () {
     });
 
     Route::prefix('student')->group(function () {
-        Route::get('/', [App\Http\Controllers\StudentController::class, 'index'])->name('student');
-        Route::get('/add', [App\Http\Controllers\StudentController::class, 'add'])->name('addStudent');
-        Route::post('/store', [App\Http\Controllers\StudentController::class, 'store'])->name('storeStudent');
-        Route::delete('/delete/{id}', [App\Http\Controllers\StudentController::class, 'destroy'])->name('deleteStudent');
-        Route::post('/update/{id}', [App\Http\Controllers\StudentController::class, 'update'])->name('updateStudent');
-        Route::post('/update/allClass/{id}', [App\Http\Controllers\StudentController::class, 'updateAllClass'])->name('updateAllClass');
-        Route::delete('/delete/allStudent/{id}', [App\Http\Controllers\StudentController::class, 'destroyAllStudent'])->name('deleteAllStudent');
+        Route::group(['middleware' => ['can:access-studentList']], function () {
+            Route::get('/', [App\Http\Controllers\StudentController::class, 'index'])->name('student');
+        });
+        Route::group(['middleware' => ['can:access-studentList']], function () {
+            Route::get('/detail/{id}', [App\Http\Controllers\StudentController::class, 'detail'])->name('detailStudent');
+        });
+        Route::group(['middleware' => ['can:access-studentUpdate']], function () {
+            Route::post('/update/allClass/{id}', [App\Http\Controllers\StudentController::class, 'updateAllClass'])->name('updateAllClass');
+        });
+        Route::group(['middleware' => ['can:access-studentDelete']], function () {
+            Route::delete('/delete/allStudent/{id}', [App\Http\Controllers\StudentController::class, 'destroyAllStudent'])->name('deleteAllStudent');
+        });
     });
 
     Route::prefix('credit')->group(function () {

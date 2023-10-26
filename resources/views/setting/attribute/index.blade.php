@@ -34,7 +34,7 @@
                                 <a href="{{ url('/setting/packages/add') }}">
                                     <button class="btn btn-primary" data-toggle="modal"
                                         data-target="#relationModal">{{ __('+ Tambah
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Data') }}</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Data') }}</button>
                                 </a>
                             @endcan
                         </div>
@@ -149,7 +149,6 @@
                                                 <th>{{ __('Nama Atribut') }}</th>
                                                 <th>{{ __('Harga Atribut') }}</th>
                                                 <th>{{ __('Diubah pada') }}</th>
-                                                <th>{{ __('Petugas') }}</th>
                                                 <th>{{ __('Action') }}</th>
                                             </tr>
                                         </thead>
@@ -170,9 +169,6 @@
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $item->updated_at->format('d F Y') }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $item->users->name }}
                                                     </td>
                                                     <td>
                                                         <div class="d-flex justify-content-center">
@@ -232,7 +228,6 @@
                                                 <th>{{ __('Harga Atribut') }}</th>
                                                 <th>{{ __('Semester') }}</th>
                                                 <th>{{ __('Diubah pada') }}</th>
-                                                <th>{{ __('Petugas') }}</th>
                                                 <th>{{ __('Action') }}</th>
                                             </tr>
                                         </thead>
@@ -256,9 +251,6 @@
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $item->updated_at->format('d F Y') }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $item->users->name }}
                                                     </td>
                                                     <td>
                                                         <div class="d-flex justify-content-center">
@@ -317,7 +309,6 @@
                                                 </th>
                                                 <th>{{ __('Nama Kategori') }}</th>
                                                 <th>{{ __('Diubah pada') }}</th>
-                                                <th>{{ __('Petugas') }}</th>
                                                 <th>{{ __('Action') }}</th>
                                             </tr>
                                         </thead>
@@ -335,9 +326,6 @@
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $item->updated_at->format('d F Y') }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $item->users->name }}
                                                     </td>
                                                     <td>
                                                         <div class="d-flex justify-content-center">
