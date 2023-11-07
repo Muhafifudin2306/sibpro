@@ -14,4 +14,14 @@ class UserHasCredit extends Model
         'status',
         'credit_price'
     ];
+
+    public function credit()
+    {
+        return $this->belongsTo(Credit::class, 'credit_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

@@ -31,6 +31,7 @@ Route::prefix('income')->group(function () {
     Route::prefix('credit')->group(function () {
         Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
         Route::get('/detail/{id}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
+        Route::get('/payment/{id}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
     });
 });
 

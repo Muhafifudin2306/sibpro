@@ -79,8 +79,11 @@
                                                         @foreach ($item->credits as $credit)
                                                             <div class="mb-2 mx-1">
                                                                 @if ($credit->status == 'Unpaid')
-                                                                    <button class="btn btn-danger" data-toggle="modal"
-                                                                        data-target="#creditModal{{ $credit->id }}">{{ $credit->credit_name }}</button>
+                                                                    <a
+                                                                        href="{{ url('income/credit/payment/' . $credit->user_credit_id) }}">
+                                                                        <button class="btn btn-danger" type="submit"
+                                                                            id="pay-button">{{ $credit->credit_name }}</button>
+                                                                    </a>
                                                                 @elseif($credit->status == 'Paid')
                                                                     <button class="btn btn-success" data-toggle="modal"
                                                                         data-target="#creditModal{{ $credit->id }}">{{ $credit->credit_name }}</button>
