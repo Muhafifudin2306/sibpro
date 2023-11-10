@@ -9,7 +9,7 @@
                 <div class="col-12 col-md-6 col-lg-5">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h4>{{ __('Login Akun SIBPRO') }}</h4>
+                            <h4>{{ __('Login SIBPRO') }}</h4>
                         </div>
                         <div class="card-body">
                             <form method="POST" action="{{ route('login') }}">
