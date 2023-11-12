@@ -147,7 +147,7 @@ class CreditController extends Controller
         $hashed = hash('sha512', $request->order_id.$request->status_code.$request->order_id.$request->gross_amount.$serverKey);
 
         if($hashed == $request->signature_key){
-            if($request->transaction_status == 'capture'){
+            if($request->transaction_status == 'settlement'){
                 $order = UserHasCredit::find($request->order_id);
 
                 $order->update([
