@@ -86,7 +86,8 @@
                                                                     </a>
                                                                 @elseif($credit->status == 'Paid')
                                                                     <button class="btn btn-success" data-toggle="modal"
-                                                                        data-target="#creditModal{{ $credit->id }}">{{ $credit->credit_name }}</button>
+                                                                        data-target="#creditModal{{ $credit->id }}">{{ $credit->credit_name }}
+                                                                        (Lunas )</button>
                                                                 @endif
                                                             </div>
                                                             @php
