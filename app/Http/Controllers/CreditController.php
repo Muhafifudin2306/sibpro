@@ -13,11 +13,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CreditController extends Controller
 {
-    public function __construct()
-    {
-        // Tambahkan middleware autentikasi ke metode 'store'
-        $this->middleware('auth')->only('store');
-    }
 
     public function index()
     {
