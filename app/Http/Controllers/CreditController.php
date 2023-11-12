@@ -142,19 +142,42 @@ class CreditController extends Controller
 
     public function callback(Request $request)
     {
+        // Ambil nilai server key dari konfigurasi
         $serverKey = config('midtrans.server_key');
 
-        $hashed = hash('sha512', $request->order_id.$request->status_code.$request->order_id.$request->gross_amount.$serverKey);
+        // Pastikan bahwa semua field yang dibutuhkan ada dan tidak kosong
+        if (!empty($request->order_id) && !empty($request->status_code) && !empty($request->gross_amount)) {
 
-        if($hashed == $request->signature_key){
-            if($request->transaction_status == 'settlement'){
-                $order = UserHasCredit::find($request->order_id);
+            // Hitung hash dengan menggunakan algoritma SHA512
+            $hashed = hash('sha512', $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
 
-                $order->update([
-                    'status' => 'Paid',
-                    'credit_price' => $request->gross_amount
-                ]);
+            // Periksa apakah hash yang dihasilkan sama dengan signature_key dari Midtrans
+            if ($hashed == $request->signature_key) {
+
+                // Jika status transaksi adalah 'settlement', tandai pesanan sebagai 'Paid'
+                if ($request->transaction_status == 'settlement') {
+                    $order = UserHasCredit::find($request->order_id);
+
+                    // Update status dan harga kredit
+                    $order->update([
+                        'status' => 'Paid',
+                        'credit_price' => $request->gross_amount
+                    ]);
+
+                    // Tambahan: Log ke file jika diperlukan
+                    \Log::info('Pembayaran berhasil. ID Pesanan: ' . $request->order_id);
+                }
+
+                // Tambahan: Log ke file jika diperlukan
+                \Log::info('Callback Midtrans berhasil diproses.');
+            } else {
+                // Tambahan: Log ke file jika diperlukan
+                \Log::warning('Hash tidak cocok. Ada potensi perubahan data tidak sah.');
             }
+        } else {
+            // Tambahan: Log ke file jika diperlukan
+            \Log::error('Data callback tidak lengkap atau tidak valid.');
         }
     }
+
 }
