@@ -125,7 +125,7 @@ class CreditController extends Controller
 
         $params = array(
             'transaction_details' => array(
-                'order_id' => rand(),
+                'order_id' => $id,
                 'gross_amount' => $order->credit->credit_price,
             ),
             'customer_details' => array(
