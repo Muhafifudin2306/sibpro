@@ -128,7 +128,7 @@
                 onSuccess: function(result) {
                     /* You may add your own implementation here */
                     // alert("payment success!");
-                    window.location.href = '/income/credit/{{ $order->user->class_id }}';
+                    window.location.href = '/income/credit/detail/{{ $order->user->class_id }}';
                     console.log(result);
                 },
                 onPending: function(result) {
