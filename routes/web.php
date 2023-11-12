@@ -32,6 +32,7 @@ Route::prefix('income')->group(function () {
         Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
         Route::get('/detail/{id}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
         Route::get('/payment/{id}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
+        Route::post('/midtrans-callback', [App\Http\Controllers\ProfileController::class, 'updatePayment'])->name('updatePayment');
     });
 });
 
