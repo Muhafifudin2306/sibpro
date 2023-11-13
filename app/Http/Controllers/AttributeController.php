@@ -43,14 +43,13 @@ class AttributeController extends Controller
 
         $attributes = Attribute::create([
             'attribute_name' => $request->input('attribute_name'),
-            'attribute_price' => $request->input('attribute_price'),
-            'user_id' => Auth::user()->id
+            'attribute_price' => $request->input('attribute_price')
         ]);
 
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Membuat Data Atribut" . " " . $request->input('attribute_name') . " " . "dengan harga" . " " . "Rp" . $request->input('attribute_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "membuat data atribut Daftar Ulang" . " " . $request->input('attribute_name') . " " . "dengan harga" . " " . "Rp" . $request->input('attribute_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
 
@@ -73,7 +72,7 @@ class AttributeController extends Controller
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Mengedit Data Atribut" . " " . $attributes->attribute_name . " " . "dengan harga" . " " . "Rp" .  $request->input('attribute_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "mengedit data atribut Daftar Ulang" . " " . $attributes->attribute_name . " " . "dengan harga" . " " . "Rp" .  $request->input('attribute_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
         return response()->json([
@@ -95,7 +94,7 @@ class AttributeController extends Controller
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Menghapus Data Atribut" . " " . $attribute->attribute_name . " " . "dengan harga" . " " . "Rp" . $attribute->attribute_price . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "menghapus data atribut Daftar Ulang" . " " . $attribute->attribute_name . " " . "dengan harga" . " " . "Rp" . $attribute->attribute_price . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_staus' => 0
         ]);
 

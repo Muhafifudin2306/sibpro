@@ -11,8 +11,7 @@ class Credit extends Model
     protected $fillable = [
         'credit_name',
         'credit_price',
-        'semester',
-        'user_id'
+        'semester'
     ];
 
     public function categories()

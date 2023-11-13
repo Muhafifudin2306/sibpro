@@ -34,7 +34,7 @@
                                 <a href="{{ url('/setting/packages/add') }}">
                                     <button class="btn btn-primary" data-toggle="modal"
                                         data-target="#relationModal">{{ __('+ Tambah
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Data') }}</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Data') }}</button>
                                 </a>
                             @endcan
                         </div>
@@ -652,7 +652,7 @@
                             Notiflix.Notify.failure(
                                 'Field tidak boleh kosong atau nama sejenis telah digunakan');
                         } else {
-                            Notiflix.Notify.success('Data atribut Daftar Ulang berhasi dibuat!');
+                            Notiflix.Notify.success('Data atribut Daftar Ulang berhasil dibuat!');
                             location.reload();
                         }
                     } catch (error) {

@@ -32,15 +32,11 @@ class PackageController extends Controller
     public function add()
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
-
         $categories = Category::orderBy("updated_at", "DESC")->get();
-
         $attributes = Attribute::orderBy("updated_at", "DESC")->get();
-
         $credits = Credit::orderBy("updated_at", "DESC")->get();
 
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
-
         return view('setting.attribute.add', compact('credits', 'notifications', 'categories', 'attributes'));
     }
 
@@ -59,11 +55,11 @@ class PackageController extends Controller
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Membuat Relasi Data Kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "membuat data paket" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
         return response()->json([
-            'message' => 'Data inserted successfully'
+            'message' => 'Data paket berhasil dibuat!'
         ], 201);
     }
 
@@ -97,7 +93,7 @@ class PackageController extends Controller
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Menghapus Relasi Data Kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "menghapus paket" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
         return response()->json(['message' => 'Data paket berhasil dihapus.']);
@@ -107,23 +103,20 @@ class PackageController extends Controller
     {
         $category = Category::find($id);
         $attributeIds = $request->input('attribute_id');
-
         $category->attributes()->sync($attributeIds);
-
         $creditIds = $request->input('credit_id');
-
         $category->credits()->sync($creditIds);
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "mengedit data paket" . " " . $category->name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "mengedit data paket" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
 
         return response()->json([
-            'message' => 'Data updated successfully',
+            'message' => 'Data paket berhasi diedit!',
             'data' => $category,
         ], 200);
     }

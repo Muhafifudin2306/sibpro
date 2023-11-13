@@ -16,7 +16,6 @@ class CreditController extends Controller
 
     public function index()
     {
-        // Get Data Notification
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
 
@@ -25,7 +24,6 @@ class CreditController extends Controller
 
     public function detail($id)
     {
-        // Get Data Notification
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $students = User::where('class_id', $id)
             ->whereNotNull('category_id')
@@ -38,7 +36,6 @@ class CreditController extends Controller
 
 
         return view('credit.detail', compact('notifications', 'students', 'class'));
-        //dd($students);
     }
 
     public function store(Request $request)
@@ -48,19 +45,18 @@ class CreditController extends Controller
         $credit = Credit::create([
             'credit_name'   => $request->input('credit_name'),
             'credit_price'  => $request->input('credit_price'),
-            'semester'      => $request->input('semester'),
-            'user_id'       => Auth::user()->id
+            'semester'      => $request->input('semester')
         ]);
-        // Create data notification
+        
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Membuat Data Atribut" . " " . $request->input('credit_name') . " " . "dengan harga" . " " . "Rp" . $request->input('credit_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "membuat data atribut SPP" . " " . $request->input('credit_name') . " " . "dengan harga" . " " . "Rp" . $request->input('credit_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
 
         return response()->json([
-            'message' => 'Data inserted successfully',
+            'message' => 'Data atribut berhasil ditambah!',
             'data' => $credit,
         ], 201);
     }
@@ -79,11 +75,11 @@ class CreditController extends Controller
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Menghapus Data Atribut" . " " . $credit->credit_name . " " . "dengan harga" . " " . "Rp" . $credit->credit_price . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "menghapus data atribut SPP" . " " . $credit->credit_name . " " . "dengan harga" . " " . "Rp" . $credit->credit_price . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_staus' => 0
         ]);
 
-        return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
+        return response()->json(['message' => 'Data atribut berhasil dihapus!']);
     }
 
     public function update(Request $request, $id)
@@ -101,12 +97,12 @@ class CreditController extends Controller
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Mengedit Data Atribut" . " " . $credit->credit_name . " " . "dengan harga" . " " . "Rp" .  $request->input('credit_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "mengedit data atribut SPP" . " " . $credit->credit_name . " " . "dengan harga" . " " . "Rp" .  $request->input('credit_price') . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
 
         return response()->json([
-            'message' => 'Data update successfully',
+            'message' => 'Data atribut berhasil diedit!',
             'data' => $credit
         ], 201);
     }
