@@ -75,7 +75,7 @@ class ProfileController extends Controller
             'notification_status' => 0
         ]);
 
-        return response()->json(['message' => 'Tambah data berhasil'], 200);
+        return response()->json(['message' => 'Data user berhasil dibuat!'], 200);
     }
 
     public function destroyUser($id)
@@ -95,7 +95,7 @@ class ProfileController extends Controller
             'notification_status' => 0
         ]);
 
-        return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
+        return response()->json(['message' => 'Data user berhasil dihapus!']);
     }
 
     public function editUser($id)
@@ -128,7 +128,7 @@ class ProfileController extends Controller
             'notification_status' => 0
         ]);
         return response()->json([
-            'message' => 'Data updated successfully',
+            'message' => 'Data user berhasil diedit!',
             'data' => $user,
         ], 200);
     }

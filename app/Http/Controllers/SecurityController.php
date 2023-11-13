@@ -50,7 +50,7 @@ class SecurityController extends Controller
             'notification_status' => 0
         ]);
         return response()->json([
-            'message' => 'Data inserted successfully',
+            'message' => 'Data permission berhasil dibuat!',
             'data' => $permissions,
         ], 201);
     }
@@ -71,7 +71,7 @@ class SecurityController extends Controller
             'notification_status' => 0
         ]);
         return response()->json([
-            'message' => 'Data inserted successfully',
+            'message' => 'Data role berhasil dibuat!',
             'data' => $roles,
         ], 201);
     }
@@ -93,7 +93,7 @@ class SecurityController extends Controller
             'notification_status' => 0
         ]);
 
-        return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
+        return response()->json(['message' => 'Data permission berhasil dihapus!']);
     }
 
     public function destroyRole($id)
@@ -114,7 +114,7 @@ class SecurityController extends Controller
             'notification_status' => 0
         ]);
 
-        return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
+        return response()->json(['message' => 'Data role berhasil dihapus!']);
     }
 
     public function updatePermission(Request $request, $id)
@@ -133,7 +133,7 @@ class SecurityController extends Controller
             'notification_status' => 0
         ]);
         return response()->json([
-            'message' => 'Data inserted successfully',
+            'message' => 'Data permission berhasil diedit!',
             'data' => $permission,
         ], 201);
     }
@@ -173,7 +173,7 @@ class SecurityController extends Controller
         }
 
         return response()->json([
-            'message' => 'Data updated successfully',
+            'message' => 'Data role berhasil diupdate!',
             'data' => $role,
         ], 200);
     }
