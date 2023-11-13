@@ -43,12 +43,12 @@ class YearController extends Controller
         ]);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Membuat Data Tahun" . " " . $request->input('year_name'),
+            'notification_content' => Auth::user()->name . " " . "membuat data tahun ajaran" . " " . $request->input('year_name'),
             'notification_status' => 0
         ]);
 
         return response()->json([
-            'message' => 'Data inserted successfully',
+            'message' => 'Data Tahun berhasil ditambahkan!',
             'data' => $year,
         ], 201);
     }
@@ -63,13 +63,13 @@ class YearController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Status Tahun berhasil diperbarui.',
+                'message' => 'Status tahun ajaran berhasil diperbarui!',
                 'year' => $year
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memperbarui status Tahun.'
+                'message' => 'Gagal memperbarui status tahun ajaran!'
             ], 500);
         }
     }
@@ -82,7 +82,7 @@ class YearController extends Controller
         }
         $year->delete();
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Menghapus Data Tahun" . " " . $year->year_name,
+            'notification_content' => Auth::user()->name . " " . "menghapus data tahun ajaran" . " " . $year->year_name,
             'notification_status' => 0
         ]);
 

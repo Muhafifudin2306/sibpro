@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="dropdown-list-content dropdown-list-icons" id="notifications-container">
-                    @foreach ($notifications as $notification)
+                    @forelse ($notifications as $notification)
                         @if ($notification->notification_status == 1)
                             <a href="#" class="dropdown-item notif-read">
                                 <div class="dropdown-item-icon bg-info text-white"
@@ -44,7 +44,9 @@
                                 </div>
                             </a>
                         @endif
-                    @endforeach
+                    @empty
+                        <p class="text-center pt-4">Belum Ada Notifikasi</p>
+                    @endforelse
                 </div>
                 <div class="dropdown-footer text-center">
                     <a href="{{ url('/notifications') }}">View All <i class="fas fa-chevron-right"></i></a>

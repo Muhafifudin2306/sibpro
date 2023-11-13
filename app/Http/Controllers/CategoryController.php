@@ -20,14 +20,13 @@ class CategoryController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $categories = Category::create([
-            'category_name' => $request->input('category_name'),
-            'user_id' => Auth::user()->id
+            'category_name' => $request->input('category_name')
         ]);
 
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Membuat Data kategori" . " " . $request->input('category_name') . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "membuat data kategori" . " " . $request->input('category_name') . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
         return response()->json([
@@ -49,7 +48,7 @@ class CategoryController extends Controller
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Menghapus Data Kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "menghapus data kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_staus' => 0
         ]);
 
@@ -61,14 +60,13 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         $category->update([
-            "category_name" =>  $request->input('category_name'),
-            'user_id' => Auth::user()->id
+            "category_name" =>  $request->input('category_name')
         ]);
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Mengedit Data Kategori" . " " . $category->category_name  . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "mengedit data kategori" . " " . $category->category_name  . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
         return response()->json([
