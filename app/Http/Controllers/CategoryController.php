@@ -49,7 +49,7 @@ class CategoryController extends Controller
 
         Notification::create([
             'notification_content' => Auth::user()->name . " " . "menghapus data kategori" . " " . $category->category_name . " " . "pada tahun ajaran" . " " . $years->year_name,
-            'notification_staus' => 0
+            'notification_status' => 0
         ]);
 
         return response()->json(['message' => 'Data kategori berhasil dihapus.']);

@@ -28,18 +28,17 @@ class StudentClassController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $classes = StudentClass::create([
-            'class_name' => $request->input('class_name'),
-            'user_id' => Auth::user()->id
+            'class_name' => $request->input('class_name')
         ]);
 
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Membuat Data Kelas" . " " . $request->input('class_name') . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "membuat data kelas" . " " . $request->input('class_name') . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
         return response()->json([
-            'message' => 'Data inserted successfully',
+            'message' => 'Data kelas berhasil disimpan!',
             'data' => $classes,
         ], 201);
     }
@@ -49,18 +48,17 @@ class StudentClassController extends Controller
         $class = StudentClass::find($id);
 
         $class->update([
-            "class_name" =>  $request->input('class_name'),
-            'user_id' => Auth::user()->id
+            "class_name" =>  $request->input('class_name')
         ]);
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Mengedit Data Kelas" . " " . $class->class_name  . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_content' => Auth::user()->name . " " . "mengedit data kelas" . " " . $class->class_name  . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
         return response()->json([
-            'message' => 'Data inserted successfully',
+            'message' => 'Data kelas berhasil diedit!',
             'data' => $class,
         ], 201);
     }
@@ -78,10 +76,10 @@ class StudentClassController extends Controller
         $years = Year::find($activeYearId);
 
         Notification::create([
-            'notification_content' => Auth::user()->name . " " . "Menghapus Data Kelas" . " " . $classes->class_name . " " . "pada tahun ajaran" . " " . $years->year_name,
-            'notification_staus' => 0
+            'notification_content' => Auth::user()->name . " " . "menghapus data kelas" . " " . $classes->class_name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_status' => 0
         ]);
 
-        return response()->json(['message' => 'Data Kelas berhasil dihapus.']);
+        return response()->json(['message' => 'Data kelas berhasil dihapus.']);
     }
 }

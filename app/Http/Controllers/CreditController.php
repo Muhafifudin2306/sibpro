@@ -76,7 +76,7 @@ class CreditController extends Controller
 
         Notification::create([
             'notification_content' => Auth::user()->name . " " . "menghapus data atribut SPP" . " " . $credit->credit_name . " " . "dengan harga" . " " . "Rp" . $credit->credit_price . " " . "pada tahun ajaran" . " " . $years->year_name,
-            'notification_staus' => 0
+            'notification_status' => 0
         ]);
 
         return response()->json(['message' => 'Data atribut berhasil dihapus!']);

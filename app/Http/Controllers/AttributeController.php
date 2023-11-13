@@ -95,7 +95,7 @@ class AttributeController extends Controller
 
         Notification::create([
             'notification_content' => Auth::user()->name . " " . "menghapus data atribut Daftar Ulang" . " " . $attribute->attribute_name . " " . "dengan harga" . " " . "Rp" . $attribute->attribute_price . " " . "pada tahun ajaran" . " " . $years->year_name,
-            'notification_staus' => 0
+            'notification_status' => 0
         ]);
 
         return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
