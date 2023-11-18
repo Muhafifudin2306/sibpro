@@ -19,4 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('/midtrans-callback', [App\Http\Controllers\CreditController::class, 'callback'])->name('paymentCallback');
+Route::post('/midtrans-callback', [App\Http\Controllers\MidtransController::class, 'callback'])->name('paymentCallback');
