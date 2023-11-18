@@ -40,6 +40,7 @@ class ProfileController extends Controller
 
     public function storeUser(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -66,6 +67,14 @@ class ProfileController extends Controller
 
         $studentRole = Role::where('name', 'Student')->first();
         $user->assignRole($studentRole);
+
+        
+        // Retrieve id_credit based on category_id
+        $id_credits = Category::find($request->input('category_id'))->credits()->pluck('credit_id');
+
+        // Attach user to credits in user_has_credit table
+        $user->credits()->attach($id_credits);
+
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $years = Year::find($activeYearId);
