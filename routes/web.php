@@ -31,8 +31,8 @@ Route::prefix('income')->group(function () {
     Route::prefix('credit')->group(function () {
         Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
         Route::get('/detail/{id}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
-        Route::get('/payment/{id}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
-        Route::post('/midtrans-callback', [App\Http\Controllers\ProfileController::class, 'updatePayment'])->name('updatePayment');
+        Route::get('/payment/{id}', [App\Http\Controllers\MidtransController::class, 'payment'])->name('paymentCredit');
+        Route::post('/midtrans-callback', [App\Http\Controllers\MidtransController::class, 'updatePayment'])->name('updatePayment');
     });
 });
 
