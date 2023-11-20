@@ -20,9 +20,11 @@
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
                         <h2 class="section-title">{{ __('Tahun Pembelajaran Aktif') }}</h2>
-                        <p class="section-lead">
-                            {{ __('Pilih dan Tambah Data Tahun Pembelajaran Aktif') }}
-                        </p>
+                        @can('access-yearAdd')
+                            <p class="section-lead">
+                                {{ __('Pilih dan Tambah Data Tahun Pembelajaran Aktif') }}
+                            </p>
+                        @endcan
                     </div>
                     @can('access-yearAdd')
                         <div class="action-content">

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserHasCredit;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -28,7 +30,9 @@ class HomeController extends Controller
     {
         $adminCount = User::count();
         $totalCredit = DB::table('user_has_credit')->sum('credit_price');
+        $userId = Auth::user()->id;
+        $totalPaid =  UserHasCredit::where('user_id', '=', $userId)->sum('credit_price');
         $notifications = Notification::get();
-        return view('home', compact('adminCount', 'notifications','totalCredit'));
+        return view('home', compact('adminCount', 'notifications','totalCredit','totalPaid'));
     }
 }

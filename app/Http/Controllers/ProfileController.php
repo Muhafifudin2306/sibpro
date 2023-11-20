@@ -33,7 +33,7 @@ class ProfileController extends Controller
     public function profile()
     {
         $user = User::with('roles')->find(Auth::user()->id);
-        $student = Student::where('user_id', Auth::user()->id)->first();
+        $student = User::where('id', Auth::user()->id)->first();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         return view('account.profile.index', compact('notifications', 'user', 'student'));
     }
@@ -72,10 +72,11 @@ class ProfileController extends Controller
         // Retrieve id_credit based on category_id
         $id_credits = Category::find($request->input('category_id'))->credits()->pluck('credit_id');
 
-        // Attach user to credits in user_has_credit table
-        $user->credits()->attach($id_credits);
-
         $activeYearId = Year::where('year_status', 'active')->value('id');
+
+         // Attach user to credits in user_has_credit table with id_year
+        $user->credits()->attach($id_credits, ['year_id' => $activeYearId]);
+
 
         $years = Year::find($activeYearId);
 

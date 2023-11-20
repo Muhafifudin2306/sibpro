@@ -1,5 +1,7 @@
 @extends('layouts.admin.app')
 
+@section('title_page', 'Profile User')
+
 @section('content')
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
@@ -61,8 +63,8 @@
                                         <div class="row">
                                             <div class="form-group col-md-6 col-12">
                                                 <label>{{ __('FullName') }}</label>
-                                                <input type="text" class="form-control"
-                                                    value="{{ $student->student_name }}" disabled>
+                                                <input type="text" class="form-control" value="{{ $student->name }}"
+                                                    disabled>
                                             </div>
                                             <div class="form-group col-md-6 col-12">
                                                 <label>{{ 'NIS' }}</label>

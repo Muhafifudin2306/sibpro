@@ -16,28 +16,47 @@
             </li>
 
             <li class="menu-header">Transaksi</li>
-            <li class="dropdown {{ Request::is('pengeluaran*') ? 'active' : '' }}">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-money-bill-wave-alt"></i>
-                    <span>Pengeluaran</span></a>
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'vendor' ? 'active' : '' }}"><a class="nav-link"
-                            href="{{ url('pengeluaran/vendor') }}">Pembayaran Vendor</a></li>
-                    <li><a class="nav-link" href="components-avatar.html">Penggajian Staff</a>
-                    </li>
-                    <li><a class="nav-link" href="components-chat-box.html">Pembelian Aset</a></li>
-                    <li><a class="nav-link" href="components-empty-state.html">Biaya
-                            Operasional</a></li>
-                </ul>
-            </li>
-            <li class="dropdown {{ Request::is('income*') ? 'active' : '' }}">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-dollar-sign"></i>
-                    <span>Pemasukan</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="components-article.html">Daftar Ulang</a></li>
-                    <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
-                            href="{{ url('income/credit') }}">SPP</a></li>
-                </ul>
-            </li>
+            @can('access-paymentStudent')
+                <li class="dropdown {{ Request::is('payment*') ? 'active' : '' }}">
+
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-dollar-sign"></i>
+                        <span>Pembayaran</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link" href="components-article.html">Daftar Ulang</a></li>
+                        <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
+                                href="{{ url('payment/credit') }}">SPP</a></li>
+                    </ul>
+                </li>
+            @endcan
+
+            @can('access-outcome')
+                <li class="dropdown {{ Request::is('pengeluaran*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-money-bill-wave-alt"></i>
+                        <span>Pengeluaran</span></a>
+                    <ul class="dropdown-menu">
+                        <li class="{{ Request::segment(2) === 'vendor' ? 'active' : '' }}"><a class="nav-link"
+                                href="{{ url('pengeluaran/vendor') }}">Pembayaran Vendor</a></li>
+                        <li><a class="nav-link" href="components-avatar.html">Penggajian Staff</a>
+                        </li>
+                        <li><a class="nav-link" href="components-chat-box.html">Pembelian Aset</a></li>
+                        <li><a class="nav-link" href="components-empty-state.html">Biaya
+                                Operasional</a></li>
+                    </ul>
+                </li>
+            @endcan
+
+            @can('access-income')
+                <li class="dropdown {{ Request::is('income*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-dollar-sign"></i>
+                        <span>Pemasukan</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link" href="components-article.html">Daftar Ulang</a></li>
+                        <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
+                                href="{{ url('income/credit') }}">SPP</a></li>
+                    </ul>
+                </li>
+            @endcan
+
             {{-- 
             <li class="menu-header">Anggaran</li>
             <li><a class="nav-link" href="blank.html"><i class="fas fa-chart-pie"></i><span>Laporan
@@ -80,36 +99,34 @@
                     @endcan
                 </ul>
             </li>
-            @can('access-userList')
-                <li class="dropdown {{ Request::is('setting*') ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i>
-                        <span>General Setting</span></a>
+            <li class="dropdown {{ Request::is('setting*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i>
+                    <span>General Setting</span></a>
+                <ul class="dropdown-menu">
+                    @can('access-yearList')
+                        <li class="{{ Request::segment(2) === 'year' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/year') }}">Tahun Aktif</a></li>
+                    @endcan
+                </ul>
+                @can('access-packageList')
                     <ul class="dropdown-menu">
-                        @can('access-yearList')
-                            <li class="{{ Request::segment(2) === 'year' ? 'active' : '' }}"><a
-                                    href="{{ url('/setting/year') }}">Tahun Aktif</a></li>
-                        @endcan
+                        <li class="{{ Request::segment(2) === 'packages' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/packages') }}">Paket</a></li>
                     </ul>
-                    @can('access-packageList')
-                        <ul class="dropdown-menu">
-                            <li class="{{ Request::segment(2) === 'packages' ? 'active' : '' }}"><a
-                                    href="{{ url('/setting/packages') }}">Paket</a></li>
-                        </ul>
-                    @endcan
-                    @can('access-classList')
-                        <ul class="dropdown-menu">
-                            <li class="{{ Request::segment(2) === 'class' ? 'active' : '' }}"><a
-                                    href="{{ url('/setting/class') }}">Kelas</a></li>
-                        </ul>
-                    @endcan
-                    @can('access-studentList')
-                        <ul class="dropdown-menu">
-                            <li class="{{ Request::segment(2) === 'student' ? 'active' : '' }}"><a
-                                    href="{{ url('/setting/student') }}">Siswa</a></li>
-                        </ul>
-                    @endcan
-                </li>
-            @endcan
+                @endcan
+                @can('access-classList')
+                    <ul class="dropdown-menu">
+                        <li class="{{ Request::segment(2) === 'class' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/class') }}">Kelas</a></li>
+                    </ul>
+                @endcan
+                @can('access-studentList')
+                    <ul class="dropdown-menu">
+                        <li class="{{ Request::segment(2) === 'student' ? 'active' : '' }}"><a
+                                href="{{ url('/setting/student') }}">Siswa</a></li>
+                    </ul>
+                @endcan
+            </li>
         </ul>
     </aside>
 </div>

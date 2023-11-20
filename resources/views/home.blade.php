@@ -15,37 +15,59 @@
                     <h1>{{ __('Dashboard') }}</h1>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-primary">
-                                <i class="far fa-user"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Total User</h4>
+                    @can('access-userSum')
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="card-icon bg-primary">
+                                    <i class="far fa-user"></i>
                                 </div>
-                                <div class="card-body py-1">
-                                    <h4>{{ $adminCount }}</h4>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total User</h4>
+                                    </div>
+                                    <div class="card-body py-1">
+                                        <h4>{{ $adminCount }}</h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endcan
 
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-danger">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Total Pemasukan</h4>
+                    @can('access-incomeSum')
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="card-icon bg-danger">
+                                    <i class="fas fa-dollar-sign"></i>
                                 </div>
-                                <div class="card-body py-1">
-                                    <h4>Rp {{ number_format($totalCredit, 0, ',', '.') }}</h4>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total Pemasukan</h4>
+                                    </div>
+                                    <div class="card-body py-1">
+                                        <h4>Rp {{ number_format($totalCredit, 0, ',', '.') }}</h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endcan
+
+                    @can('access-paidSum')
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="card-icon bg-danger">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total Pembayaran</h4>
+                                    </div>
+                                    <div class="card-body py-1">
+                                        <h4>Rp {{ number_format($totalPaid, 0, ',', '.') }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
                 </div>
             </section>
         </div>

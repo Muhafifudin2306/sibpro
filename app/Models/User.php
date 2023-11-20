@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function classes()
     {
-        return $this->belongsTo(StudentClass::class, 'id');
+        return $this->belongsTo(StudentClass::class, 'class_id');
     }
 
     public function categories()
