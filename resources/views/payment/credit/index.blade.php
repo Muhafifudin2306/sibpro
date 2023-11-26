@@ -1,12 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title_page', 'Class List')
+@section('title_page', 'Credit Payment')
 
 @section('content')
     @push('styles')
-        @can('access-classList')
-            <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-        @endcan
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     @endpush
 
     <div class="main-wrapper main-wrapper-1">
@@ -16,104 +14,86 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Kelas') }}</h1>
+                    <h1>{{ __('Pembayaran SPP Siswa') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('General Setting') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Kelas') }}</div>
+                        <div class="breadcrumb-item">{{ __('Pembayaran') }}</div>
+                        <div class="breadcrumb-item active">{{ __('SPP') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">{{ __('Data Pembayaran SPP') }}</h2>
-                        <p class="section-lead">
-                            {{ __('Pilih dan Tambah Pembayaran SPP') }}
-                        </p>
-                    </div>
-                    <div class="action-content">
-                        @can('access-classAdd')
-                            <button class="btn btn-primary" data-toggle="modal"
-                                data-target="#AddModal">{{ __('+ Tambah Data') }}</button>
-                        @endcan
+                        <h2 class="section-title">{{ __('Daftar Tagihan SPP') }}</h2>
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Kelas') }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-tagihan-vendor">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">
-                                                {{ __('No') }}
-                                            </th>
-                                            <th>{{ __('Tahun Ajaran') }}</th>
-                                            <th>{{ __('Nama Biaya') }}</th>
-                                            <th>{{ __('Jumlah Biaya') }}</th>
-                                            <th>{{ __('Status') }}</th>
-                                            <th>{{ __('Tanggal Pembayaran') }}</th>
-                                            <th>{{ __('Aksi') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($credit as $item)
-                                            <tr>
-                                                <td class="text-center">
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->year_id }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->year_id }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->status }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->status }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->status }}
-                                                </td>
-                                                @if ($item->updated_at != null)
-                                                    <td class="text-center">
-                                                        {{ $item->updated_at->format('d F Y') }}
-                                                    </td>
-                                                @else
-                                                    <td></td>
-                                                @endif
-
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        @can('access-classUpdate')
-                                                            <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                                data-target="#updateModal{{ $item->id }}">
-                                                                <i class="fas fa-pen" title="Edit Nama Kelas"></i>
-                                                            </div>
-                                                        @endcan
-                                                        @can('access-classDelete')
-                                                            <div class="text-danger mx-2 cursor-pointer">
-                                                                <i class="fas class-delete fa-trash-alt"
-                                                                    data-card-id="{{ $item->id }}"
-                                                                    title="Delete Kelas"></i>
-                                                            </div>
-                                                        @endcan
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                <div class="row">
+                    @foreach ($credit as $item)
+                        @if ($item->status == 'Paid')
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="card card-success">
+                                    <div class="card-header">
+                                        <h4>{{ 'Pembayaran Lunas' }}</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="py-2 mb-3">
+                                            <div class="box py-5 bg-success rounded fs-2 text-center text-white">
+                                                <h1><i class="bi bi-check2-circle"></i></h1>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-calendar2 mr-2"></i>
+                                            <span>Tahun Pelajaran {{ $item->year->year_name }}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-wallet2 mr-2"></i>
+                                            <span>{{ $item->credit->credit_name }}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-currency-dollar mr-2"></i>
+                                            <span>Rp{{ number_format($item->credit->credit_price, 0, ',', '.') }}</span>
+                                        </div>
+                                        <a href="{{ url('payment/credit/detail/' . $item->id) }}">
+                                            <div class="py-2">
+                                                <button class="btn btn-outline-success w-100">Bukti Pembayaran</button>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        @elseif ($item->status == 'Unpaid')
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="card card-warning">
+                                    <div class="card-header d-flex justify-content-between">
+                                        <h4>{{ 'Pembayaran Belum Lunas' }}</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="py-2 mb-3">
+                                            <div class="box py-5 bg-warning rounded fs-2 text-center text-white">
+                                                <h1><i class="bi bi-pause-circle"></i></h1>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-calendar2 mr-2"></i>
+                                            <span>Tahun Pelajaran {{ $item->year->year_name }}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-wallet2 mr-2"></i>
+                                            <span>{{ $item->credit->credit_name }}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-currency-dollar mr-2"></i>
+                                            <span>Rp{{ number_format($item->credit->credit_price, 0, ',', '.') }}</span>
+                                        </div>
+                                        <a href="{{ url('payment/credit/detail/' . $item->id) }}">
+                                            <div class="py-2">
+                                                <button class="btn btn-warning w-100">Bayar Sekarang</button>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
             </section>
         </div>
@@ -123,175 +103,6 @@
             </div>
         </footer>
     </div>
-    @can('access-classAdd')
-        <div class="modal fade" tabindex="-1" role="dialog" id="AddModal">
-            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Tambah Data Kelas</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form id="classForm">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="class_name">Nama Kelas</label>
-                                <input type="text" class="form-control" name="class_name" id="class_name"
-                                    placeholder="X TKJ A/X TKJ B" autofocus>
-                            </div>
-                        </div>
-                        <div class="modal-footer bg-whitesmoke br">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    @endcan
-
-    @can('access-classUpdate')
-        @foreach ($classes as $item)
-            <div class="modal fade" tabindex="-1" role="dialog" id="updateModal{{ $item->id }}">
-                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Update Data Kelas</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form class="update-form" data-action="{{ url('/setting/class/update/' . $item->id) }} }}"
-                            method="POST">
-                            @csrf
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="class_name">Nama Kelas</label>
-                                    <input type="text" class="form-control" name="class_name" id="class_name"
-                                        value="{{ $item->class_name }}">
-                                </div>
-                            </div>
-                            <div class="modal-footer bg-whitesmoke br">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Simpan Data</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    @endcan
-
     @push('scripts')
-        @can('access-classAdd')
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const classForm = document.getElementById('classForm');
-                    classForm.addEventListener('submit', function(event) {
-                        event.preventDefault();
-                        const formData = new FormData(classForm);
-                        const classData = {};
-                        formData.forEach((value, key) => {
-                            classData[key] = value;
-                        });
-                        fetch(`/setting/class/add`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(classData)
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                Notiflix.Notify.success("Data kelas berhasil dibuat!", {
-                                    timeout: 3000
-                                });
-                                location.reload();
-                            })
-                            .catch(error => {
-                                Notiflix.Notify.failure('Error:', error);
-                            });
-                    });
-                });
-            </script>
-        @endcan
-
-        @can('access-classDelete')
-            <script>
-                const deleteClass = document.querySelectorAll('.class-delete');
-            </script>
-            <script>
-                deleteClass.forEach(button => {
-                    button.addEventListener('click', function() {
-                        const cardId = button.dataset.cardId;
-
-                        Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
-                            'Batal',
-                            function() {
-                                fetch(`/setting/class/delete/${cardId}`, {
-                                        method: 'DELETE',
-                                        headers: {
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                        }
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        Notiflix.Notify.success("Data kelas berhasil dihapus!", {
-                                            timeout: 3000
-                                        });
-                                        location.reload();
-                                    })
-                                    .catch(error => {
-                                        Notiflix.Notify.failure('Error:', error);
-                                    });
-                            });
-                    });
-                });
-            </script>
-        @endcan
-
-        @can('access-classUpdate')
-            <script>
-                const updateForms = document.querySelectorAll('.update-form');
-            </script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-
-                    updateForms.forEach(form => {
-                        form.addEventListener('submit', function(event) {
-                            event.preventDefault();
-
-                            const formData = new FormData(form);
-
-                            fetch(form.getAttribute('data-action'), {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    body: formData
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    Notiflix.Notify.success("Data kelas berhasil diperbarui!", {
-                                        timeout: 3000
-                                    });
-
-                                    location.reload();
-                                })
-                                .catch(error => {
-                                    Notiflix.Notify.failure('Error:', error);
-                                });
-                        });
-                    });
-                });
-            </script>
-        @endcan
-
-        @can('access-classList')
-            <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-            <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
-        @endcan
     @endpush
 @endsection

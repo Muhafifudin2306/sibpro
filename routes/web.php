@@ -197,6 +197,7 @@ Route::prefix('setting')->group(function () {
 
 Route::prefix('payment')->group(function () {
     Route::prefix('credit')->group(function () {
-        Route::get('/', [App\Http\Controllers\PaymentController::class, 'index'])->name('credit');
+        Route::get('/', [App\Http\Controllers\PaymentController::class, 'index']);
+        Route::get('/detail/{id}', [App\Http\Controllers\PaymentController::class, 'detail'])->name('detailpayment');
     });
 });

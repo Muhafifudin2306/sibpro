@@ -24,4 +24,14 @@ class UserHasCredit extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class, 'year_id', 'id');
+    }
+
+    public function studentClass()
+    {
+        return $this->belongsTo(Year::class, 'class_id', 'id');
+    }
 }
