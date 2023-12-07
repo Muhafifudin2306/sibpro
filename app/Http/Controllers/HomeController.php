@@ -7,6 +7,7 @@ use App\Models\UserHasCredit;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use App\Models\Year;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -30,12 +31,16 @@ class HomeController extends Controller
     public function index()
     {
         $adminCount = User::count();
+        $years = Year::orderBy("updated_at", "DESC")->get();
         $roleCount = Role::count();
         $totalCredit = DB::table('user_has_credit')->sum('credit_price');
         $userId = Auth::user()->id;
         $totalPaid =  UserHasCredit::where('user_id', '=', $userId)->sum('credit_price');
-        $credit = UserHasCredit::where('invoice_number','!=','')->orderBy("updated_at", "DESC")->limit(5)->get();
+        $credit = UserHasCredit::where('invoice_number','!=','')
+                    ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
+                    ->orderBy("updated_at", "DESC")
+                    ->limit(5)->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(3)->get();
-        return view('home', compact('adminCount', 'notifications','totalCredit','totalPaid','roleCount','credit'));
+        return view('home', compact('adminCount', 'notifications','totalCredit','totalPaid','roleCount','credit','years'));
     }
 }

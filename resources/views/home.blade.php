@@ -11,8 +11,38 @@
         <!-- Main Content -->
         <div class="main-content">
             <section class="section">
-                <div class="section-header">
-                    <h1>{{ __('Dashboard') }}</h1>
+                <div class="section-header d-flex justify-content-lg-between ">
+                    <div class="title">
+                        <h1>{{ __('Dashboard') }}</h1>
+                    </div>
+                    <form id="updateYearForm">
+                        @csrf
+                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                            <div class="semester__active mr-2">
+                                <select class="form-control" name="year_semester">
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_semester }}"
+                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                            Semester: {{ $item->year_semester }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="year__active mr-2">
+                                <select class="form-control" name="year_name">
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_name }}"
+                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                            Tahun Ajaran: {{ $item->year_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="button-submit">
+                                <button type="button" onclick="updateYear()" class="btn btn-primary h-100">Simpan</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="row">
                     @can('access-userSum')
@@ -90,42 +120,47 @@
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Transaksi Terbaru</h4>
-                                <div class="card-header-action">
-                                    <a href="#" class="btn btn-danger">View More <i
-                                            class="fas fa-chevron-right"></i></a>
-                                </div>
+                                <h4>Transaksi SPP Terbaru</h4>
+                                @if ($credit->isNotEmpty())
+                                    <div class="card-header-action">
+                                        <a href="#" class="btn btn-danger">View More <i
+                                                class="fas fa-chevron-right"></i></a>
+                                    </div>
+                                @endif
+
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive table-invoice">
-                                    <table class="table table-striped">
-                                        <tr>
-                                            <th>ID Transaksi</th>
-                                            <th>Pembayaran</th>
-                                            <th>Nama</th>
-                                            <th>Status</th>
-                                            <th>Tanggal</th>
-                                        </tr>
-                                        @foreach ($credit as $item)
+                                    @if ($credit->isEmpty())
+                                        <p class="text-center">Belum ada transaksi pada periode ini</p>
+                                    @else
+                                        <table class="table table-striped">
                                             <tr>
-                                                <td>{{ $item->invoice_number }}</td>
-                                                <td>{{ $item->credit->credit_name }}</td>
-                                                <td class="font-weight-600">{{ $item->user->name }}</td>
-                                                @if ($item->status == 'Paid')
-                                                    <td>
-                                                        <div class="badge badge-success">{{ $item->status }}</div>
-                                                    </td>
-                                                @else
-                                                    <td>
-                                                        <div class="badge badge-warning">{{ $item->status }}</div>
-                                                    </td>
-                                                @endif
-                                                <td>{{ $item->updated_at->format('F d, Y') }}</td>
+                                                <th>ID Transaksi</th>
+                                                <th>Pembayaran</th>
+                                                <th>Nama</th>
+                                                <th>Status</th>
+                                                <th>Tanggal</th>
                                             </tr>
-                                        @endforeach
-
-
-                                    </table>
+                                            @foreach ($credit as $item)
+                                                <tr>
+                                                    <td>{{ $item->invoice_number }}</td>
+                                                    <td>{{ $item->credit->credit_name }}</td>
+                                                    <td class="font-weight-600">{{ $item->user->name }}</td>
+                                                    @if ($item->status == 'Paid')
+                                                        <td>
+                                                            <div class="badge badge-success">{{ $item->status }}</div>
+                                                        </td>
+                                                    @else
+                                                        <td>
+                                                            <div class="badge badge-warning">{{ $item->status }}</div>
+                                                        </td>
+                                                    @endif
+                                                    <td>{{ $item->updated_at->format('F d, Y') }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -165,9 +200,37 @@
             <div class="footer-left">
                 Development by Muhammad Afifudin</a>
             </div>
-            <div class="footer-right">
-
-            </div>
         </footer>
     </div>
+    <script>
+        function updateYear() {
+            const form = document.getElementById('updateYearForm');
+            const formData = new FormData(form);
+
+            fetch('/current-year', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Terjadi kesalahan');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    Notiflix.Notify.success(data.message, {
+                        timeout: 3000
+                    });
+                    location.reload();
+                })
+                .catch(error => {
+                    Notiflix.Notify.failure('Error: Data tidak ditemukan!');
+                });
+        }
+    </script>
+
+
 @endsection

@@ -88,4 +88,35 @@ class YearController extends Controller
 
         return response()->json(['message' => 'Data Tahun berhasil dihapus.']);
     }
+
+
+    public function currentYear(Request $request)
+    {
+        $newSemester = $request->input('year_semester');
+        $newYearName = $request->input('year_name');
+
+        if (!$this->isValidData($newSemester, $newYearName)) {
+            return response()->json(['error' => 'Data yang diberikan tidak valid'], 422);
+        }
+
+        if (!$this->isDataExist($newSemester, $newYearName)) {
+            return response()->json(['error' => 'Data tidak ditemukan di tabel'], 422);
+        }
+
+        Year::where('year_current', 'selected')->update(['year_current' => 'unSelected']);
+        Year::where(['year_semester' => $newSemester, 'year_name' => $newYearName])->update(['year_current' => 'selected']);
+
+        return response()->json(['message' => 'Data tahun ajaran berhasil diperbarui'], 200);
+    }
+
+    private function isValidData($semester, $yearName)
+    {
+        return !empty($semester) && !empty($yearName);
+    }
+
+    private function isDataExist($semester, $yearName)
+    {
+        return Year::where(['year_semester' => $semester, 'year_name' => $yearName])->exists();
+    }
 }
+

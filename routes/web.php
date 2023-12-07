@@ -22,6 +22,8 @@ Auth::routes();
 Route::post('/readall', [App\Http\Controllers\NotificationController::class, 'store'])->name('storeNotification');
 Route::post('/readnotif/{id}', [App\Http\Controllers\NotificationController::class, 'update'])->name('updateNotification');
 Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notif');
+Route::post('/current-year', [App\Http\Controllers\YearController::class, 'currentYear'])->name('current-year');
+
 Route::prefix('pengeluaran')->group(function () {
 
     Route::get('/vendor', [App\Http\Controllers\VendorController::class, 'index'])->name('vendor');
