@@ -50,10 +50,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function attributes()
-    {
-        return $this->hasMany(Attribute::class, 'id_user');
-    }
 
     public function classes()
     {
@@ -65,9 +61,13 @@ class User extends Authenticatable
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-
     public function credits()
     {
         return $this->belongsToMany(Credit::class, 'user_has_credit');
+    }
+
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'user_has_attribute');
     }
 }

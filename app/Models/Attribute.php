@@ -24,4 +24,8 @@ class Attribute extends Model
     {
         return $this->belongsToMany(Category::class, 'category_has_attribute');
     }
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'category_has_attribute', 'category_id');
+    }
 }

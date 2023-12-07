@@ -14,15 +14,16 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+            </li>
 
             <li class="menu-header">Transaksi</li>
             @can('access-paymentStudent')
                 <li class="dropdown {{ Request::is('payment*') ? 'active' : '' }}">
-
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-dollar-sign"></i>
                         <span>Pembayaran</span></a>
                     <ul class="dropdown-menu">
-                        <li><a class="nav-link" href="components-article.html">Daftar Ulang</a></li>
+                        <li class="{{ Request::segment(2) === 'enrollment' ? 'active' : '' }}"><a
+                                href="{{ url('payment/enrollment') }}">Daftar Ulang</a></li>
                         <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
                                 href="{{ url('payment/credit') }}">SPP</a></li>
                     </ul>

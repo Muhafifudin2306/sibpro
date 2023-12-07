@@ -7,7 +7,7 @@ use App\Models\Notification;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Student;
+use App\Models\Attribute;
 use App\Models\StudentClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -76,6 +76,14 @@ class ProfileController extends Controller
 
          // Attach user to credits in user_has_credit table with id_year
         $user->credits()->attach($id_credits, ['year_id' => $activeYearId]);
+
+        // Retrieve id_credit based on attribute_id
+        $id_attributes = Attribute::find($request->input('category_id'))->attributes()->pluck('attribute_id');
+
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+         // Attach user to credits in user_has_credit table with id_year
+        $user->attributes()->attach($id_attributes, ['year_id' => $activeYearId]);
 
 
         $years = Year::find($activeYearId);

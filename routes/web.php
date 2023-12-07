@@ -200,4 +200,8 @@ Route::prefix('payment')->group(function () {
         Route::get('/', [App\Http\Controllers\PaymentController::class, 'index']);
         Route::get('/detail/{id}', [App\Http\Controllers\PaymentController::class, 'detail'])->name('detailpayment');
     });
+
+    Route::prefix('enrollment')->group(function () {
+        Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index']);
+    });
 });
