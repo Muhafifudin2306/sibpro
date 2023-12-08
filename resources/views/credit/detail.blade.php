@@ -29,9 +29,6 @@
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
                         <h2 class="section-title">{{ __('Data Kelas') }} {{ $class->class_name }}</h2>
-                        <p class="section-lead">
-                            {{ __('Pilih dan Edit Pembayaran Siswa') }}
-                        </p>
                     </div>
                 </div>
 
@@ -44,13 +41,14 @@
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-tagihan-vendor">
                                     <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">{{ __('No') }}</th>
+                                        <tr>
+                                            <th>{{ __('No') }}</th>
                                             <th>{{ __('NIS') }}</th>
                                             <th>{{ __('Nama Siswa') }}</th>
                                             <th>{{ __('Kategori') }}</th>
-                                            <th>{{ __('Pembayaran') }}</th>
-                                            <th>{{ __('Total') }}</th>
+                                            <th>{{ __('Terbayar') }}</th>
+                                            <th>{{ __('Tagihan') }}</th>
+                                            <th>{{ __('Operasi') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -59,7 +57,7 @@
                                         @endphp
                                         @foreach ($students as $item)
                                             <tr>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $no++ }}
                                                 </td>
                                                 <td>
@@ -68,36 +66,34 @@
                                                 <td>
                                                     {{ $item->name }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $item->categories->category_name }}
                                                 </td>
-                                                <td class="text-center">
-                                                    <div class="d-flex flex-wrap">
+                                                <td>
+                                                    @php
+                                                        $totalCreditPrice = 0;
+                                                        $totalBilling = 0;
+                                                    @endphp
+                                                    @foreach ($item->credits as $credit)
                                                         @php
-                                                            $totalCreditPrice = 0;
+                                                            $totalCreditPrice += $credit->credit_price;
                                                         @endphp
-                                                        @foreach ($item->credits as $credit)
-                                                            <div class="mb-2 mx-1">
-                                                                @if ($credit->status == 'Unpaid')
-                                                                    <a
-                                                                        href="{{ url('income/credit/payment/' . $credit->user_credit_id) }}">
-                                                                        <button class="btn btn-danger" type="submit"
-                                                                            id="pay-button">{{ $credit->credit_name }}</button>
-                                                                    </a>
-                                                                @elseif($credit->status == 'Paid')
-                                                                    <button class="btn btn-success" data-toggle="modal"
-                                                                        data-target="#creditModal{{ $credit->id }}">{{ $credit->credit_name }}
-                                                                        (Lunas )</button>
-                                                                @endif
-                                                            </div>
-                                                            @php
-                                                                $totalCreditPrice += $credit->credit_price;
-                                                            @endphp
-                                                        @endforeach
-                                                    </div>
+                                                    @endforeach
+                                                    Rp{{ number_format($totalCreditPrice, 0, ',', '.') }}
                                                 </td>
                                                 <td>
-                                                    Rp{{ number_format($totalCreditPrice, 0, ',', '.') }}
+                                                    @foreach ($item->categories->credits as $billing)
+                                                        @php
+                                                            $totalBilling += $billing->credit_price;
+                                                        @endphp
+                                                    @endforeach
+                                                    Rp{{ number_format($totalBilling, 0, ',', '.') }}
+                                                </td>
+                                                <td>
+                                                    <a href="{{ url('income/credit/detail/student/' . $item->uuid) }}">
+                                                        <button class="btn btn-primary" type="submit"
+                                                            id="pay-button">Bayar</button>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach

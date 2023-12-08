@@ -30,7 +30,7 @@
                                         <h6 class="text-center p-4 border-bottom">{{ $item->class_name }}</h6>
                                     </div>
                                     <div class="card-body">
-                                        <a href="{{ url('income/credit/detail/' . $item->id) }}">
+                                        <a href="{{ url('income/credit/detail/' . $item->uuid) }}">
                                             <button class="btn btn-primary w-100">More Detail</button>
                                         </a>
                                     </div>

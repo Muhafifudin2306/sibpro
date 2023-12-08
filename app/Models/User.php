@@ -66,6 +66,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Credit::class, 'user_has_credit');
     }
 
+    public function billing()
+    {
+        return $this->hasMany(UserHasCredit::class, 'user_id', 'id');
+    }
+
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'user_has_attribute');

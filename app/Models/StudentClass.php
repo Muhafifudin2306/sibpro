@@ -8,6 +8,7 @@ class StudentClass extends Model
 {
     protected $table = "student_classes";
     protected $fillable = [
+        'uuid',
         'class_name',
         'user_id'
     ];

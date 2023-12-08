@@ -7,6 +7,7 @@ use App\Models\Notification;
 use App\Models\Year;
 use App\Models\StudentClass;
 use Illuminate\Support\Facades\Auth;
+use Ramsey\Uuid\Uuid;
 
 class StudentClassController extends Controller
 {
@@ -27,7 +28,11 @@ class StudentClassController extends Controller
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
+        // Membuat UUID
+        $uuid = Uuid::uuid4()->toString();
+
         $classes = StudentClass::create([
+            'uuid' => $uuid,
             'class_name' => $request->input('class_name')
         ]);
 
@@ -37,6 +42,7 @@ class StudentClassController extends Controller
             'notification_content' => Auth::user()->name . " " . "membuat data kelas" . " " . $request->input('class_name') . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
+
         return response()->json([
             'message' => 'Data kelas berhasil disimpan!',
             'data' => $classes,

@@ -25,8 +25,17 @@ class CreditController extends Controller
         return view('credit.index', compact('notifications', 'studentClasses'));
     }
 
-    public function detail($id)
+    public function detail($uuid)
     {
+        $data = StudentClass::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            // Handle jika data tidak ditemukan
+            abort(404);
+        }
+
+        $id = $data->id;
+
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $students = User::where('class_id', $id)
             ->whereNotNull('category_id')
@@ -39,6 +48,24 @@ class CreditController extends Controller
 
 
         return view('credit.detail', compact('notifications', 'students', 'class'));
+    }
+
+    public function billingStudent($uuid)
+    {
+        $data = User::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            // Handle jika data tidak ditemukan
+            abort(404);
+        }
+
+        $id = $data->id;
+
+        $student = User::find($id);
+
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+
+        return view('credit.billing', compact('notifications', 'student'));
     }
 
     public function store(Request $request)
