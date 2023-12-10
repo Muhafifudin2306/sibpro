@@ -68,7 +68,8 @@
                                                     @foreach ($student->billing as $item)
                                                         <div class="mb-2 mx-1">
                                                             @if ($item->status == 'Unpaid')
-                                                                <a href="#">
+                                                                <a
+                                                                    href="{{ url('income/credit/payment/' . $item->uuid) }}">
                                                                     <button class="btn btn-danger" type="submit"
                                                                         id="pay-button">{{ $item->credit->credit_name }}</button>
                                                                 </a>

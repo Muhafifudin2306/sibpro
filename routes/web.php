@@ -32,9 +32,10 @@ Route::prefix('pengeluaran')->group(function () {
 Route::prefix('income')->group(function () {
     Route::prefix('credit')->group(function () {
         Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
+        Route::get('/all', [App\Http\Controllers\CreditController::class, 'allData'])->name('allData');
         Route::get('/detail/{uuid}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
         Route::get('/detail/student/{uuid}', [App\Http\Controllers\CreditController::class, 'billingStudent'])->name('billingStudent');
-        Route::get('/payment/{id}', [App\Http\Controllers\MidtransController::class, 'payment'])->name('paymentCredit');
+        Route::get('/payment/{uuid}', [App\Http\Controllers\MidtransController::class, 'payment'])->name('paymentCredit');
         Route::post('/midtrans-callback', [App\Http\Controllers\MidtransController::class, 'updatePayment'])->name('updatePayment');
     });
 });

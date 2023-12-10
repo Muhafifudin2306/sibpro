@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Credit;
 use App\Models\Notification;
 use App\Models\StudentClass;
+use App\Models\UserHasCredit;
 use App\Models\Year;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,6 +24,18 @@ class CreditController extends Controller
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
 
         return view('credit.index', compact('notifications', 'studentClasses'));
+    }
+
+    public function allData()
+    {
+        $credit = UserHasCredit::where('invoice_number','!=','')
+                    ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
+                    ->orderBy("updated_at", "DESC")
+                    ->get();
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+
+        return view('credit.allData', compact('notifications', 'studentClasses','credit'));
     }
 
     public function detail($uuid)

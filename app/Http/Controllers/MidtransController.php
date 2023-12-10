@@ -8,8 +8,17 @@ use App\Models\UserHasCredit;
 
 class MidtransController extends Controller
 {
-    public function payment($id)
+    public function payment($uuid)
     {
+        $data = UserHasCredit::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            // Handle jika data tidak ditemukan
+            abort(404);
+        }
+
+        $id = $data->id;
+        
         $order = UserHasCredit::find($id);
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.server_key');

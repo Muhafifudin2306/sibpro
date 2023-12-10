@@ -123,7 +123,7 @@
                                 <h4>Transaksi SPP Terbaru</h4>
                                 @if ($credit->isNotEmpty())
                                     <div class="card-header-action">
-                                        <a href="{{ url('/income/credit') }}" class="btn btn-danger">View More <i
+                                        <a href="{{ url('/income/credit/all') }}" class="btn btn-danger">View More <i
                                                 class="fas fa-chevron-right"></i></a>
                                     </div>
                                 @endif
