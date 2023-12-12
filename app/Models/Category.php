@@ -27,4 +27,9 @@ class Category extends Model
     {
         return $this->belongsToMany(Credit::class, 'category_has_credit');
     }
+
+    public function enrollments()
+    {
+        return $this->belongsToMany(Attribute::class, 'user_has_attribute');
+    }
 }

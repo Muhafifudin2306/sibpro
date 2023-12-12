@@ -102,7 +102,7 @@
                                     <div class="form-group col-6">
                                         <label for="gender">{{ __('Kategori') }} <span
                                                 class="text-danger">*</span></label>
-                                        <select class="form-control" name="category_id">
+                                        <select class="form-control" name="category_id" disabled>
                                             <option disabled>{{ __('-- Pilih Kategori --') }}</option>
                                             @foreach ($categories as $item)
                                                 <option value="{{ $item->id }}"

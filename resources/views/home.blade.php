@@ -147,15 +147,9 @@
                                                     <td>{{ $item->invoice_number }}</td>
                                                     <td>{{ $item->credit->credit_name }}</td>
                                                     <td class="font-weight-600">{{ $item->user->name }}</td>
-                                                    @if ($item->status == 'Paid')
-                                                        <td>
-                                                            <div class="badge badge-success">{{ $item->status }}</div>
-                                                        </td>
-                                                    @else
-                                                        <td>
-                                                            <div class="badge badge-warning">{{ $item->status }}</div>
-                                                        </td>
-                                                    @endif
+                                                    <td>
+                                                        <div class="badge badge-success">{{ $item->status }}</div>
+                                                    </td>
                                                     <td>{{ $item->updated_at->format('F d, Y') }}</td>
                                                 </tr>
                                             @endforeach

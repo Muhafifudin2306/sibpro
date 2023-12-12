@@ -10,11 +10,11 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Siswa') }}</h1>
+                    <h1>{{ __('Pembayaran SPP Siswa') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('General Setting') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Siswa') }}</div>
+                        <div class="breadcrumb-item">{{ __('Pemasukan') }}</div>
+                        <div class="breadcrumb-item active">{{ __('SPP') }}</div>
                     </div>
                 </div>
                 <div class="section-body">

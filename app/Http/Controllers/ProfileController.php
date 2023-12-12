@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use Ramsey\Uuid\Uuid;
 
 class ProfileController extends Controller
 {
@@ -40,11 +41,12 @@ class ProfileController extends Controller
 
     public function storeUser(Request $request)
     {
-        
+        $uuid = Uuid::uuid4()->toString();
+
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:5', 'confirmed'],
             'nis' => ['required'],
             'class_id' => ['required'],
             'category_id' => ['required'],
@@ -56,6 +58,7 @@ class ProfileController extends Controller
         }
 
         $user = User::create([
+            'uuid' => $uuid,
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
@@ -75,7 +78,20 @@ class ProfileController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
          // Attach user to credits in user_has_credit table with id_year
-        $user->credits()->attach($id_credits, ['year_id' => $activeYearId]);
+         foreach ($id_credits as $creditId) {
+            $uuidTwo = Uuid::uuid4()->toString();
+            
+            // Generate a unique invoice number with 7 digits and 5 letters
+            $invoiceNumber = $this->generateInvoiceNumberCredit();
+
+            $user->credits()->attach($creditId, [
+                'year_id' => $activeYearId,
+                'uuid' => $uuidTwo,
+                'invoice_number' => $invoiceNumber,
+                'created_at' => now(), // Add created_at timestamp
+                'updated_at' => now(), // Add updated_at timestamp
+            ]);
+        }
 
         // Retrieve id_credit based on attribute_id
         $id_attributes = Attribute::find($request->input('category_id'))->attributes()->pluck('attribute_id');
@@ -83,7 +99,22 @@ class ProfileController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
          // Attach user to credits in user_has_credit table with id_year
-        $user->attributes()->attach($id_attributes, ['year_id' => $activeYearId]);
+        //$user->attributes()->attach($id_attributes, ['year_id' => $activeYearId]);
+
+        foreach ($id_attributes as $attributeId) {
+            $uuidThree = Uuid::uuid4()->toString();
+            
+            // Generate a unique invoice number with 7 digits and 5 letters
+            $invoiceNumber = $this->generateInvoiceNumberEnrollment();
+
+            $user->attributes()->attach($attributeId, [
+                'year_id' => $activeYearId,
+                'uuid' => $uuidThree,
+                'invoice_number' => $invoiceNumber,
+                'created_at' => now(), // Add created_at timestamp
+                'updated_at' => now(), // Add updated_at timestamp
+            ]);
+        }
 
 
         $years = Year::find($activeYearId);
@@ -95,7 +126,33 @@ class ProfileController extends Controller
 
         return response()->json(['message' => 'Data user berhasil dibuat!'], 200);
     }
+    private function generateInvoiceNumberCredit()
+    {
+        // Generate 7 random digits
+        $digits = mt_rand(1000000, 9999999);
 
+        // Generate 5 random letters
+        $letters = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
+
+        // Concatenate digits and letters
+        $invoiceNumber = "SPP"."-".$digits ."-". $letters;
+
+        return $invoiceNumber;
+    }
+
+    private function generateInvoiceNumberEnrollment()
+    {
+        // Generate 7 random digits
+        $digits = mt_rand(1000000, 9999999);
+
+        // Generate 5 random letters
+        $letters = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
+
+        // Concatenate digits and letters
+        $invoiceNumber = "DU"."-".$digits ."-". $letters;
+
+        return $invoiceNumber;
+    }
     public function destroyUser($id)
     {
         $user = user::find($id);

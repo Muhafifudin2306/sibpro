@@ -9,6 +9,8 @@ class UserHasCredit extends Model
     protected $table = "user_has_credit";
 
     protected $fillable = [
+        'uuid',
+        'invoice_number',
         'user_id',
         'credit_id',
         'status',

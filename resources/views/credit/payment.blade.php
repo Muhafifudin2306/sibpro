@@ -61,18 +61,20 @@
                                         <table class="table table-striped table-hover table-md">
                                             <tr>
                                                 <th data-width="40">#</th>
+                                                <th>Invoice Number</th>
                                                 <th>Item</th>
-                                                <th class="text-center">Price</th>
-                                                <th class="text-center">Quantity</th>
-                                                <th class="text-right">Totals</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Totals</th>
                                             </tr>
                                             <tr>
                                                 <td>1</td>
+                                                <td>{{ $order->invoice_number }}</td>
                                                 <td>{{ $order->credit->credit_name }}</td>
-                                                <td class="text-center">
+                                                <td>
                                                     Rp{{ number_format($order->credit->credit_price, 0, ',', '.') }}</td>
-                                                <td class="text-center">1</td>
-                                                <td class="text-right">
+                                                <td>1</td>
+                                                <td>
                                                     Rp{{ number_format($order->credit->credit_price, 0, ',', '.') }}</td>
                                             </tr>
                                         </table>
@@ -128,7 +130,7 @@
                 onSuccess: function(result) {
                     /* You may add your own implementation here */
                     // alert("payment success!");
-                    window.location.href = '/income/credit/detail/{{ $order->user->class_id }}';
+                    window.location.href = '/income/credit/detail/{{ $order->user->uuid }}';
                     console.log(result);
                 },
                 onPending: function(result) {

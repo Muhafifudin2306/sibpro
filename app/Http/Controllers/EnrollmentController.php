@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UserHasCredit;
+use App\Models\User;
 use App\Models\Notification;
+use App\Models\StudentClass;
 
 class EnrollmentController extends Controller
 {
@@ -13,11 +14,36 @@ class EnrollmentController extends Controller
     {
         $this->middleware('auth');
     }
-
     public function index()
     {
-        $credit = UserHasCredit::orderBy("updated_at", "DESC")->get();
-        $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('payment.enrollment.index', compact('notifications', 'credit'));
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+
+        return view('enrollment.index', compact('notifications', 'studentClasses'));
+    }
+
+    public function detail($uuid)
+    {
+        $data = StudentClass::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            // Handle jika data tidak ditemukan
+            abort(404);
+        }
+
+        $id = $data->id;
+
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $students = User::where('class_id', $id)
+            ->whereNotNull('category_id')
+            ->with(['enrollments' => function ($query) {
+                $query->select('attributes.id', 'attribute_name', 'status', 'user_has_attribute.attribute_price', 'user_has_attribute.id as user_attribute_id');
+            }])
+            ->get();
+
+        $class = StudentClass::find($id);
+
+
+        return view('enrollment.detail', compact('notifications', 'students', 'class'));
     }
 }

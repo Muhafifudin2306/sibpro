@@ -38,6 +38,11 @@ Route::prefix('income')->group(function () {
         Route::get('/payment/{uuid}', [App\Http\Controllers\MidtransController::class, 'payment'])->name('paymentCredit');
         Route::post('/midtrans-callback', [App\Http\Controllers\MidtransController::class, 'updatePayment'])->name('updatePayment');
     });
+
+    Route::prefix('enrollment')->group(function () {
+        Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index'])->name('enrollment');
+        Route::get('/detail/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'detail'])->name('detailenrollment');
+    });
 });
 
 Route::prefix('account')->group(function () {

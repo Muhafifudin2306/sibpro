@@ -10,11 +10,11 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Siswa') }}</h1>
+                    <h1>{{ __('Pembayaran Daftar Ulang Siswa') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('General Setting') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Siswa') }}</div>
+                        <div class="breadcrumb-item">{{ __('Pemasukan') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Daftar Ulang') }}</div>
                     </div>
                 </div>
                 <div class="section-body">
@@ -30,8 +30,8 @@
                                         <h6 class="text-center p-4 border-bottom">{{ $item->class_name }}</h6>
                                     </div>
                                     <div class="card-body">
-                                        <a href="{{ url('setting/student/detail/' . $item->uuid) }}">
-                                            <button class="btn btn-primary w-100">{{ __('More Detail') }}</button>
+                                        <a href="{{ url('income/enrollment/detail/' . $item->uuid) }}">
+                                            <button class="btn btn-primary w-100">More Detail</button>
                                         </a>
                                     </div>
                                 </div>

@@ -21,6 +21,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'uuid',
         'name',
         'email',
         'password',
@@ -64,6 +65,11 @@ class User extends Authenticatable
     public function credits()
     {
         return $this->belongsToMany(Credit::class, 'user_has_credit');
+    }
+
+    public function enrollments()
+    {
+        return $this->belongsToMany(Attribute::class, 'user_has_attribute');
     }
 
     public function billing()

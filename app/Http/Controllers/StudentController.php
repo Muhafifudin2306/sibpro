@@ -23,8 +23,17 @@ class StudentController extends Controller
         return view('setting.student.index', compact('notifications', 'studentClasses'));
     }
 
-    public function detail($id)
+    public function detail($uuid)
     {
+        $data = StudentClass::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            // Handle jika data tidak ditemukan
+            abort(404);
+        }
+
+        $id = $data->id;
+        
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $students = User::where('class_id', $id)->get();
         $class = StudentClass::find($id);
