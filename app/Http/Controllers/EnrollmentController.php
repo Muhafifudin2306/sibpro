@@ -46,4 +46,22 @@ class EnrollmentController extends Controller
 
         return view('enrollment.detail', compact('notifications', 'students', 'class'));
     }
+
+    public function billingStudent($uuid)
+    {
+        $data = User::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            // Handle jika data tidak ditemukan
+           abort(404);
+       }
+
+        $id = $data->id;
+
+        $student = User::find($id);
+
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+
+        return view('enrollment.billing', compact('notifications', 'student'));
+    }
 }

@@ -90,7 +90,7 @@
                                                     Rp{{ number_format($totalattributePrice, 0, ',', '.') }}
                                                 </td>
                                                 <td>
-                                                    <a href="#">
+                                                    <a href="{{ url('income/enrollment/detail/student/' . $item->uuid) }}">
                                                         <button class="btn btn-primary" type="submit"
                                                             id="pay-button">Bayar</button>
                                                     </a>

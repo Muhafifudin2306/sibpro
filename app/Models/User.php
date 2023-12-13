@@ -77,6 +77,11 @@ class User extends Authenticatable
         return $this->hasMany(UserHasCredit::class, 'user_id', 'id');
     }
 
+    public function enrollmentAll()
+    {
+        return $this->hasMany(UserHasAttribute::class, 'user_id', 'id');
+    }
+
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'user_has_attribute');

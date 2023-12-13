@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserHasAttribute extends Model
 {
-    protected $table = "user_has_credit";
+    protected $table = "user_has_attribute";
 
     protected $fillable = [
+        'uuid',
+        'invoice_number',
         'user_id',
         'attribute_id',
         'status',

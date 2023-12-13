@@ -42,6 +42,7 @@ Route::prefix('income')->group(function () {
     Route::prefix('enrollment')->group(function () {
         Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index'])->name('enrollment');
         Route::get('/detail/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'detail'])->name('detailenrollment');
+        Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
     });
 });
 

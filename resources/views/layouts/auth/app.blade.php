@@ -10,8 +10,8 @@
         href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAADdZgUA/vz7AO+6kADcZAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMzMzMzMzMzMzMzMzMzMzMzMzMzREQ0QzMzMzRERERDMzMzREMzREMzMzNEMzNEQzMzM0QzMzRDMzMzREMzREMzMzNERAREQzMzMzRERERDMzMzM0RBJEMzMzMzMzMkQzMzMzMzMyRDMzMzMzMzJEMzMzMzMzMzMzMzMzMzMzMzMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('assets/modules/notiflix/src/notiflix.css') }}"> --}}
-    {{-- <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('assets/modules/notiflix/src/notiflix.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
     @stack('styles')
 
 </head>
