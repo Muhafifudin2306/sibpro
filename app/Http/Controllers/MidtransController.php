@@ -13,15 +13,19 @@ class MidtransController extends Controller
     {
         $serverKey = config('midtrans.server_key');
 
-        if (!empty($request->order_id) && !empty($request->status_code) && !empty($request->gross_amount)&& !empty($request->price)) {
+        if (!empty($request->order_id) && !empty($request->status_code) && !empty($request->gross_amount)) {
 
-            $hashed = hash('sha512', $request->order_id.$request->status_code.$request->gross_amount.$request->price.$serverKey);
+            $hashed = hash('sha512', $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
 
             if ($hashed == $request->signature_key) {
                 if ($request->transaction_status == 'settlement') {
-                    Payment::where("invoice_number",'=',$request->order_id)->update([
+                    $order = Payment::where("invoice_number", '=', $request->order_id)->first();
+                    $itemDetails = json_decode($order->item_details, true);
+
+                   $order->update([
                         'status' => 'Paid',
-                        'price' => $request->price
+                        'price' => $request->gross_amount,
+                        'type' => $itemDetails
                     ]);
                     \Log::info('Pembayaran berhasil. ID Pesanan: ' . $request->order_id);
                 }
