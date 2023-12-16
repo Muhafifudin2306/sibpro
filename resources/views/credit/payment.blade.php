@@ -132,7 +132,7 @@
                 onSuccess: function(result) {
                     /* You may add your own implementation here */
                     // alert("payment success!");
-                    window.location.href = '/income/credit/detail/{{ $order->user->uuid }}';
+                    window.location.href = '/income/credit/detail/student/{{ $order->user->uuid }}';
                     console.log(result);
                 },
                 onPending: function(result) {

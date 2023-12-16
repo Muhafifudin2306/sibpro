@@ -108,7 +108,7 @@ class EnrollmentController extends Controller
         // Prepare Midtrans parameters for the group payment
         $params = [
             'transaction_details' => [
-                'order_id' => $orderId,
+                'order_id' => $transaction->id,
                 'gross_amount' => $totalAmount,
             ],
             'customer_details' => [
