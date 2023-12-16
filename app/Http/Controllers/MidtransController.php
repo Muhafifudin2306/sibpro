@@ -20,13 +20,32 @@ class MidtransController extends Controller
             if ($hashed == $request->signature_key) {
                 if ($request->transaction_status == 'settlement') {
                     $order = Payment::find($request->order_id);
-                    $order->update([
-                        'status' => 'Paid',
-                        'price' => $request->gross_amount
-                    ]);
-                    \Log::info('Pembayaran berhasil. ID Pesanan: ' . $request->order_id);
+
+                    if ($order) {
+                        $itemDetails = json_decode($order->item_details, true);
+
+                        foreach ($itemDetails as &$item) {
+                            // Memeriksa apakah $item adalah array
+                            if (is_array($item) && array_key_exists('id', $item) && $item['id'] == $request->item_details['id']) {
+                                // Update status dan harga berdasarkan item_details
+                                $item['status'] = 'Paid';
+                                $item['price'] = $request->item_details['price'];
+                            }
+                        }
+
+                        // Update model pembayaran dengan item_details yang sudah diperbarui
+                        $order->update([
+                            'status' => 'Paid',
+                            'price' => $request->item_details['price'],
+                            'item_details' => json_encode($itemDetails),
+                        ]);
+
+                        \Log::info('Pembayaran berhasil. ID Pesanan: ' . $request->order_id);
+                    } else {
+                        \Log::warning('Pesanan tidak ditemukan.');
+                    }
                 }
-                \Log::info('Callback Midtrans berhasil diproses.');
+
             } else {
                 \Log::warning('Hash tidak cocok. Ada potensi perubahan data tidak sah.');
             }
