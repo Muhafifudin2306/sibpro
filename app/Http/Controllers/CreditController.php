@@ -174,7 +174,7 @@ class CreditController extends Controller
         );
 
         $customerDetails = array(
-            'name' => $order->user->name,
+            'first_name' => $order->user->name,
             'email' => $order->user->email,
             'phone' =>  $order->user->nis,
         );
