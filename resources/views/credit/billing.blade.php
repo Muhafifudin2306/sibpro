@@ -74,7 +74,7 @@
                                                             type="submit" id="pay-button">Belum Bayar</span>
                                                     @elseif($item->status == 'Paid')
                                                         <span
-                                                            class="py-1 px-3 border border-danger rounded text-success fw-bold"
+                                                            class="py-1 px-3 border border-success rounded text-success fw-bold"
                                                             type="submit" id="pay-button">Lunas</span>
                                                     @endif
                                                 </td>

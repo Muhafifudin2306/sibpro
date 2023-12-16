@@ -170,7 +170,7 @@ class CreditController extends Controller
 
         $params = array(
             'transaction_details' => array(
-                'order_id' => $id,
+                'order_id' => $order->invoice_number,
                 'gross_amount' => $order->credit->credit_price,
             ),
             'customer_details' => array(
@@ -185,7 +185,6 @@ class CreditController extends Controller
                         'quantity' => 1,
                         'price' => $order->credit->credit_price,
                     ),
-            // Add more items if needed
         ),
         );
 
