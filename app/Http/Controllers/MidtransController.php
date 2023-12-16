@@ -13,9 +13,9 @@ class MidtransController extends Controller
     {
         $serverKey = config('midtrans.server_key');
 
-        if (!empty($request->order_id) && !empty($request->status_code) && !empty($request->gross_amount)) {
+        if (!empty($request->order_id) && !empty($request->status_code) && !empty($request->gross_amount)&& !empty($request->price)) {
 
-            $hashed = hash('sha512', $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
+            $hashed = hash('sha512', $request->order_id.$request->status_code.$request->gross_amount.$request->price.$serverKey);
 
             if ($hashed == $request->signature_key) {
                 if ($request->transaction_status == 'settlement') {
