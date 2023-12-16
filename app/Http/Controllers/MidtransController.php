@@ -25,7 +25,7 @@ class MidtransController extends Controller
                    $order->update([
                         'status' => 'Paid',
                         'price' => $request->gross_amount,
-                        'type' => $itemDetails
+                        'uuid' => $itemDetails
                     ]);
                     \Log::info('Pembayaran berhasil. ID Pesanan: ' . $request->order_id);
                 }
