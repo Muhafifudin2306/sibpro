@@ -168,25 +168,34 @@ class CreditController extends Controller
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
-        $params = array(
-            'transaction_details' => array(
-                'order_id' => $order->invoice_number,
-                'gross_amount' => $order->credit->credit_price,
-            ),
-            'customer_details' => array(
-                'name' => $order->user->name,
-                'email' => $order->user->email,
-                'phone' =>  $order->user->nis,
-            ),
-            'item_details' => array(
-                    array(
-                        'id' => $id,
-                        'name' => $order->credit->credit_name,
-                        'quantity' => 1,
-                        'price' => $order->credit->credit_price,
-                    ),
-        ),
+        $transactionDetails = array(
+            'order_id' => $order->invoice_number,
+            'gross_amount' => $order->credit->credit_price,
         );
+
+        $customerDetails = array(
+            'name' => $order->user->name,
+            'email' => $order->user->email,
+            'phone' =>  $order->user->nis,
+        );
+
+        $itemDetails = array(
+            array(
+                'id' => $id,
+                'name' => $order->credit->credit_name,
+                'quantity' => 1,
+                'price' => $order->credit->credit_price,
+            ),
+        );
+
+        $params = array(
+            'transaction_details' => $transactionDetails,
+            'customer_details' => $customerDetails,
+        );
+
+        // Menambahkan item_details secara terpisah
+        $params['item_details'] = $itemDetails;
+
 
         $snapToken = \Midtrans\Snap::getSnapToken($params);
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
