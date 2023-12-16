@@ -1,7 +1,7 @@
 @extends('layouts.admin.app')
 
 @section('title_page')
-    Billing of {{ $student->name }}
+    Billing Student
 @endsection
 
 @section('content')
@@ -21,8 +21,7 @@
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item active">{{ __('Dashboard') }}</div>
                         <div class="breadcrumb-item active">{{ __('Pemasukan') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Daftar Ulang') }}</div>
-                        <div class="breadcrumb-item">{{ $student->name }}</div>
+                        <div class="breadcrumb-item">{{ __('Daftar Ulang') }}</div>
                     </div>
                 </div>
 
@@ -37,82 +36,84 @@
                             <h4>{{ __('Pembayaran Daftar Ulang') }}</h4>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-tagihan-vendor">
-                                    <thead>
-                                        <tr>
-                                            <th>{{ __('No') }}</th>
-                                            <th>{{ __('Nama Siswa') }}</th>
-                                            @foreach ($student->enrollmentAll as $item)
-                                                <th>{{ $item->attribute->attribute_name }}</th>
-                                            @endforeach
-                                            <th>{{ __('Terbayar') }}</th>
-                                            <th>{{ __('Total ') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        <tr>
-                                            <td>
-                                                {{ $no++ }}
-                                            </td>
-                                            <td>
-                                                {{ $student->name }}
-                                            </td>
-                                            <form id="checklistForm">
-                                                @foreach ($student->enrollmentAll as $item)
+                            <form id="checklistForm" method="post" action="{{ route('processMultiplePayments') }}">
+                                @csrf
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-tagihan-vendor">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ __('No') }}</th>
+                                                <th>{{ __('Nama Siswa') }}</th>
+                                                @foreach ($student as $item)
+                                                    <th>{{ $item->attribute_name }}</th>
+                                                @endforeach
+                                                <th>{{ __('Terbayar') }}</th>
+                                                <th>{{ __('Total ') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            <tr>
+                                                <td>
+                                                    {{ $no++ }}
+                                                </td>
+                                                <td>
+                                                    {{ $user->name }}
+                                                </td>
+                                                @foreach ($student as $item)
                                                     <td class="text-center bg-white">
                                                         @if ($item->status == 'Paid')
-                                                            <p>Rp{{ number_format($item->attribute->attribute_price, 0, ',', '.') }}
+                                                            <p>Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
                                                                 <br>(Lunas)
                                                             </p>
                                                         @else
                                                             <label><input class="checkbox" type="checkbox"
-                                                                    value="{{ intval($item->attribute->attribute_price) }}">
-                                                                <p>Rp{{ number_format($item->attribute->attribute_price, 0, ',', '.') }}
+                                                                    name="attribute_id[]" value="{{ $item->id }}">
+                                                                <p>Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
                                                                 </p>
                                                         @endif
                                                         </label>
                                                     </td>
                                                 @endforeach
-                                            </form>
-                                            @php
-                                                $totalattributePrice = 0;
-                                                $totalBilling = 0;
-                                            @endphp
-                                            <td>
-                                                @foreach ($student->enrollmentAll as $item)
-                                                    @php
-                                                        $totalBilling += $item->attribute_price;
-                                                    @endphp
-                                                @endforeach
-                                                Rp{{ number_format($totalBilling, 0, ',', '.') }}
-                                            </td>
-                                            <td>
-                                                @foreach ($student->attributes as $attribute)
-                                                    @php
-                                                        $totalattributePrice += $attribute->attribute_price;
-                                                    @endphp
-                                                @endforeach
-                                                Rp{{ number_format($totalattributePrice, 0, ',', '.') }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="py-4">
-                                    <hr class="py-3">
-                                    <h5 class="fw-bold">
-                                        Total : <span id="totalChecked">0</span>
-                                    </h5>
-                                    <div class="py-3">
-                                        <button class="btn btn-primary button-payment" style="display: none;">Bayar
-                                            sekarang</button>
+                                                @php
+                                                    $totalattributePrice = 0;
+                                                    $totalBilling = 0;
+                                                @endphp
+                                                <td>
+                                                    @foreach ($user->paymentAttribute as $attribute)
+                                                        @php
+                                                            $totalattributePrice += $attribute->price;
+                                                        @endphp
+                                                    @endforeach
+                                                    Rp{{ number_format($totalattributePrice, 0, ',', '.') }}
+                                                </td>
+                                                <td>
+                                                    @foreach ($user->paymentAttribute as $attribute)
+                                                        @php
+                                                            $totalattributePrice += $attribute->attribute_price;
+                                                        @endphp
+                                                    @endforeach
+                                                    Rp{{ number_format($totalattributePrice, 0, ',', '.') }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="py-4">
+                                        <hr class="py-3">
+                                        <h5 class="fw-bold">
+                                            Total : <span id="totalChecked">0</span>
+                                        </h5>
+                                        <div class="py-3">
+                                            <button class="btn btn-primary button-payment" onclick="submitForm()"
+                                                style="display: none;">Bayar
+                                                Sekarang</button>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -130,6 +131,14 @@
     <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
     <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
     <script>
+        function submitForm() {
+            // Add any additional validation logic if needed
+
+            // Trigger form submission
+            document.getElementById('paymentForm').submit();
+        }
+    </script>
+    <script>
         // Mendapatkan semua elemen checkbox
         const checkboxes = document.querySelectorAll('.checkbox');
 
@@ -137,20 +146,6 @@
         checkboxes.forEach(function(checkbox) {
             checkbox.addEventListener('change', updateTotalChecked);
         });
-
-        // Fungsi untuk mengupdate total yang terpilih
-        // function updateTotalChecked() {
-        //     // Menghitung jumlah checkbox yang terpilih dan pertambahan nilai value
-        //     let totalChecked = 0;
-        //     checkboxes.forEach(function(checkbox) {
-        //         if (checkbox.checked) {
-        //             totalChecked += parseInt(checkbox.value, 10);
-        //         }
-        //     });
-
-        //     // Menampilkan jumlah pertambahan nilai value checkbox yang terpilih
-        //     document.getElementById('totalChecked').textContent = formatRupiah(totalChecked);
-        // }
 
         // Fungsi untuk memformat angka ke format Rupiah
         function formatRupiah(angka) {

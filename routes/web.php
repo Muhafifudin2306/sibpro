@@ -35,14 +35,14 @@ Route::prefix('income')->group(function () {
         Route::get('/all', [App\Http\Controllers\CreditController::class, 'allData'])->name('allData');
         Route::get('/detail/{uuid}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
         Route::get('/detail/student/{uuid}', [App\Http\Controllers\CreditController::class, 'billingStudent'])->name('billingStudent');
-        Route::get('/payment/{uuid}', [App\Http\Controllers\MidtransController::class, 'payment'])->name('paymentCredit');
-        Route::post('/midtrans-callback', [App\Http\Controllers\MidtransController::class, 'updatePayment'])->name('updatePayment');
+        Route::get('/payment/{uuid}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
     });
 
     Route::prefix('enrollment')->group(function () {
         Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index'])->name('enrollment');
         Route::get('/detail/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'detail'])->name('detailenrollment');
         Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
+        Route::post('/process-multiple-payments', [App\Http\Controllers\EnrollmentController::class, 'processMultiplePayments'])->name('processMultiplePayments');
     });
 });
 

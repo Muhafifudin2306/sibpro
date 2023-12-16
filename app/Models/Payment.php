@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserHasCredit extends Model
+class Payment extends Model
 {
-    protected $table = "user_has_credit";
+    protected $table = "payments";
 
     protected $fillable = [
         'uuid',
         'invoice_number',
+        'type',
         'user_id',
         'credit_id',
+        'attribute_id',
         'status',
         'credit_price'
     ];
@@ -20,6 +22,11 @@ class UserHasCredit extends Model
     public function credit()
     {
         return $this->belongsTo(Credit::class, 'credit_id', 'id');
+    }
+
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class, 'attribute_id', 'id');
     }
 
     public function user()

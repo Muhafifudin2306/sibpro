@@ -22,7 +22,7 @@
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item active">{{ __('Dashboard') }}</div>
                         <div class="breadcrumb-item active">{{ __('Pemasukan') }}</div>
-                        <div class="breadcrumb-item active">{{ __('SPP') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Daftar Ulang') }}</div>
                         <div class="breadcrumb-item">{{ __('Pembayaran') }}</div>
                     </div>
                 </div>
@@ -32,15 +32,15 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="invoice-title">
-                                        <h5>Slip Pembayaran SPP</h5>
+                                        <h5>Slip Pembayaran Daftar Ulang</h5>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <address>
                                                 <strong>Billed To:</strong><br>
-                                                {{ $order->user->name }}<br>
-                                                {{ $order->user->nis }}<br>
+                                                {{ $transactions[0]->user->name }}<br>
+                                                {{ $transactions[0]->user->nis }}<br>
                                             </address>
                                         </div>
                                         <div class="col-md-6 text-md-right">
@@ -68,14 +68,27 @@
                                                 <th>Totals</th>
                                             </tr>
                                             <tr>
-                                                <td>{{ $order->invoice_number }}</td>
-                                                <td>{{ $order->credit->credit_name }}</td>
-                                                <td>
-                                                    Rp{{ number_format($order->credit->credit_price, 0, ',', '.') }}</td>
+                                                @foreach ($transactions as $item)
+                                            <tr>
+                                                <td> {{ $item->invoice_number }} </td>
+                                                <td> {{ $item->attribute->attribute_name }} </td>
+                                                <td> Rp{{ number_format($item->attribute->attribute_price, 0, ',', '.') }}
+                                                </td>
                                                 <td>1</td>
-                                                <td>{{ $order->status }}</td>
+                                                <td> {{ $item->status }} </td>
+                                                <td> Rp{{ number_format($item->attribute->attribute_price, 0, ',', '.') }}
+                                            </tr>
+                                            @endforeach
+
+                                            {{-- <td>{{ $transaction->attribute->attribute_name }}</td>
                                                 <td>
-                                                    Rp{{ number_format($order->credit->credit_price, 0, ',', '.') }}</td>
+                                                    Rp{{ number_format($transaction->attribute->attribute_price, 0, ',', '.') }}
+                                                </td>
+                                                <td>1</td>
+                                                <td>{{ $transaction->status }}</td>
+                                                <td>
+                                                    Rp{{ number_format($transaction->attribute->attribute_price, 0, ',', '.') }}
+                                                </td> --}}
                                             </tr>
                                         </table>
                                     </div>
@@ -87,7 +100,15 @@
                                             <div class="invoice-detail-item">
                                                 <div class="invoice-detail-name">Total</div>
                                                 <div class="invoice-detail-value invoice-detail-value-lg">
-                                                    Rp{{ number_format($order->credit->credit_price, 0, ',', '.') }}
+                                                    @php
+                                                        $totalattributePrice = 0;
+                                                    @endphp
+                                                    @foreach ($transactions as $item)
+                                                        @php
+                                                            $totalattributePrice += $item->attribute->attribute_price;
+                                                        @endphp
+                                                    @endforeach
+                                                    Rp{{ number_format($totalattributePrice, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>
@@ -100,13 +121,13 @@
                             <div class="float-lg-left mb-lg-0 mb-3">
                                 <button class="btn btn-warning btn-icon icon-left"><i class="fas fa-print"></i>
                                     Print</button>
-                                <a href="{{ url('/income/credit/detail/student/' . $order->user->uuid) }}">
+                                {{-- <a href="{{ url('/income/attribute/detail/student/' . $transaction->user->uuid) }}">
                                     <button class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>
                                         Cancel</button>
-                                </a>
+                                </a> --}}
                             </div>
                             <button class="btn btn-primary btn-icon icon-left" id="pay-button"><i
-                                    class="fas fa-credit-card"></i>
+                                    class="fas fa-attribute-card"></i>
                                 Bayar Sekarang</button>
                         </div>
                     </div>
@@ -132,7 +153,6 @@
                 onSuccess: function(result) {
                     /* You may add your own implementation here */
                     // alert("payment success!");
-                    window.location.href = '/income/credit/detail/{{ $order->user->uuid }}';
                     console.log(result);
                 },
                 onPending: function(result) {

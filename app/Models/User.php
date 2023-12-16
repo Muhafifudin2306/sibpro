@@ -62,28 +62,23 @@ class User extends Authenticatable
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function credits()
+    public function paymentCredit()
     {
-        return $this->belongsToMany(Credit::class, 'user_has_credit');
+        return $this->belongsToMany(Credit::class, 'payments');
     }
 
-    public function enrollments()
+    public function paymentAttribute()
     {
-        return $this->belongsToMany(Attribute::class, 'user_has_attribute');
+        return $this->belongsToMany(Attribute::class, 'payments');
     }
 
     public function billing()
     {
-        return $this->hasMany(UserHasCredit::class, 'user_id', 'id');
+        return $this->hasMany(Payment::class, 'user_id', 'id');
     }
 
     public function enrollmentAll()
     {
-        return $this->hasMany(UserHasAttribute::class, 'user_id', 'id');
-    }
-
-    public function attributes()
-    {
-        return $this->belongsToMany(Attribute::class, 'user_has_attribute');
+        return $this->hasMany(Payment::class, 'user_id', 'id');
     }
 }

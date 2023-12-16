@@ -74,7 +74,7 @@
                                                         $totalCreditPrice = 0;
                                                         $totalBilling = 0;
                                                     @endphp
-                                                    @foreach ($item->credits as $credit)
+                                                    @foreach ($item->paymentCredit as $credit)
                                                         @php
                                                             $totalCreditPrice += $credit->credit_price;
                                                         @endphp

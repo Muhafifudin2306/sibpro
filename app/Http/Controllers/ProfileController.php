@@ -72,47 +72,41 @@ class ProfileController extends Controller
         $user->assignRole($studentRole);
 
         
-        // Retrieve id_credit based on category_id
         $id_credits = Category::find($request->input('category_id'))->credits()->pluck('credit_id');
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-         // Attach user to credits in user_has_credit table with id_year
          foreach ($id_credits as $creditId) {
             $uuidTwo = Uuid::uuid4()->toString();
             
-            // Generate a unique invoice number with 7 digits and 5 letters
             $invoiceNumber = $this->generateInvoiceNumberCredit();
 
-            $user->credits()->attach($creditId, [
+            $user->paymentCredit()->attach($creditId, [
+                'type' => 1,
                 'year_id' => $activeYearId,
                 'uuid' => $uuidTwo,
                 'invoice_number' => $invoiceNumber,
-                'created_at' => now(), // Add created_at timestamp
-                'updated_at' => now(), // Add updated_at timestamp
+                'created_at' => now(), 
+                'updated_at' => now(), 
             ]);
         }
 
-        // Retrieve id_credit based on attribute_id
         $id_attributes = Attribute::find($request->input('category_id'))->attributes()->pluck('attribute_id');
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-         // Attach user to credits in user_has_credit table with id_year
-        //$user->attributes()->attach($id_attributes, ['year_id' => $activeYearId]);
-
         foreach ($id_attributes as $attributeId) {
             $uuidThree = Uuid::uuid4()->toString();
             
-            // Generate a unique invoice number with 7 digits and 5 letters
             $invoiceNumber = $this->generateInvoiceNumberEnrollment();
 
-            $user->attributes()->attach($attributeId, [
+            $user->paymentAttribute()->attach($attributeId, [
+                'type' => 2,
                 'year_id' => $activeYearId,
                 'uuid' => $uuidThree,
                 'invoice_number' => $invoiceNumber,
-                'created_at' => now(), // Add created_at timestamp
-                'updated_at' => now(), // Add updated_at timestamp
+                'created_at' => now(), 
+                'updated_at' => now(), 
             ]);
         }
 
@@ -128,13 +122,10 @@ class ProfileController extends Controller
     }
     private function generateInvoiceNumberCredit()
     {
-        // Generate 7 random digits
         $digits = mt_rand(1000000, 9999999);
 
-        // Generate 5 random letters
         $letters = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
 
-        // Concatenate digits and letters
         $invoiceNumber = "SPP"."-".$digits ."-". $letters;
 
         return $invoiceNumber;
@@ -142,13 +133,10 @@ class ProfileController extends Controller
 
     private function generateInvoiceNumberEnrollment()
     {
-        // Generate 7 random digits
         $digits = mt_rand(1000000, 9999999);
 
-        // Generate 5 random letters
         $letters = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
 
-        // Concatenate digits and letters
         $invoiceNumber = "DU"."-".$digits ."-". $letters;
 
         return $invoiceNumber;

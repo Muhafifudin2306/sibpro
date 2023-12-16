@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Credit;
 use App\Models\Notification;
 use App\Models\StudentClass;
-use App\Models\UserHasCredit;
+use App\Models\Payment;
 use App\Models\Year;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +28,7 @@ class CreditController extends Controller
 
     public function allData()
     {
-        $credit = UserHasCredit::where('invoice_number','!=','')
+        $credit = Payment::where('invoice_number','!=','')
                     ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                     ->orderBy("updated_at", "DESC")
                     ->get();
@@ -43,7 +43,6 @@ class CreditController extends Controller
         $data = StudentClass::where('uuid', $uuid)->first();
 
         if (!$data) {
-            // Handle jika data tidak ditemukan
             abort(404);
         }
 
@@ -52,8 +51,8 @@ class CreditController extends Controller
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $students = User::where('class_id', $id)
             ->whereNotNull('category_id')
-            ->with(['credits' => function ($query) {
-                $query->select('credits.id', 'credit_name', 'status', 'user_has_credit.credit_price', 'user_has_credit.id as user_credit_id');
+            ->with(['paymentCredit' => function ($query) {
+                $query->select('credits.id', 'credit_name', 'status', 'payments.price');
             }])
             ->get();
 
@@ -74,7 +73,9 @@ class CreditController extends Controller
 
         $id = $data->id;
 
-        $student = User::find($id);
+        $student = Payment::where('user_id','=',$id)
+                            ->where('type','=',1)
+                            ->get();
 
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 
@@ -148,6 +149,49 @@ class CreditController extends Controller
             'message' => 'Data atribut berhasil diedit!',
             'data' => $credit
         ], 201);
+    }
+
+    public function payment($uuid)
+    {
+        $data = Payment::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            abort(404);
+        }
+
+        $id = $data->id;
+        
+        $order = Payment::find($id);
+
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => $id,
+                'gross_amount' => $order->credit->credit_price,
+            ),
+            'customer_details' => array(
+                'name' => $order->user->name,
+                'email' => $order->user->email,
+                'phone' =>  $order->user->nis,
+            ),
+            'item_details' => array(
+                    array(
+                        'id' => $id,
+                        'name' => $order->credit->credit_name,
+                        'quantity' => 1,
+                        'price' => $order->credit->credit_price,
+                    ),
+            // Add more items if needed
+        ),
+        );
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        return view('credit.payment', compact('order', 'snapToken', 'notifications'));
     }
 
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\UserHasCredit;
+use App\Models\Payment;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\Role;
@@ -33,10 +33,10 @@ class HomeController extends Controller
         $adminCount = User::count();
         $years = Year::orderBy("updated_at", "DESC")->get();
         $roleCount = Role::count();
-        $totalCredit = DB::table('user_has_credit')->sum('credit_price');
+        $totalCredit = DB::table('payments')->sum('price');
         $userId = Auth::user()->id;
-        $totalPaid =  UserHasCredit::where('user_id', '=', $userId)->sum('credit_price');
-        $credit = UserHasCredit::where('status','=','Paid')
+        $totalPaid =  Payment::where('user_id', '=', $userId)->sum('price');
+        $credit = Payment::where('status','=','Paid')
                     ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                     ->orderBy("updated_at", "DESC")
                     ->limit(5)->get();

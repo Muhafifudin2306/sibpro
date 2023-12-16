@@ -21,7 +21,7 @@ class Category extends Model
     }
     public function attributes()
     {
-        return $this->belongsToMany(Attribute::class, 'category_has_attribute');
+        return $this->belongsToMany(Attribute::class, 'payments');
     }
     public function credits()
     {

@@ -74,7 +74,7 @@
                                                     $totalBilling = 0;
                                                 @endphp
                                                 <td>
-                                                    @foreach ($item->enrollments as $billing)
+                                                    @foreach ($item->paymentAttribute as $billing)
                                                         @php
                                                             $totalBilling += $billing->attribute_price;
                                                         @endphp
@@ -82,9 +82,9 @@
                                                     Rp{{ number_format($totalBilling, 0, ',', '.') }}
                                                 </td>
                                                 <td>
-                                                    @foreach ($item->attributes as $attribute)
+                                                    @foreach ($item->paymentAttribute as $total)
                                                         @php
-                                                            $totalattributePrice += $attribute->attribute_price;
+                                                            $totalattributePrice += $total->total_price;
                                                         @endphp
                                                     @endforeach
                                                     Rp{{ number_format($totalattributePrice, 0, ',', '.') }}

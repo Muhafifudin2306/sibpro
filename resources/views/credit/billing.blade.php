@@ -1,7 +1,7 @@
 @extends('layouts.admin.app')
 
 @section('title_page')
-    Billing of {{ $student->name }}
+    Billing Student
 @endsection
 
 @section('content')
@@ -21,8 +21,7 @@
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item active">{{ __('Dashboard') }}</div>
                         <div class="breadcrumb-item active">{{ __('Pemasukan') }}</div>
-                        <div class="breadcrumb-item active">{{ __('SPP') }}</div>
-                        <div class="breadcrumb-item">{{ $student->name }}</div>
+                        <div class="breadcrumb-item">{{ __('SPP') }}</div>
                     </div>
                 </div>
 
@@ -43,58 +42,50 @@
                                     <thead>
                                         <tr>
                                             <th>{{ __('No') }}</th>
-                                            <th>{{ __('NIS') }}</th>
-                                            <th>{{ __('Nama Siswa') }}</th>
+                                            <th>{{ __('Kode Pembayaran') }}</th>
+                                            <th>{{ __('Nama Pembayaran') }}</th>
                                             <th>{{ __('Tagihan') }}</th>
-                                            <th>{{ __('Dibayarkan') }}</th>
+                                            <th>{{ __('Status') }}</th>
+                                            <th>{{ __('Aksi') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             $no = 1;
                                         @endphp
-                                        <tr>
-                                            <td>
-                                                {{ $no++ }}
-                                            </td>
-                                            <td>
-                                                {{ $student->nis }}
-                                            </td>
-                                            <td>
-                                                {{ $student->name }}
-                                            </td>
-                                            <td>
-                                                <div class="d-flex flex-wrap">
-                                                    @foreach ($student->billing as $item)
-                                                        <div class="mb-2 mx-1">
-                                                            @if ($item->status == 'Unpaid')
-                                                                <a
-                                                                    href="{{ url('income/credit/payment/' . $item->uuid) }}">
-                                                                    <button class="btn btn-danger" type="submit"
-                                                                        id="pay-button">{{ $item->credit->credit_name }}</button>
-                                                                </a>
-                                                            @elseif($item->status == 'Paid')
-                                                                <button class="btn btn-success"
-                                                                    data-toggle="modal">{{ $item->credit->credit_name }}
-                                                                    (Lunas)
-                                                                </button>
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </td>
-                                            <td>
-                                                @php
-                                                    $totalCreditPrice = 0;
-                                                @endphp
-                                                @foreach ($student->billing as $item)
-                                                    @php
-                                                        $totalCreditPrice += $item->credit_price;
-                                                    @endphp
-                                                @endforeach
-                                                Rp{{ number_format($totalCreditPrice, 0, ',', '.') }}
-                                            </td>
-                                        </tr>
+                                        @foreach ($student as $item)
+                                            <tr>
+                                                <td>
+                                                    {{ $no++ }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->invoice_number }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->credit->credit_name }}
+                                                </td>
+                                                <td>
+                                                    Rp{{ number_format($item->credit->credit_price, 0, ',', '.') }}
+                                                </td>
+                                                <td>
+                                                    @if ($item->status == 'Unpaid')
+                                                        <span
+                                                            class="py-1 px-3 border border-danger rounded text-danger fw-bold"
+                                                            type="submit" id="pay-button">Belum Bayar</span>
+                                                    @elseif($item->status == 'Paid')
+                                                        <span
+                                                            class="py-1 px-3 border border-danger rounded text-success fw-bold"
+                                                            type="submit" id="pay-button">Lunas</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a href="{{ url('income/credit/payment/' . $item->uuid) }}">
+                                                        <button class="btn btn-primary">Bayar Sekarang</button>
+                                                    </a>
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
