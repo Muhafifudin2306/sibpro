@@ -21,7 +21,7 @@ class MidtransController extends Controller
                 if ($request->transaction_status == 'settlement') {
                     Payment::where("invoice_number",'=',$request->order_id)->update([
                         'status' => 'Paid',
-                        'price' => $request->gross_amount
+                        'price' => $request->price
                     ]);
                     \Log::info('Pembayaran berhasil. ID Pesanan: ' . $request->order_id);
                 }
