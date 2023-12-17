@@ -16,7 +16,7 @@ class Payment extends Model
         'credit_id',
         'attribute_id',
         'status',
-        'credit_price'
+        'price'
     ];
 
     public function credit()

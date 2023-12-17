@@ -43,6 +43,7 @@ Route::prefix('income')->group(function () {
         Route::get('/detail/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'detail'])->name('detailenrollment');
         Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
         Route::post('/process-multiple-payments', [App\Http\Controllers\EnrollmentController::class, 'processMultiplePayments'])->name('processMultiplePayments');
+        Route::post('/process-invoice-number', [App\Http\Controllers\EnrollmentController::class, 'invoiceNumber'])->name('invoiceNumber');
     });
 });
 

@@ -10,6 +10,7 @@ use App\Models\StudentClass;
 use App\Models\Payment;
 use App\Models\Year;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CreditController extends Controller
 {
@@ -162,6 +163,18 @@ class CreditController extends Controller
         $id = $data->id;
         
         $order = Payment::find($id);
+
+        $price = DB::table('payments')
+                    ->join('credits', 'payments.credit_id', '=', 'credits.id')
+                    ->select('credits.credit_price')
+                    ->where('payments.id',$id)
+                    ->first();
+            
+        $priceItem = $price->credit_price;
+
+        $order->update([
+            'price' => $priceItem
+        ]);
 
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
         \Midtrans\Config::$isProduction = false;

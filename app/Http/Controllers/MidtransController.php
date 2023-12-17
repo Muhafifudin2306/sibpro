@@ -20,8 +20,7 @@ class MidtransController extends Controller
             if ($hashed == $request->signature_key) {
                 if ($request->transaction_status == 'settlement') {
                     Payment::where("invoice_number",'=',$request->order_id)->update([
-                        'status' => 'Paid',
-                        'price' => $request->gross_amount
+                        'status' => 'Paid'
                     ]);
                     \Log::info('Pembayaran berhasil. ID Pesanan: ' . $request->order_id);
                 }

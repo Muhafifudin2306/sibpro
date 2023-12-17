@@ -76,11 +76,37 @@ class EnrollmentController extends Controller
         return view('enrollment.billing', compact('notifications', 'student','user'));
     }
 
+    private function generateInvoiceNumberEnrollment()
+    {
+        $digits = mt_rand(1000000, 9999999);
+
+        $letters = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
+
+        $invoiceNumber = "DU"."-".$digits ."-". $letters;
+
+        return $invoiceNumber;
+    }
+
     public function processMultiplePayments(Request $request)
     {
         $transactionIds = $request->input('attribute_id');
         $transactions = [];
 
+        $invoiceNumber = $this->generateInvoiceNumberEnrollment();
+
+        foreach ($transactionIds as $transactionId) {
+            $payment = Payment::find($transactionId);
+
+            $price = DB::table('payments')
+                    ->join('attributes', 'payments.attribute_id', '=', 'attributes.id')
+                    ->select('attributes.attribute_price')
+                    ->where('payments.id',$transactionId)
+                    ->first();
+            
+            $priceItem = $price->attribute_price;
+
+            $payment->update(['invoice_number' => $invoiceNumber, 'price' => $priceItem]);
+        }
         // Validate if the user is authorized to perform these transactions (optional)
 
         // Now process the selected transactions
@@ -108,7 +134,7 @@ class EnrollmentController extends Controller
         // Prepare Midtrans parameters for the group payment
         $params = [
             'transaction_details' => [
-                'order_id' => $transaction->id,
+                'order_id' => $transaction->invoice_number,
                 'gross_amount' => $totalAmount,
             ],
             'customer_details' => [
@@ -136,4 +162,3 @@ class EnrollmentController extends Controller
     }
 
 }
-
