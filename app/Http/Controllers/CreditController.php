@@ -53,7 +53,7 @@ class CreditController extends Controller
         $students = User::where('class_id', $id)
             ->whereNotNull('category_id')
             ->with(['paymentCredit' => function ($query) {
-                $query->select('credits.id', 'credit_name', 'status', 'payments.price');
+                $query->select( 'status', 'payments.price');
             }])
             ->get();
 
@@ -173,7 +173,8 @@ class CreditController extends Controller
         $priceItem = $price->credit_price;
 
         $order->update([
-            'price' => $priceItem
+            'price' => $priceItem,
+            'status' => 'Pending'
         ]);
 
         \Midtrans\Config::$serverKey = config('midtrans.server_key');

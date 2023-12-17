@@ -46,7 +46,8 @@
                                             <th>{{ __('NIS') }}</th>
                                             <th>{{ __('Nama Siswa') }}</th>
                                             <th>{{ __('Kategori') }}</th>
-                                            <th>{{ __('Terbayar') }}</th>
+                                            <th>{{ __('Pembayaran Lunas') }}</th>
+                                            <th>{{ __('Pembayaran Pending') }}</th>
                                             <th>{{ __('Tagihan') }}</th>
                                             <th>{{ __('Operasi') }}</th>
                                         </tr>
@@ -71,15 +72,28 @@
                                                 </td>
                                                 <td>
                                                     @php
-                                                        $totalCreditPrice = 0;
+                                                        $totalCreditPending = 0;
+                                                        $totalCreditPaid = 0;
                                                         $totalBilling = 0;
                                                     @endphp
                                                     @foreach ($item->paymentCredit as $credit)
-                                                        @php
-                                                            $totalCreditPrice += $credit->credit_price;
-                                                        @endphp
+                                                        @if ($credit->status == 'Paid')
+                                                            @php
+                                                                $totalCreditPaid += $credit->price;
+                                                            @endphp
+                                                        @endif
                                                     @endforeach
-                                                    Rp{{ number_format($totalCreditPrice, 0, ',', '.') }}
+                                                    Rp{{ number_format($totalCreditPaid, 0, ',', '.') }}
+                                                </td>
+                                                <td>
+                                                    @foreach ($item->paymentCredit as $credit)
+                                                        @if ($credit->status == 'Pending')
+                                                            @php
+                                                                $totalCreditPending += $credit->price;
+                                                            @endphp
+                                                        @endif
+                                                    @endforeach
+                                                    Rp{{ number_format($totalCreditPending, 0, ',', '.') }}
                                                 </td>
                                                 <td>
                                                     @foreach ($item->categories->credits as $billing)

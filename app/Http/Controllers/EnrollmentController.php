@@ -105,7 +105,7 @@ class EnrollmentController extends Controller
             
             $priceItem = $price->attribute_price;
 
-            $payment->update(['invoice_number' => $invoiceNumber, 'price' => $priceItem]);
+            $payment->update(['invoice_number' => $invoiceNumber, 'price' => $priceItem,'status' => 'Pending']);
         }
         // Validate if the user is authorized to perform these transactions (optional)
 
