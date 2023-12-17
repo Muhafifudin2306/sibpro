@@ -33,15 +33,15 @@ class HomeController extends Controller
         $adminCount = User::count();
         $years = Year::orderBy("updated_at", "DESC")->get();
         $roleCount = Role::count();
-        $totalCredit = Payment::where('status','!=','Paid')
+        $totalCredit = Payment::where('type','1')
                                 ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                                 ->orderBy("updated_at", "DESC")
-                                ->where('type','1')
+                                ->where('status','=','Paid')
                                 ->sum('price');
-        $totalAttribute = Payment::where('status','!=','Paid')
+        $totalAttribute = Payment::where('type','2')
                                 ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                                 ->orderBy("updated_at", "DESC")
-                                ->where('type','2')
+                                ->where('status','=','Paid')
                                 ->sum('price');
         $userId = Auth::user()->id;
         $totalPaid =  Payment::where('user_id', '=', $userId)->sum('price');
