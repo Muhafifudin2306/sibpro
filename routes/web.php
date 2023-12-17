@@ -32,7 +32,6 @@ Route::prefix('pengeluaran')->group(function () {
 Route::prefix('income')->group(function () {
     Route::prefix('credit')->group(function () {
         Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
-        Route::get('/all', [App\Http\Controllers\CreditController::class, 'allData'])->name('allData');
         Route::get('/detail/{uuid}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
         Route::get('/detail/student/{uuid}', [App\Http\Controllers\CreditController::class, 'billingStudent'])->name('billingStudent');
         Route::get('/payment/{uuid}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
@@ -44,6 +43,10 @@ Route::prefix('income')->group(function () {
         Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
         Route::post('/process-multiple-payments', [App\Http\Controllers\EnrollmentController::class, 'processMultiplePayments'])->name('processMultiplePayments');
         Route::post('/process-invoice-number', [App\Http\Controllers\EnrollmentController::class, 'invoiceNumber'])->name('invoiceNumber');
+    });
+
+    Route::prefix('payment')->group(function () {
+        Route::get('/all', [App\Http\Controllers\PaymentController::class, 'allData'])->name('allData');
     });
 });
 

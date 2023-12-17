@@ -120,10 +120,10 @@
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Transaksi SPP Terbaru</h4>
+                                <h4>Transaksi Terbaru</h4>
                                 @if ($credit->isNotEmpty())
                                     <div class="card-header-action">
-                                        <a href="{{ url('/income/credit/all') }}" class="btn btn-danger">View More <i
+                                        <a href="{{ url('/income/payment/all') }}" class="btn btn-danger">View More <i
                                                 class="fas fa-chevron-right"></i></a>
                                     </div>
                                 @endif
@@ -145,10 +145,19 @@
                                             @foreach ($credit as $item)
                                                 <tr>
                                                     <td>{{ $item->invoice_number }}</td>
-                                                    <td>{{ $item->credit->credit_name }}</td>
-                                                    <td class="font-weight-600">{{ $item->user->name }}</td>
+                                                    @if ($item->credit == null)
+                                                        <td>{{ $item->attribute->attribute_name }}</td>
+                                                    @elseif($item->credit != null)
+                                                        <td>{{ $item->credit->credit_name }}</td>
+                                                    @endif
+                                                    <td>{{ $item->user->name }}</td>
                                                     <td>
-                                                        <div class="badge badge-success">{{ $item->status }}</div>
+                                                        @if ($item->status == 'Pending')
+                                                            <div class="badge badge-warning">{{ $item->status }}</div>
+                                                        @elseif($item->status == 'Paid')
+                                                            <div class="badge badge-success">{{ $item->status }}</div>
+                                                        @endif
+
                                                     </td>
                                                     <td>{{ $item->updated_at->format('F d, Y') }}</td>
                                                 </tr>

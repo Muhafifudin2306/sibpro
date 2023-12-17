@@ -26,19 +26,7 @@ class CreditController extends Controller
 
         return view('credit.index', compact('notifications', 'studentClasses'));
     }
-
-    public function allData()
-    {
-        $credit = Payment::where('invoice_number','!=','')
-                    ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
-                    ->orderBy("updated_at", "DESC")
-                    ->get();
-        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
-        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
-
-        return view('credit.allData', compact('notifications', 'studentClasses','credit'));
-    }
-
+    
     public function detail($uuid)
     {
         $data = StudentClass::where('uuid', $uuid)->first();

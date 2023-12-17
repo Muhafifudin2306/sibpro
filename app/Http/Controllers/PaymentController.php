@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 use App\Models\Payment;
-use App\Models\User;
+use App\Models\Year;
 use App\Models\StudentClass;
 
 class PaymentController extends Controller
@@ -22,6 +22,18 @@ class PaymentController extends Controller
         $credit = Payment::orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         return view('payment.credit.index', compact('notifications', 'credit'));
+    }
+
+    public function allData()
+    {
+        $credit = Payment::where('status','!=','Unpaid')
+                    ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
+                    ->orderBy("updated_at", "DESC")
+                    ->get();
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+
+        return view('payment.allData', compact('notifications', 'studentClasses','credit'));
     }
 
     public function detail($id)

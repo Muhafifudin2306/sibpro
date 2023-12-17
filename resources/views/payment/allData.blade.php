@@ -59,7 +59,11 @@
                                                     {{ $no++ }}
                                                 </td>
                                                 <td>{{ $item->invoice_number }}</td>
-                                                <td>{{ $item->credit->credit_name }}</td>
+                                                @if ($item->credit == null)
+                                                    <td>{{ $item->attribute->attribute_name }}</td>
+                                                @elseif($item->credit != null)
+                                                    <td>{{ $item->credit->credit_name }}</td>
+                                                @endif
                                                 <td class="font-weight-600">{{ $item->user->name }}</td>
                                                 @if ($item->status == 'Paid')
                                                     <td>

@@ -36,7 +36,7 @@ class HomeController extends Controller
         $totalCredit = DB::table('payments')->sum('price');
         $userId = Auth::user()->id;
         $totalPaid =  Payment::where('user_id', '=', $userId)->sum('price');
-        $credit = Payment::where('status','=','Paid')
+        $credit = Payment::where('status','!=','Unpaid')
                     ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                     ->orderBy("updated_at", "DESC")
                     ->limit(5)->get();
