@@ -30,7 +30,7 @@
                 </li>
             @endcan
 
-            @can('access-outcome')
+            {{-- @can('access-outcome')
                 <li class="dropdown {{ Request::is('pengeluaran*') ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-money-bill-wave-alt"></i>
                         <span>Pengeluaran</span></a>
@@ -44,7 +44,7 @@
                                 Operasional</a></li>
                     </ul>
                 </li>
-            @endcan
+            @endcan --}}
 
             @can('access-income')
                 <li class="dropdown {{ Request::is('income*') ? 'active' : '' }}">

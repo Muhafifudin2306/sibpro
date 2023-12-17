@@ -33,7 +33,8 @@ class HomeController extends Controller
         $adminCount = User::count();
         $years = Year::orderBy("updated_at", "DESC")->get();
         $roleCount = Role::count();
-        $totalCredit = DB::table('payments')->sum('price');
+        $totalCredit = DB::table('payments')->where('type','1')->where('status','Paid')->sum('price');
+        $totalAttribute = DB::table('payments')->where('type','2')->where('status','Paid')->sum('price');
         $userId = Auth::user()->id;
         $totalPaid =  Payment::where('user_id', '=', $userId)->sum('price');
         $credit = Payment::where('status','!=','Unpaid')
@@ -41,6 +42,6 @@ class HomeController extends Controller
                     ->orderBy("updated_at", "DESC")
                     ->limit(5)->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(3)->get();
-        return view('home', compact('adminCount', 'notifications','totalCredit','totalPaid','roleCount','credit','years'));
+        return view('home', compact('adminCount', 'notifications','totalCredit','totalAttribute','totalPaid','roleCount','credit','years'));
     }
 }

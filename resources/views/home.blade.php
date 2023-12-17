@@ -46,61 +46,81 @@
                 </div>
                 <div class="row">
                     @can('access-userSum')
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                             <div class="card card-statistic-1">
-                                <div class="card-icon bg-primary">
-                                    <i class="far fa-user"></i>
+                                <div class="bg-primary">
+                                    <div class="py-1"></div>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
                                         <h4>Total User</h4>
                                     </div>
                                     <div class="card-body py-1">
-                                        <h4>{{ $adminCount }}</h4>
+                                        <h5>{{ $adminCount }}</h5>
                                     </div>
+                                    <div class="py-2"></div>
                                 </div>
                             </div>
                         </div>
                     @endcan
 
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                         <div class="card card-statistic-1">
-                            <div class="card-icon bg-success">
-                                <i class="fas fa-circle"></i>
+                            <div class="bg-success">
+                                <div class="py-1"></div>
                             </div>
                             <div class="card-wrap">
                                 <div class="card-header">
                                     <h4>Total Role</h4>
                                 </div>
                                 <div class="card-body py-1">
-                                    <h4>{{ $roleCount }}</h4>
+                                    <h5>{{ $roleCount }}</h5>
                                 </div>
+                                <div class="py-2"></div>
                             </div>
                         </div>
                     </div>
 
                     @can('access-incomeSum')
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                             <div class="card card-statistic-1">
-                                <div class="card-icon bg-danger">
-                                    <i class="fas fa-dollar-sign"></i>
+                                <div class="bg-warning">
+                                    <div class="py-1"></div>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Total Pemasukan</h4>
+                                        <h4>SPP</h4>
                                     </div>
                                     <div class="card-body py-1">
-                                        <h4>Rp {{ number_format($totalCredit, 0, ',', '.') }}</h4>
+                                        <h5>Rp {{ number_format($totalCredit, 0, ',', '.') }}</h5>
                                     </div>
+                                    <div class="py-2"></div>
                                 </div>
                             </div>
                         </div>
                     @endcan
 
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="bg-danger">
+                                <div class="py-1"></div>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Daftar Ulang</h4>
+                                </div>
+                                <div class="card-body py-1">
+                                    <h5>Rp {{ number_format($totalAttribute, 0, ',', '.') }}</h5>
+                                </div>
+                                <div class="py-2"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     @can('access-paidSum')
                         <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
-                                <div class="card-icon bg-danger">
+                                <div class="bg-danger">
                                     <i class="fas fa-dollar-sign"></i>
                                 </div>
                                 <div class="card-wrap">
