@@ -34,7 +34,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>{{ __('Tabel Data Transaksi SPP') }}</h4>
+                            <h4>{{ __('Tabel Data Transaksi') }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -42,8 +42,9 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">{{ __('No') }}</th>
-                                            <th>{{ __('ID Transaksi SPP') }}</th>
+                                            <th>{{ __('ID Transaksi') }}</th>
                                             <th>{{ __('Pembayaran') }}</th>
+                                            <th>{{ __('Tipe Pembayaran') }}</th>
                                             <th>{{ __('Nama Siswa') }}</th>
                                             <th>{{ __('Status') }}</th>
                                             <th>{{ __('Tanggal') }}</th>
@@ -63,6 +64,11 @@
                                                     <td>{{ $item->attribute->attribute_name }}</td>
                                                 @elseif($item->credit != null)
                                                     <td>{{ $item->credit->credit_name }}</td>
+                                                @endif
+                                                @if ($item->type == 1)
+                                                    <td>SPP</td>
+                                                @elseif($item->type == 2)
+                                                    <td>Daftar Ulang</td>
                                                 @endif
                                                 <td class="font-weight-600">{{ $item->user->name }}</td>
                                                 @if ($item->status == 'Paid')

@@ -55,6 +55,8 @@
                                 href="{{ url('income/enrollment') }}">Daftar Ulang</a></li>
                         <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
                                 href="{{ url('income/credit') }}">SPP</a></li>
+                        <li class="{{ Request::segment(2) === 'payment' ? 'active' : '' }}"><a
+                                href="{{ url('income/payment/all') }}">Riwayat Transaksi</a></li>
                     </ul>
                 </li>
             @endcan
