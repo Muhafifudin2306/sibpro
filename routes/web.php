@@ -29,6 +29,16 @@ Route::prefix('pengeluaran')->group(function () {
     Route::get('/vendor', [App\Http\Controllers\VendorController::class, 'index'])->name('vendor');
 });
 
+Route::prefix('master')->group(function () {
+    Route::prefix('pos')->group(function () {
+        Route::get('/', [App\Http\Controllers\PointOfSalesController::class, 'index'])->name('indexPos');
+        Route::post('/add', [App\Http\Controllers\PointOfSalesController::class, 'storePos'])->name('storePos');
+        Route::delete('/delete/{id}', [App\Http\Controllers\PointOfSalesController::class, 'destroyPos'])->name('deletePos');
+        Route::post('/update/{id}', [App\Http\Controllers\PointOfSalesController::class, 'updatePos'])->name('updatePos');
+    });
+});
+
+
 Route::prefix('income')->group(function () {
     Route::prefix('credit')->group(function () {
         Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
@@ -47,6 +57,13 @@ Route::prefix('income')->group(function () {
 
     Route::prefix('payment')->group(function () {
         Route::get('/all', [App\Http\Controllers\PaymentController::class, 'allData'])->name('allData');
+    });
+
+    Route::prefix('external')->group(function () {
+        Route::get('/', [App\Http\Controllers\ExternalIncomeController::class, 'index'])->name('external');
+        Route::post('/add', [App\Http\Controllers\ExternalIncomeController::class, 'storeExternal'])->name('storeExternal');
+        Route::delete('/delete/{id}', [App\Http\Controllers\ExternalIncomeController::class, 'destroyExternal'])->name('deleteExternal');
+        Route::post('/update/{id}', [App\Http\Controllers\ExternalIncomeController::class, 'updateExternal'])->name('updateExternal');
     });
 });
 

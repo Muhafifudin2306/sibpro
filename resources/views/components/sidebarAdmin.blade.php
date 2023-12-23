@@ -55,6 +55,8 @@
                                 href="{{ url('income/enrollment') }}">Daftar Ulang</a></li>
                         <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
                                 href="{{ url('income/credit') }}">SPP</a></li>
+                        <li class="{{ Request::segment(2) === 'external' ? 'active' : '' }}"><a
+                                href="{{ url('income/external') }}">Dana Eksternal</a></li>
                         <li class="{{ Request::segment(2) === 'payment' ? 'active' : '' }}"><a
                                 href="{{ url('income/payment/all') }}">Riwayat Transaksi</a></li>
                     </ul>
@@ -80,12 +82,12 @@
                         Konsolidasi</span></a>
             </li> --}}
             <li class="menu-header">Master Data</li>
-            <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">
+            <li class="dropdown {{ Request::is('master*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-archive"></i>
                     <span>Master Data</span></a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'profile' ? 'active' : '' }}"><a
-                            href="{{ url('/account/profile') }}">Point Of Sales</a></li>
+                    <li class="{{ Request::segment(2) === 'pos' ? 'active' : '' }}"><a
+                            href="{{ url('/master/pos') }}">Point Of Sales</a></li>
                 </ul>
             </li>
             <li class="menu-header">Utilitas</li>

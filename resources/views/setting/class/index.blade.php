@@ -71,7 +71,7 @@
                                                     {{ $item->updated_at->format('d F Y') }}
                                                 </td>
                                                 <td>
-                                                    <div class="d-flex justify-content-center">
+                                                    <div class="d-flex justify-content-start">
                                                         @can('access-classUpdate')
                                                             <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
                                                                 data-target="#updateModal{{ $item->id }}">
