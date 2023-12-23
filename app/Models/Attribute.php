@@ -14,7 +14,9 @@ class Attribute extends Model
 
     protected $fillable = [
         'attribute_name',
-        'attribute_price'
+        'attribute_price',
+        'attribute_type',
+        'slug'
     ];
     public function users()
     {

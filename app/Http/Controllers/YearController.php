@@ -20,16 +20,15 @@ class YearController extends Controller
     public function index()
     {
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        $years = Year::orderByRaw('year_status = "active" desc, updated_at desc')->get();
+        $years = Year::orderByRaw('year_status = "active" desc, updated_at desc')->select('year_name','year_semester','year_status','id')->get();
         return view('setting.year.index', compact('years', 'notifications'));
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'year_name' => [
-                'required'
-            ]
+            'year_name' => 'required',
+            'year_semester' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -38,8 +37,8 @@ class YearController extends Controller
 
         $year = Year::create([
             'year_name' => $request->input('year_name'),
-            'year_status' => "nonActive",
-            'user_id' => Auth::user()->id
+            'year_semester' => $request->input('year_semester'),
+            'year_status' => "nonActive"
         ]);
 
         Notification::create([

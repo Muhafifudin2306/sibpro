@@ -11,6 +11,7 @@ class Credit extends Model
     protected $fillable = [
         'credit_name',
         'credit_price',
+        'credit_type',
         'semester'
     ];
 

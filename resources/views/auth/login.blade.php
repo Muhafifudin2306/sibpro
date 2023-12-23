@@ -64,9 +64,6 @@
                             </form>
                         </div>
                     </div>
-                    <div class="mt-5 text-center">
-                        {{ __('Belum punya akun?') }} <a href="{{ url('/register') }}">{{ __('Register Sekarang') }}</a>
-                    </div>
                 </div>
             </div>
         </div>

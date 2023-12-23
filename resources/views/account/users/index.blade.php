@@ -52,12 +52,13 @@
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-users">
                                     <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">{{ __('No') }}</th>
+                                        <tr>
+                                            <th>{{ __('No') }}</th>
+                                            <th>{{ __('NIS') }}</th>
                                             <th>{{ __('Nama') }}</th>
+                                            <th>{{ __('Kelas') }}</th>
                                             <th>{{ __('Email') }}</th>
                                             <th>{{ __('Role') }}</th>
-                                            <th>{{ __('Diedit Pada') }}</th>
                                             <th>{{ __('Action') }}</th>
                                         </tr>
                                     </thead>
@@ -67,16 +68,25 @@
                                         @endphp
                                         @foreach ($users as $item)
                                             <tr>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $no++ }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->nis }}
                                                 </td>
                                                 <td>
                                                     {{ $item->name }}
                                                 </td>
                                                 <td>
+                                                    @if ($item->classes == null)
+                                                    @else
+                                                        {{ $item->classes->class_name }}
+                                                    @endif
+                                                </td>
+                                                <td>
                                                     {{ $item->email }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
                                                     @foreach ($item->roles as $role)
                                                         @if ($role->name == 'Superadmin')
                                                             <span class="fw-bold text-danger">
@@ -90,10 +100,7 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
+                                                    <div class="d-flex justify-content-start">
                                                         @can('access-userEdit')
                                                             <a href="{{ url('account/users/edit/' . $item->id) }}">
                                                                 <div class="text-warning mx-2 cursor-pointer">

@@ -11,7 +11,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <section class="section">
-                <div class="section-header d-flex justify-content-lg-between ">
+                <div class="section-header d-flex justify-content-lg-between">
                     <div class="title">
                         <h1>{{ __('Dashboard') }}</h1>
                     </div>

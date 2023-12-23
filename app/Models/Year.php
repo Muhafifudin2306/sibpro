@@ -12,16 +12,7 @@ class Year extends Model
     protected $fillable = [
         'year_name',
         'year_status',
+        'year_semester',
         'user_id'
     ];
-
-    public function attributes()
-    {
-        return $this->hasMany(Attribute::class, 'id_year');
-    }
-
-    public function class()
-    {
-        return $this->hasMany(StudentClass::class, 'id_year');
-    }
 }

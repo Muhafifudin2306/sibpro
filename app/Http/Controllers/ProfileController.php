@@ -7,6 +7,7 @@ use App\Models\Notification;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Credit;
 use App\Models\Attribute;
 use App\Models\StudentClass;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,7 @@ class ProfileController extends Controller
 
     public function userList()
     {
-        $users = User::with('roles')->get();
+        $users = User::with('roles')->select('name','email','nis','id','class_id')->orderBy("updated_at", "DESC")->get();
         $classes = StudentClass::orderBy("updated_at", "DESC")->get();
         $categories = Category::orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
@@ -76,18 +77,22 @@ class ProfileController extends Controller
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-         foreach ($id_credits as $creditId) {
+        foreach ($id_credits as $creditId) {
             $uuidTwo = Uuid::uuid4()->toString();
-            
             $invoiceNumber = $this->generateInvoiceNumberCredit();
+
+            $creditType = Credit::find($creditId)->credit_type;
+
+            $status = ($creditType == 0) ? 'Paid' : 'Unpaid';
 
             $user->paymentCredit()->attach($creditId, [
                 'type' => 1,
                 'year_id' => $activeYearId,
                 'uuid' => $uuidTwo,
                 'invoice_number' => $invoiceNumber,
-                'created_at' => now(), 
-                'updated_at' => now(), 
+                'status' => $status,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
 
@@ -97,16 +102,20 @@ class ProfileController extends Controller
 
         foreach ($id_attributes as $attributeId) {
             $uuidThree = Uuid::uuid4()->toString();
-            
             $invoiceNumber = $this->generateInvoiceNumberEnrollment();
+
+            $attributeType = Attribute::find($attributeId)->attribute_type;
+
+            $status = ($attributeType == 0) ? 'Paid' : 'Unpaid';
 
             $user->paymentAttribute()->attach($attributeId, [
                 'type' => 2,
                 'year_id' => $activeYearId,
                 'uuid' => $uuidThree,
                 'invoice_number' => $invoiceNumber,
-                'created_at' => now(), 
-                'updated_at' => now(), 
+                'status' => $status,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
 

@@ -43,19 +43,29 @@
                                 </div>
                                 <div class="form-group">
                                     <label>{{ __('Atribut Daftar Ulang') }}</label>
-                                    <select class="form-control select2" name="attribute_id[]" multiple="">
-                                        @foreach ($attributes as $item)
-                                            <option value="{{ $item->id }}">{{ $item->attribute_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    @foreach ($attributes as $item)
+                                        <div class="py-1 mx-3">
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="attribute_id[]"
+                                                    id="{{ $item->slug }}" value="{{ $item->id }}">
+                                                <label class="custom-control-label"
+                                                    for="{{ $item->slug }}">{{ $item->attribute_name }}</label>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                                 <div class="form-group">
                                     <label>{{ __('Atribut SPP') }}</label>
-                                    <select class="form-control select2" name="credit_id[]" multiple="">
-                                        @foreach ($credits as $item)
-                                            <option value="{{ $item->id }}">{{ $item->credit_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    @foreach ($credits as $item)
+                                        <div class="py-1 mx-3">
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="credit_id[]"
+                                                    value="{{ $item->id }}" id="{{ $item->slug }}">
+                                                <label class="custom-control-label"
+                                                    for="{{ $item->slug }}">{{ $item->credit_name }}</label>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                                 <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
                             </form>

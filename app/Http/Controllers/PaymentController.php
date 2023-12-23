@@ -30,10 +30,11 @@ class PaymentController extends Controller
                     ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                     ->orderBy("updated_at", "DESC")
                     ->get();
+        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
 
-        return view('payment.allData', compact('notifications', 'studentClasses','credit'));
+        return view('payment.allData', compact('notifications', 'studentClasses','credit','years'));
     }
 
     public function detail($id)

@@ -46,8 +46,8 @@
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-tagihan-vendor">
                                     <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">
+                                        <tr>
+                                            <th>
                                                 {{ __('No') }}
                                             </th>
                                             <th>{{ __('Nama Kelas') }}</th>
@@ -61,13 +61,13 @@
                                         @endphp
                                         @foreach ($classes as $item)
                                             <tr>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $no++ }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $item->class_name }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $item->updated_at->format('d F Y') }}
                                                 </td>
                                                 <td>

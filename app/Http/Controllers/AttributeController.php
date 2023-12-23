@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Credit;
 use App\Models\Notification;
 use App\Models\Year;
+use Illuminate\Support\Str;
 
 class AttributeController extends Controller
 {
@@ -32,18 +33,16 @@ class AttributeController extends Controller
     public function store(Request $request)
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
-        $validator = Validator::make($request->all(), [
-            'attribute_name' => 'required|unique:attributes,attribute_name,null',
-            'attribute_price' => 'required'
-        ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()->toArray()], 422);
-        }
+        $attributeName = $request->input('attribute_name');
+
+        $slug = Str::slug($attributeName);
 
         $attributes = Attribute::create([
-            'attribute_name' => $request->input('attribute_name'),
-            'attribute_price' => $request->input('attribute_price')
+            'attribute_name' => $attributeName,
+            'attribute_price' => $request->input('attribute_price'),
+            'attribute_type' => $request->input('attribute_type'),
+            'slug' => $slug
         ]);
 
         $years = Year::find($activeYearId);
@@ -62,11 +61,14 @@ class AttributeController extends Controller
     public function update(Request $request, $id)
     {
         $attributes = Attribute::find($id);
+        $attributeName = $request->input('attribute_name');
 
+        $slug = Str::slug($attributeName);
         $attributes->update([
-            "attribute_name" =>  $request->input('attribute_name'),
+            "attribute_name" => $attributeName,
             "attribute_price" =>  $request->input('attribute_price'),
-            'user_id' => Auth::user()->id
+            "attribute_type" => $request->input('attribute_type'),
+            'slug' => $slug
         ]);
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);

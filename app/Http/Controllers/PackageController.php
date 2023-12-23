@@ -20,9 +20,9 @@ class PackageController extends Controller
     public function index()
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
-        $attributes = Attribute::orderBy("updated_at", "DESC")->get();
-        $categories = Category::orderBy("updated_at", "DESC")->get();
-        $credits = Credit::orderBy("updated_at", "DESC")->get();
+        $attributes = Attribute::select('id','attribute_name','attribute_price', 'attribute_type','updated_at','slug')->orderBy("updated_at", "DESC")->get();
+        $categories = Category::select('id','category_name','updated_at','slug')->orderBy("updated_at", "DESC")->get();
+        $credits = Credit::select('id','credit_type','credit_name','credit_price','semester','updated_at','slug')->orderBy("updated_at", "DESC")->get();
         $categoriesRelation = Category::has("attributes")->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         return view('setting.attribute.index', compact('credits', 'attributes', 'categories', 'notifications', 'categoriesRelation'));

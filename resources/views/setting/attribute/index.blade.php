@@ -34,7 +34,7 @@
                                 <a href="{{ url('/setting/packages/add') }}">
                                     <button class="btn btn-primary" data-toggle="modal"
                                         data-target="#relationModal">{{ __('+ Tambah
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Data') }}</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Data') }}</button>
                                 </a>
                             @endcan
                         </div>
@@ -48,8 +48,8 @@
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="table-relation">
                                         <thead>
-                                            <tr class="text-center">
-                                                <th class="text-center">
+                                            <tr>
+                                                <th>
                                                     {{ __('No') }}
                                                 </th>
                                                 <th>{{ __('Nama Paket') }}</th>
@@ -64,13 +64,13 @@
                                             @endphp
                                             @foreach ($categoriesRelation as $item)
                                                 <tr>
-                                                    <td class="text-center">
+                                                    <td>
                                                         {{ $no++ }}
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td>
                                                         {{ $item->category_name }}
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td>
                                                         <div class="d-flex flex-wrap">
                                                             @foreach ($item->attributes as $attribute)
                                                                 <div class="mb-2 mx-1">
@@ -80,7 +80,7 @@
                                                             @endforeach
                                                         </div>
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td>
                                                         <div class="d-flex flex-wrap">
                                                             @foreach ($item->credits as $credit)
                                                                 <div class="mb-2 mx-1">
@@ -142,12 +142,13 @@
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="table-attribute">
                                         <thead>
-                                            <tr class="text-center">
-                                                <th class="text-center">
+                                            <tr>
+                                                <th>
                                                     {{ __('No') }}
                                                 </th>
                                                 <th>{{ __('Nama Atribut') }}</th>
                                                 <th>{{ __('Harga Atribut') }}</th>
+                                                <th>{{ __('Tipe Atribut') }}</th>
                                                 <th>{{ __('Diubah pada') }}</th>
                                                 <th>{{ __('Action') }}</th>
                                             </tr>
@@ -158,7 +159,7 @@
                                             @endphp
                                             @foreach ($attributes as $item)
                                                 <tr>
-                                                    <td class="text-center">
+                                                    <td>
                                                         {{ $no++ }}
                                                     </td>
                                                     <td>
@@ -167,14 +168,15 @@
                                                     <td>
                                                         Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td>{{ $item->attribute_type == 1 ? 'Reguler' : 'Khusus' }}</td>
+                                                    <td>
                                                         {{ $item->updated_at->format('d F Y') }}
                                                     </td>
                                                     <td>
-                                                        <div class="d-flex justify-content-center">
+                                                        <div class="d-flex justify-content-start">
                                                             @can('access-attributeUpdate')
                                                                 <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                                    data-target="#exampleModal{{ $item->id }}">
+                                                                    data-target="#exampleModal{{ $item->slug }}">
                                                                     <i class="fas fa-pen" title="Edit Atribut"></i>
                                                                 </div>
                                                             @endcan
@@ -220,12 +222,13 @@
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="table-credit">
                                         <thead>
-                                            <tr class="text-center">
-                                                <th class="text-center">
+                                            <tr>
+                                                <th>
                                                     {{ __('No') }}
                                                 </th>
                                                 <th>{{ __('Nama Atribut') }}</th>
                                                 <th>{{ __('Harga Atribut') }}</th>
+                                                <th>{{ __('Tipe Atribut') }}</th>
                                                 <th>{{ __('Semester') }}</th>
                                                 <th>{{ __('Diubah pada') }}</th>
                                                 <th>{{ __('Action') }}</th>
@@ -235,28 +238,29 @@
                                             @php
                                                 $no = 1;
                                             @endphp
-                                            @foreach ($credits as $item)
+                                            @foreach ($credits as $credit)
                                                 <tr>
-                                                    <td class="text-center">
+                                                    <td>
                                                         {{ $no++ }}
                                                     </td>
                                                     <td>
-                                                        {{ $item->credit_name }}
+                                                        {{ $credit->credit_name }}
                                                     </td>
                                                     <td>
-                                                        Rp{{ number_format($item->credit_price, 0, ',', '.') }}
+                                                        Rp{{ number_format($credit->credit_price, 0, ',', '.') }}
                                                     </td>
-                                                    <td class="text-center">
-                                                        {{ $item->semester }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $item->updated_at->format('d F Y') }}
+                                                    <td>{{ $credit->credit_type == 1 ? 'Reguler' : 'Khusus' }}</td>
+                                                    <td>
+                                                        {{ $credit->semester }}
                                                     </td>
                                                     <td>
-                                                        <div class="d-flex justify-content-center">
+                                                        {{ $credit->updated_at->format('d F Y') }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-start">
                                                             @can('access-creditUpdate')
                                                                 <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                                    data-target="#creditEdit{{ $item->id }}">
+                                                                    data-target="#creditEdit{{ $credit->id }}">
                                                                     <i class="fas fa-pen" title="Edit Credit"></i>
                                                                 </div>
                                                             @endcan
@@ -303,8 +307,8 @@
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="table-category">
                                         <thead>
-                                            <tr class="text-center">
-                                                <th class="text-center">
+                                            <tr>
+                                                <th>
                                                     {{ __('No') }}
                                                 </th>
                                                 <th>{{ __('Nama Kategori') }}</th>
@@ -318,27 +322,27 @@
                                             @endphp
                                             @foreach ($categories as $item)
                                                 <tr>
-                                                    <td class="text-center">
+                                                    <td>
                                                         {{ $no++ }}
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td>
                                                         {{ $item->category_name }}
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td>
                                                         {{ $item->updated_at->format('d F Y') }}
                                                     </td>
                                                     <td>
-                                                        <div class="d-flex justify-content-center">
+                                                        <div class="d-flex justify-content-start">
                                                             @can('access-categoryUpdate')
                                                                 <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                                    data-target="#categoryModal{{ $item->id }}">
+                                                                    data-target="#categoryModal{{ $item->slug }}">
                                                                     <i class="fas fa-pen" title="Edit Category"></i>
                                                                 </div>
                                                             @endcan
                                                             @can('access-categoryDelete')
                                                                 <div class="text-danger mx-2 cursor-pointer">
                                                                     <i class="fas category-delete fa-trash-alt"
-                                                                        data-card-id="{{ $item->id }}" title="Delete"></i>
+                                                                        data-card-id="{{ $item->slug }}" title="Delete"></i>
                                                                 </div>
                                                             @endcan
                                                         </div>
@@ -376,14 +380,21 @@
                             <div class="form-group">
                                 <label for="attribute_name">{{ __('Nama Atribut') }}</label>
                                 <input type="text" class="form-control" name="attribute_name" id="attribute_name"
-                                    placeholder="Topi/Dasi/Seragam" autofocus>
+                                    placeholder="Topi/Dasi/Seragam" autofocus required="">
                             </div>
                             <div class="form-group">
                                 <label for="attribute_price">{{ __('Harga (Tulis : 100000)') }} </label>
                                 <input type="number" class="form-control" name="attribute_price" id="attribute_price"
-                                    placeholder="100000">
+                                    placeholder="100000" required="">
                             </div>
-
+                            <div class="form-group">
+                                <label>{{ __('Tipe Atribut') }}</label>
+                                <select class="form-control select2" name="attribute_type" required="">
+                                    <option>{{ __('-- Pilih Tipe --') }}</option>
+                                    <option value="1">{{ __('Reguler') }}</option>
+                                    <option value="0">{{ __('Khusus') }}</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-secondary"
@@ -426,7 +437,14 @@
                                     <option value="Gasal">{{ __('Gasal') }}</option>
                                 </select>
                             </div>
-
+                            <div class="form-group">
+                                <label>{{ __('Tipe Atribut') }}</label>
+                                <select class="form-control select2" name="attribute_type">
+                                    <option>{{ __('-- Pilih Tipe --') }}</option>
+                                    <option value="1">{{ __('Reguler') }}</option>
+                                    <option value="0">{{ __('Khusus') }}</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-secondary"
@@ -454,7 +472,15 @@
                             <div class="form-group">
                                 <label for="category_name">{{ __('Nama Kategori') }}</label>
                                 <input type="text" class="form-control" name="category_name" id="category_name"
-                                    placeholder="Reguler" autofocus>
+                                    placeholder="Reguler" autofocus="" required="">
+                            </div>
+                            <div class="form-group">
+                                <label>{{ __('Tipe Kategori') }}</label>
+                                <select class="form-control select2" name="category_type" required="">
+                                    <option>{{ __('-- Pilih Tipe --') }}</option>
+                                    <option value="1">{{ __('Reguler') }}</option>
+                                    <option value="0">{{ __('Khusus') }}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -470,7 +496,7 @@
 
     @can('access-attributeUpdate')
         @foreach ($attributes as $item)
-            <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal{{ $item->id }}">
+            <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal{{ $item->slug }}">
                 <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -486,12 +512,21 @@
                                 <div class="form-group">
                                     <label for="attribute_name">{{ __('Nama Atribut') }}</label>
                                     <input type="text" class="form-control" name="attribute_name" id="attribute_name"
-                                        value="{{ $item->attribute_name }}">
+                                        value="{{ $item->attribute_name }}" required="">
                                 </div>
                                 <div class="form-group">
                                     <label for="attribute_price">{{ __('Harga (Tulis : 100000)') }} </label>
                                     <input type="number" class="form-control" name="attribute_price" id="attribute_price"
-                                        value="{{ round($item->attribute_price) }}" autofocus>
+                                        value="{{ round($item->attribute_price) }}" autofocus required="">
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ __('Tipe Kategori') }}</label>
+                                    <select class="form-control select2" name="attribute_type" required="">
+                                        <option value="1" {{ $item->attribute_type == 1 ? 'selected' : '' }}>
+                                            {{ __('Reguler') }}</option>
+                                        <option value="0" {{ $item->attribute_type == 0 ? 'selected' : '' }}>
+                                            {{ __('Khusus') }}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">
@@ -534,13 +569,10 @@
                                 <div class="form-group">
                                     <label>Semester</label>
                                     <select class="form-control select2" name="semester">
-                                        @if ($item->semester == 'Genap')
-                                            <option value="Genap" selected>{{ __('Genap') }}</option>
-                                            <option value="Gasal">{{ __('Gasal') }}</option>
-                                        @elseif($item->semester == 'Gasal')
-                                            <option value="Genap">{{ __('Genap') }}</option>
-                                            <option value="Gasal" selected>{{ __('Gasal') }}</option>
-                                        @endif
+                                        <option value="Genap" {{ $item->semester == 'Genap' ? 'selected' : '' }}>
+                                            {{ __('Genap') }}</option>
+                                        <option value="Gasal" {{ $item->semester == 'Gasal' ? 'selected' : '' }}>
+                                            {{ __('Gasal') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -558,7 +590,7 @@
 
     @can('access-categoryUpdate')
         @foreach ($categories as $item)
-            <div class="modal fade" tabindex="-1" role="dialog" id="categoryModal{{ $item->id }}">
+            <div class="modal fade" tabindex="-1" role="dialog" id="categoryModal{{ $item->slug }}">
                 <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -574,7 +606,16 @@
                                 <div class="form-group">
                                     <label for="category_name">{{ __('Nama Kategori') }}</label>
                                     <input type="text" class="form-control" name="category_name" id="category_name"
-                                        value="{{ $item->category_name }}" autofocus="">
+                                        value="{{ $item->category_name }}" autofocus="" required="">
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ __('Tipe Kategori') }}</label>
+                                    <select class="form-control select2" name="category_type" required="">
+                                        <option value="1" {{ $item->category_type == 1 ? 'selected' : '' }}>
+                                            {{ __('Reguler') }}</option>
+                                        <option value="0" {{ $item->category_type == 0 ? 'selected' : '' }}>
+                                            {{ __('Khusus') }}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">
@@ -793,7 +834,8 @@
                                     location.reload();
                                 })
                                 .catch(error => {
-                                    Notiflix.Notify.failure('Error:', error);
+                                    Notiflix.Notify.failure(
+                                        'Error: Data kategori telah berelasi dengan tabel lainnya');
                                 });
                         });
                 });

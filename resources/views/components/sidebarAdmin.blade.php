@@ -79,7 +79,15 @@
             <li><a class="nav-link" href="blank.html"><i class="fas fa-file-invoice-dollar"></i><span>Laporan
                         Konsolidasi</span></a>
             </li> --}}
-
+            <li class="menu-header">Master Data</li>
+            <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-archive"></i>
+                    <span>Master Data</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::segment(2) === 'profile' ? 'active' : '' }}"><a
+                            href="{{ url('/account/profile') }}">Point Of Sales</a></li>
+                </ul>
+            </li>
             <li class="menu-header">Utilitas</li>
             <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i>

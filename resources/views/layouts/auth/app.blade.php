@@ -10,10 +10,7 @@
         href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAADdZgUA/vz7AO+6kADcZAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMzMzMzMzMzMzMzMzMzMzMzMzMzREQ0QzMzMzRERERDMzMzREMzREMzMzNEMzNEQzMzM0QzMzRDMzMzREMzREMzMzNERAREQzMzMzRERERDMzMzM0RBJEMzMzMzMzMkQzMzMzMzMyRDMzMzMzMzJEMzMzMzMzMzMzMzMzMzMzMzMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/modules/notiflix/src/notiflix.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
     @stack('styles')
-
 </head>
 
 <body>
@@ -25,14 +22,6 @@
 
     @stack('scripts')
     <script src="{{ asset('assets/modules/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/popper.js') }}"></script>
-    <script src="{{ asset('assets/modules/tooltip.js') }}"></script>
-    <script src="{{ asset('assets/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/stisla.js') }}"></script>
-    <script src="{{ asset('assets/modules/notiflix/src/notiflix.js') }}"></script>
-    <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script>
 </body>
 
 </html>

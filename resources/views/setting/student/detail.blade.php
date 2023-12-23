@@ -47,13 +47,13 @@
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-student">
                                     <thead>
-                                        <tr class="text-center">
+                                        <tr>
                                             <th>{{ __('No') }}</th>
                                             <th>{{ __('NIS') }}</th>
                                             <th>{{ __('Nama Siswa') }}</th>
                                             <th>{{ __('Gender') }}</th>
-                                            <th>{{ __('Email') }}</th>
                                             <th>{{ __('Kategori') }}</th>
+                                            <th>{{ __('Email') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -62,7 +62,7 @@
                                         @endphp
                                         @foreach ($students as $item)
                                             <tr>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $no++ }}
                                                 </td>
                                                 <td>
@@ -71,14 +71,14 @@
                                                 <td>
                                                     {{ $item->name }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
                                                     {{ $item->gender }}
                                                 </td>
                                                 <td>
-                                                    {{ $item->email }}
-                                                </td>
-                                                <td class="text-center">
                                                     {{ $item->categories->category_name }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->email }}
                                                 </td>
                                             </tr>
                                         @endforeach

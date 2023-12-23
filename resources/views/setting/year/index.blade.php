@@ -36,27 +36,29 @@
                 <div class="row">
                     @foreach ($years as $year)
                         @if ($year->year_status == 'active')
-                            <div class="col-12 col-md-6 col-lg-3">
+                            <div class="col-12 col-md-6 col-lg-4">
                                 <div class="card card-success">
                                     <div class="card-header">
                                         <h4>{{ 'Tahun Aktif' }}</h4>
                                     </div>
                                     <div class="card-body">
+                                        <p>Semester {{ $year->year_semester }}</p>
                                         <p>Tahun Pelajaran {{ $year->year_name }}</p>
                                     </div>
                                 </div>
                             </div>
                         @elseif ($year->year_status == 'nonActive')
-                            <div class="col-12 col-md-6 col-lg-3">
-                                <div class="card card-danger">
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="card card-danger" title="Aktifkan Tahun Pelajaran">
                                     <div class="card-header d-flex justify-content-between">
                                         <h4>{{ 'Non Aktif' }}</h4>
                                         @can('access-yearDelete')
                                             <i class="fas fa-trash card-delete cursor-pointer text-danger"
-                                                data-card-id="{{ $year->id }}"></i>
+                                                data-card-id="{{ $year->id }}" title="Hapus Tahun Pelajaran"></i>
                                         @endcan
                                     </div>
                                     <div class="card-body cursor-pointer card-body-off" data-card-id="{{ $year->id }}">
+                                        <p>Semester {{ $year->year_semester }}</p>
                                         <p>Tahun Pelajaran {{ $year->year_name }}</p>
                                     </div>
                                 </div>
@@ -84,10 +86,24 @@
                     </div>
                     <form id="yearForm">
                         <div class="modal-body">
-                            <div class="form-group">
-                                <label for="inputAddress">Nama Tahun Pelajaran ( Misal : 2022/2023 )</label>
-                                <input type="text" class="form-control" name="year_name" placeholder="2022/2023" required
-                                    autofocus>
+                            <div class="row pt-3 pb-1">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="year_name">Nama Tahun Pelajaran</label>
+                                        <input type="text" id="year_name" class="form-control" name="year_name"
+                                            placeholder="2022/2023" required autofocus>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="year_semester">Nama Semester</label>
+                                        <select name="year_semester" id="year_semester" class="form-control">
+                                            <option selected disabled> -- Pilih Semester -- </option>
+                                            <option value="Genap">Genap</option>
+                                            <option value="Ganjil">Ganjil</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -188,23 +204,32 @@
                 updateButtons.forEach(button => {
                     button.addEventListener('click', function() {
                         const cardId = button.dataset.cardId;
-                        fetch(`/setting/year/update/${cardId}`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                Notiflix.Notify.success("Data tahun berhasil diperbarui!", {
-                                    timeout: 3000
-                                });
-                                location.reload();
-                            })
-                            .catch(error => {
-                                Notiflix.Notify.failure('Error:', error);
-                            });
+
+                        Notiflix.Confirm.show(
+                            'Konfirmasi',
+                            'Apakah Anda yakin ingin memperbarui data ini?',
+                            'Ya',
+                            'Batal',
+                            function() {
+                                fetch(`/setting/year/update/${cardId}`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'Content-Type': 'application/json'
+                                        }
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        Notiflix.Notify.success("Data tahun berhasil diperbarui!", {
+                                            timeout: 3000
+                                        });
+                                        location.reload();
+                                    })
+                                    .catch(error => {
+                                        Notiflix.Notify.failure('Error:', error);
+                                    });
+                            }
+                        );
                     });
                 });
             </script>
