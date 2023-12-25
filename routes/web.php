@@ -36,6 +36,19 @@ Route::prefix('master')->group(function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\PointOfSalesController::class, 'destroyPos'])->name('deletePos');
         Route::post('/update/{id}', [App\Http\Controllers\PointOfSalesController::class, 'updatePos'])->name('updatePos');
     });
+    Route::prefix('vendor')->group(function () {
+        Route::get('/', [App\Http\Controllers\VendorController::class, 'index'])->name('indexVendor');
+        Route::post('/add', [App\Http\Controllers\VendorController::class, 'storeVendor'])->name('storeVendor');
+        Route::delete('/delete/{id}', [App\Http\Controllers\VendorController::class, 'destroyVendor'])->name('deleteVendor');
+        Route::post('/update/{id}', [App\Http\Controllers\VendorController::class, 'updateVendor'])->name('updateVendor');
+    });
+});
+
+Route::prefix('spending')->group(function () {
+    Route::prefix('attribute')->group(function () {
+        Route::get('/', [App\Http\Controllers\SpendingController::class, 'indexAttribute'])->name('AttributeSpending');
+        Route::get('/detail/{slug}', [App\Http\Controllers\SpendingController::class, 'detailAttribute'])->name('detailAttribute');
+    });
 });
 
 

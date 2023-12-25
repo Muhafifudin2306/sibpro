@@ -12,12 +12,18 @@ class ExternalIncome extends Model
         'pos_id',
         'income_desc',
         'income_period',
-        'income_price'
+        'income_price',
+        'year_id'
     ];
 
     public function pos()
     {
         return $this->belongsTo(PointOfSales::class, 'pos_id');
+    }
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class, 'year_id');
     }
 
 }

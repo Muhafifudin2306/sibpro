@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExternalIncome;
 use App\Models\User;
 use App\Models\Payment;
 use App\Models\Notification;
@@ -32,7 +33,9 @@ class HomeController extends Controller
     {
         $adminCount = User::count();
         $years = Year::orderBy("updated_at", "DESC")->get();
-        $roleCount = Role::count();
+        $externalCount = ExternalIncome::whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
+                                ->orderBy("updated_at", "DESC")
+                                ->sum('income_price');
         $totalCredit = Payment::where('type','1')
                                 ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                                 ->orderBy("updated_at", "DESC")
@@ -50,6 +53,6 @@ class HomeController extends Controller
                     ->orderBy("updated_at", "DESC")
                     ->limit(5)->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(3)->get();
-        return view('home', compact('adminCount', 'notifications','totalCredit','totalAttribute','totalPaid','roleCount','credit','years'));
+        return view('home', compact('adminCount', 'notifications','totalCredit','totalAttribute','totalPaid','externalCount','credit','years'));
     }
 }

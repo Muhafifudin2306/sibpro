@@ -71,10 +71,10 @@
                             </div>
                             <div class="card-wrap">
                                 <div class="card-header">
-                                    <h4>Total Role</h4>
+                                    <h4>Dana Eksternal</h4>
                                 </div>
                                 <div class="card-body py-1">
-                                    <h5>{{ $roleCount }}</h5>
+                                    <h5>Rp {{ number_format($externalCount, 0, ',', '.') }}</h5>
                                 </div>
                                 <div class="py-2"></div>
                             </div>

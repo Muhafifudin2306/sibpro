@@ -106,6 +106,4 @@ class PointOfSalesController extends Controller
 
         return response()->json(['message' => 'Data updated successfully'], 200);
     }
-
-   
 }

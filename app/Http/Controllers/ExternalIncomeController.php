@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Validator;
 
 class ExternalIncomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         $externals = ExternalIncome::select('id','pos_id','income_desc','income_period','income_price','updated_at')->orderBy('updated_at','DESC')->get();
@@ -22,6 +26,8 @@ class ExternalIncomeController extends Controller
 
     public function storeExternal(Request $request)
     {
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
         $validator = Validator::make($request->all(), [
             'pos_id' => 'required|exists:point_of_sales,id',
             'income_price' => 'required|numeric',
@@ -39,9 +45,9 @@ class ExternalIncomeController extends Controller
             'income_price' => $request->input('income_price'),
             'income_desc' => $request->input('income_desc'),
             'income_period' => $incomePeriod,
+            'year_id' => $activeYearId
         ]);
 
-        $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
 
         Notification::create([
@@ -85,6 +91,7 @@ class ExternalIncomeController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
+        $activeYearId = Year::where('year_status', 'active')->value('id');
     
         $externalIncome = ExternalIncome::findOrFail($id);
 
@@ -95,9 +102,9 @@ class ExternalIncomeController extends Controller
             'income_desc' => $request->input('income_desc'),
             'income_period' => $incomePeriod,
             'income_price' => $request->input('income_price'),
+            'year_id' => $activeYearId
         ]);
 
-        $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
     
         Notification::create([

@@ -30,21 +30,16 @@
                 </li>
             @endcan
 
-            {{-- @can('access-outcome')
-                <li class="dropdown {{ Request::is('pengeluaran*') ? 'active' : '' }}">
+            @can('access-outcome')
+                <li class="dropdown {{ Request::is('spending*') ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-money-bill-wave-alt"></i>
                         <span>Pengeluaran</span></a>
                     <ul class="dropdown-menu">
-                        <li class="{{ Request::segment(2) === 'vendor' ? 'active' : '' }}"><a class="nav-link"
-                                href="{{ url('pengeluaran/vendor') }}">Pembayaran Vendor</a></li>
-                        <li><a class="nav-link" href="components-avatar.html">Penggajian Staff</a>
-                        </li>
-                        <li><a class="nav-link" href="components-chat-box.html">Pembelian Aset</a></li>
-                        <li><a class="nav-link" href="components-empty-state.html">Biaya
-                                Operasional</a></li>
+                        <li class="{{ Request::segment(2) === 'attribute' ? 'active' : '' }}"><a class="nav-link"
+                                href="{{ url('spending/attribute') }}">Realisasi Atribut Siswa</a></li>
                     </ul>
                 </li>
-            @endcan --}}
+            @endcan
 
             @can('access-income')
                 <li class="dropdown {{ Request::is('income*') ? 'active' : '' }}">
@@ -52,9 +47,9 @@
                         <span>Pemasukan</span></a>
                     <ul class="dropdown-menu">
                         <li class="{{ Request::segment(2) === 'enrollment' ? 'active' : '' }}"><a
-                                href="{{ url('income/enrollment') }}">Daftar Ulang</a></li>
+                                href="{{ url('income/enrollment') }}">Manajemen Daftar Ulang</a></li>
                         <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
-                                href="{{ url('income/credit') }}">SPP</a></li>
+                                href="{{ url('income/credit') }}">Manajemen SPP</a></li>
                         <li class="{{ Request::segment(2) === 'external' ? 'active' : '' }}"><a
                                 href="{{ url('income/external') }}">Dana Eksternal</a></li>
                         <li class="{{ Request::segment(2) === 'payment' ? 'active' : '' }}"><a
@@ -88,6 +83,8 @@
                 <ul class="dropdown-menu">
                     <li class="{{ Request::segment(2) === 'pos' ? 'active' : '' }}"><a
                             href="{{ url('/master/pos') }}">Point Of Sales</a></li>
+                    <li class="{{ Request::segment(2) === 'vendor' ? 'active' : '' }}"><a
+                            href="{{ url('/master/vendor') }}">Master Vendor</a></li>
                 </ul>
             </li>
             <li class="menu-header">Utilitas</li>
