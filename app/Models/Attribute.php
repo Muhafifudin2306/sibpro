@@ -16,6 +16,7 @@ class Attribute extends Model
         'attribute_name',
         'attribute_price',
         'attribute_type',
+        'vendor_id',
         'slug'
     ];
     public function users()
@@ -29,5 +30,9 @@ class Attribute extends Model
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'category_has_attribute', 'category_id');
+    }
+    public function vendors()
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 }

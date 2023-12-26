@@ -48,6 +48,9 @@ Route::prefix('spending')->group(function () {
     Route::prefix('attribute')->group(function () {
         Route::get('/', [App\Http\Controllers\SpendingController::class, 'indexAttribute'])->name('AttributeSpending');
         Route::get('/detail/{slug}', [App\Http\Controllers\SpendingController::class, 'detailAttribute'])->name('detailAttribute');
+        Route::post('/add', [App\Http\Controllers\SpendingController::class, 'storeSpending'])->name('storeSpending');
+        Route::delete('/delete/{id}', [App\Http\Controllers\SpendingController::class, 'destroySpending'])->name('deleteSpending');
+        Route::post('/update/{id}', [App\Http\Controllers\SpendingController::class, 'updateSpending'])->name('updateSpending');
     });
 });
 

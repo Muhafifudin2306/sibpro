@@ -34,7 +34,7 @@
                                 <a href="{{ url('/setting/packages/add') }}">
                                     <button class="btn btn-primary" data-toggle="modal"
                                         data-target="#relationModal">{{ __('+ Tambah
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Data') }}</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Data') }}</button>
                                 </a>
                             @endcan
                         </div>
@@ -149,6 +149,7 @@
                                                 <th>{{ __('Nama Atribut') }}</th>
                                                 <th>{{ __('Harga Atribut') }}</th>
                                                 <th>{{ __('Tipe Atribut') }}</th>
+                                                <th>{{ __('Penyedia Atribut') }}</th>
                                                 <th>{{ __('Diubah pada') }}</th>
                                                 <th>{{ __('Action') }}</th>
                                             </tr>
@@ -169,6 +170,9 @@
                                                         Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
                                                     </td>
                                                     <td>{{ $item->attribute_type == 1 ? 'Reguler' : 'Khusus' }}</td>
+                                                    <td>
+                                                        {{ $item->vendors->vendor_name }}
+                                                    </td>
                                                     <td>
                                                         {{ $item->updated_at->format('d F Y') }}
                                                     </td>
@@ -395,6 +399,16 @@
                                     <option value="0">{{ __('Khusus') }}</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label>{{ __('Penyedia Atribut') }}</label>
+                                <select class="form-control select2" name="vendor_id" required="">
+                                    <option selected disabled>{{ __('-- Pilih Penyedia --') }}</option>
+                                    @foreach ($vendors as $item)
+                                        <option value="{{ $item->id }}">{{ $item->vendor_name }}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-secondary"
@@ -526,6 +540,17 @@
                                             {{ __('Reguler') }}</option>
                                         <option value="0" {{ $item->attribute_type == 0 ? 'selected' : '' }}>
                                             {{ __('Khusus') }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ __('Penyedia Atribut') }}</label>
+                                    <select class="form-control select2" name="vendor_id" required="">
+                                        <option selected disabled>{{ __('-- Pilih Penyedia --') }}</option>
+                                        @foreach ($vendors as $vendor)
+                                            <option value="{{ $vendor->id }}"
+                                                {{ $vendor->id == $item->vendor_id ? 'selected' : '' }}>
+                                                {{ $vendor->vendor_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

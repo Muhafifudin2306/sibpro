@@ -12,13 +12,38 @@
         <x-sidebarAdmin></x-sidebarAdmin>
         <div class="main-content">
             <section class="section">
-                <div class="section-header">
-                    <h1>Realisasi Dana Atribut</h1>
-                    <div class="section-header-breadcrumb">
-                        <div class="breadcrumb-item active">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Pengeluaran') }}</div>
-                        <div class="breadcrumb-item">{{ __('Atribut') }}</div>
+                <div class="section-header d-flex justify-content-lg-between">
+                    <div class="title">
+                        <h1>Realisasi Dana Atribut</h1>
                     </div>
+                    <form id="updateYearForm">
+                        @csrf
+                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                            <div class="semester__active mr-2">
+                                <select class="form-control" name="year_semester">
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_semester }}"
+                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                            Semester: {{ $item->year_semester }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="year__active mr-2">
+                                <select class="form-control" name="year_name">
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_name }}"
+                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                            Tahun Ajaran: {{ $item->year_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="button-submit">
+                                <button type="button" onclick="updateYear()" class="btn btn-primary h-100">Simpan</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
@@ -40,7 +65,9 @@
                                         <h4>Total Debit</h4>
                                     </div>
                                     <div class="card-body py-1">
-                                        <h5>Rp77.000.000</h5>
+                                        <h5>
+                                            Rp{{ number_format($sumDebit, 0, ',', '.') }}
+                                        </h5>
                                     </div>
                                     <div class="py-2"></div>
                                 </div>
@@ -56,7 +83,9 @@
                                         <h4>Total Kredit</h4>
                                     </div>
                                     <div class="card-body py-1">
-                                        <h5>Rp47.000.000</h5>
+                                        <h5>
+                                            Rp{{ number_format($sumSpending, 0, ',', '.') }}
+                                        </h5>
                                     </div>
                                     <div class="py-2"></div>
                                 </div>
@@ -72,7 +101,9 @@
                                         <h4>Sisa Saldo</h4>
                                     </div>
                                     <div class="card-body py-1">
-                                        <h5>Rp30.000.000</h5>
+                                        <h5>
+                                            Rp{{ number_format($sumDebit - $sumSpending, 0, ',', '.') }}
+                                        </h5>
                                     </div>
                                     <div class="py-2"></div>
                                 </div>
@@ -98,8 +129,14 @@
                 </div>
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Debit') }}</h4>
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="table-title">
+                                <h4>{{ __('Tabel Kredit') }}</h4>
+                            </div>
+                            <div class="action-content">
+                                <button class="btn btn-primary" data-toggle="modal"
+                                    data-target="#creditModal">{{ __('+ Tambah Data') }}</button>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -107,39 +144,49 @@
                                     <thead>
                                         <tr>
                                             <th>{{ __('No') }}</th>
-                                            <th>{{ __('NIS') }}</th>
-                                            <th>{{ __('Nama Siswa') }}</th>
-                                            <th>{{ __('Gender') }}</th>
-                                            <th>{{ __('Kategori') }}</th>
-                                            <th>{{ __('Email') }}</th>
+                                            <th>{{ __('Tanggal') }}</th>
+                                            <th>{{ __('Uraian') }}</th>
+                                            <th>{{ __('Tipe Kredit') }}</th>
+                                            <th>{{ __('Kredit') }}</th>
+                                            <th>{{ __('Aksi') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @php
+                                        @php
                                             $no = 1;
                                         @endphp
-                                        @foreach ($students as $item)
+                                        @foreach ($spendings as $item)
                                             <tr>
                                                 <td>
                                                     {{ $no++ }}
                                                 </td>
+                                                <td>{{ \Carbon\Carbon::parse($item->spending_date)->format('F d, Y') }}
+                                                </td>
+
                                                 <td>
-                                                    {{ $item->nis }}
+                                                    {{ $item->spending_desc }}
                                                 </td>
                                                 <td>
-                                                    {{ $item->name }}
+                                                    {{ $item->spending_type == 1 ? 'Pembelian' : 'Non-Pembelian' }}
                                                 </td>
                                                 <td>
-                                                    {{ $item->gender }}
+                                                    Rp{{ number_format($item->spending_price, 0, ',', '.') }}
                                                 </td>
                                                 <td>
-                                                    {{ $item->categories->category_name }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->email }}
+                                                    <div class="d-flex justify-content-start">
+                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                            data-target="#creditEdit{{ $item->id }}">
+                                                            <i class="fas fa-pen" title="Edit Credit"></i>
+                                                        </div>
+                                                        <div class="text-danger mx-2 cursor-pointer">
+                                                            <i class="fas credit-delete fa-trash-alt"
+                                                                data-card-id="{{ $item->id }}"
+                                                                title="Delete Credit"></i>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
-                                        @endforeach --}}
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -155,40 +202,111 @@
         </footer>
     </div>
 
-    @can('access-studentUpdate')
-        {{-- <div class="modal fade" tabindex="-1" role="dialog" id="updateAll">
+    <div class="modal fade" tabindex="-1" role="dialog" id="creditModal">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('Tambah Data Kredit') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="creditForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="spending_date">{{ __('Tanggal Kredit') }}</label>
+                            <input type="date" class="form-control" name="spending_date" id="spending_date">
+                        </div>
+                        <div class="form-group">
+                            <label for="spending_desc">{{ __('Nama Pengeluaran') }} </label>
+                            <input type="text" class="form-control" name="spending_desc" id="spending_desc"
+                                placeholder="Masukkan nama pengeluaran">
+                        </div>
+                        <div class="form-group">
+                            <label>{{ __('Tipe Pengeluaran') }}</label>
+                            <select class="form-control select2" name="spending_type">
+                                <option>{{ __('-- Pilih Tipe --') }}</option>
+                                <option value="1">{{ __('Pembelian') }}</option>
+                                <option value="0">{{ __('Non-Pembelian') }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>{{ __('Nama Atribut') }}</label>
+                            <select class="form-control select2" name="attribute_id">
+                                <option value="{{ $attribute->id }}">{{ $attribute->attribute_name }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="spending_price">{{ __('Harga Pengeluaran') }} </label>
+                            <input type="number" class="form-control" name="spending_price" id="spending_price"
+                                placeholder="Masukkan besaran pengeluaran" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @foreach ($spendings as $item)
+        <div class="modal fade" tabindex="-1" role="dialog" id="creditEdit{{ $item->id }}">
             <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ __('Edit Kelas Siswa') }}</h5>
+                        <h5 class="modal-title">{{ __('Update Data Kredit') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form class="update-form" data-action="{{ url('setting/student/update/allClass/' . $class->id) }} }}"
+                    <form class="update-form" data-action="{{ url('/spending/attribute/update/' . $item->id) }} }}"
                         method="POST">
+                        @csrf
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="nis">{{ __('Kelas') }} <span class="text-danger">*</span></label>
-                                <select class="form-control" name="class_id">
-                                    <option disabled>{{ __('-- Pilih Kelas --') }}</option>
-                                    @foreach ($classes as $item)
-                                        <option value="{{ $item->id }}" {{ $class->id == $item->id ? 'selected' : '' }}>
-                                            {{ $item->class_name }}
-                                        </option>
-                                    @endforeach
+                                <label for="spending_date">{{ __('Tanggal Kredit') }}</label>
+                                <input type="date" class="form-control" name="spending_date" id="spending_date"
+                                    value="{{ $item->spending_date }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="spending_desc">{{ __('Nama Pengeluaran') }} </label>
+                                <input type="text" class="form-control" name="spending_desc" id="spending_desc"
+                                    value="{{ $item->spending_desc }}">
+                            </div>
+                            <div class="form-group">
+                                <label>{{ __('Tipe Pengeluaran') }}</label>
+                                <select class="form-control select2" name="spending_type">
+                                    <option value="1" {{ $item->spending_type == 1 ? 'selected' : '' }}>
+                                        {{ __('Pembelian') }}</option>
+                                    <option value="0" {{ $item->spending_type == 0 ? 'selected' : '' }}>
+                                        {{ __('Non-Pembelian') }}</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label>{{ __('Nama Atribut') }}</label>
+                                <select class="form-control select2" name="attribute_id">
+                                    <option value="{{ $attribute->id }}">{{ $attribute->attribute_name }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="spending_price">{{ __('Harga Pengeluaran') }} </label>
+                                <input type="number" class="form-control" name="spending_price" id="spending_price"
+                                    value="{{ round($item->spending_price) }}" required>
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{{ __('Close') }}</button>
                             <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div> --}}
-    @endcan
+        </div>
+    @endforeach
 @endsection
 
 @push('scripts')
@@ -229,41 +347,105 @@
         </script>
     @endcan
 
-    @can('access-studentDelete')
-        <script>
-            const deleteStudent = document.querySelectorAll('.all-student-delete');
+    <script>
+        const deleteCategory = document.querySelectorAll('.credit-delete');
 
-            deleteStudent.forEach(button => {
-                button.addEventListener('click', function() {
-                    const studentId = button.dataset.studentId;
+        deleteCategory.forEach(button => {
+            button.addEventListener('click', function() {
+                const cardId = button.dataset.cardId;
 
-                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
-                        'Batal',
-                        function() {
-                            fetch(`/setting/student/delete/allStudent/${studentId}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    Notiflix.Notify.success(
-                                        "Data siswa berhasil dihapus!", {
-                                            timeout: 3000
-                                        });
-                                    location.reload();
-                                })
-                                .catch(error => {
-                                    Notiflix.Notify.failure('Error:', error);
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                    'Batal',
+                    function() {
+                        fetch(`/spending/attribute/delete/${cardId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Notiflix.Notify.success("Data kredit berhasil dihapus!", {
+                                    timeout: 3000
                                 });
-                        });
-                });
+                                location.reload();
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure(
+                                    'Error: Data kredit telah berelasi dengan tabel lainnya');
+                            });
+                    });
             });
-        </script>
-    @endcan
+        });
+    </script>
 
     <script>
         $("#table-student").dataTable();
+    </script>
+    <script>
+        function updateYear() {
+            const form = document.getElementById('updateYearForm');
+            const formData = new FormData(form);
+
+            fetch('/current-year', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Terjadi kesalahan');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    Notiflix.Notify.success(data.message, {
+                        timeout: 3000
+                    });
+                    location.reload();
+                })
+                .catch(error => {
+                    Notiflix.Notify.failure('Error: Data tidak ditemukan!');
+                });
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const creditForm = document.getElementById('creditForm');
+            creditForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(creditForm);
+                const creditData = {};
+                formData.forEach((value, key) => {
+                    creditData[key] = value;
+                });
+
+                try {
+                    const response = await fetch(`/spending/attribute/add`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(creditData)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        const errorMessages = Object.values(errorData.errors).join('\n');
+                        Notiflix.Notify.failure(
+                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                    } else {
+                        Notiflix.Notify.success('Data kredit berhasil dibuat!');
+                        location.reload();
+                    }
+                } catch (error) {
+                    Notiflix.Notify.failure('Error:',
+                        'An error occurred while processing the request.');
+                }
+            });
+        });
     </script>
 @endpush

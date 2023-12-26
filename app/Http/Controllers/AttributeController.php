@@ -42,6 +42,7 @@ class AttributeController extends Controller
             'attribute_name' => $attributeName,
             'attribute_price' => $request->input('attribute_price'),
             'attribute_type' => $request->input('attribute_type'),
+            'vendor_id' => $request->input('vendor_id'),
             'slug' => $slug
         ]);
 
@@ -68,6 +69,7 @@ class AttributeController extends Controller
             "attribute_name" => $attributeName,
             "attribute_price" =>  $request->input('attribute_price'),
             "attribute_type" => $request->input('attribute_type'),
+            "vendor_id" => $request->input('vendor_id'),
             'slug' => $slug
         ]);
         $activeYearId = Year::where('year_status', 'active')->value('id');
