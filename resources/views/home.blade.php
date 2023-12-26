@@ -135,6 +135,80 @@
                         </div>
                     @endcan
                 </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="bg-primary">
+                                <div class="py-1"></div>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Sisa Saldo</h4>
+                                </div>
+                                <div class="card-body py-1">
+                                    <h5>
+                                        Rp{{ number_format($sumDebit - $sumSpending, 0, ',', '.') }}
+                                    </h5>
+                                </div>
+                                <div class="py-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="bg-success">
+                                <div class="py-1"></div>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total Debit</h4>
+                                </div>
+                                <div class="card-body py-1">
+                                    <h5>
+                                        Rp{{ number_format($sumDebit, 0, ',', '.') }}
+                                    </h5>
+                                </div>
+                                <div class="py-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="bg-warning">
+                                <div class="py-1"></div>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Hutang</h4>
+                                </div>
+                                <div class="card-body py-1">
+                                    <h5>
+                                        Rp{{ number_format($sumDebt, 0, ',', '.') }}
+                                    </h5>
+                                </div>
+                                <div class="py-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="bg-danger">
+                                <div class="py-1"></div>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total Kredit</h4>
+                                </div>
+                                <div class="card-body py-1">
+                                    <h5>
+                                        Rp{{ number_format($sumSpending, 0, ',', '.') }}
+                                    </h5>
+                                </div>
+                                <div class="py-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-md-8">

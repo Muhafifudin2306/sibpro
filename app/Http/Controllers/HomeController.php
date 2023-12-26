@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Debt;
 use App\Models\ExternalIncome;
+use App\Models\Spending;
 use App\Models\User;
 use App\Models\Payment;
 use App\Models\Notification;
@@ -52,7 +54,11 @@ class HomeController extends Controller
                     ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                     ->orderBy("updated_at", "DESC")
                     ->limit(5)->get();
+        $sumDebit = Payment::whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->where('status', 'Paid')->sum('price');
+        $sumSpending = Spending::whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->where('spending_type',1)->sum('spending_price');
+        $sumDebt = Debt::where('is_paid',0)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->sum('debt_amount');
+
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(3)->get();
-        return view('home', compact('adminCount', 'notifications','totalCredit','totalAttribute','totalPaid','externalCount','credit','years'));
+        return view('home', compact('sumDebit','sumSpending','sumDebt','adminCount', 'notifications','totalCredit','totalAttribute','totalPaid','externalCount','credit','years'));
     }
 }
