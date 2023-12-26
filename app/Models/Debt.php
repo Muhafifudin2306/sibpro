@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Spending extends Model
+class Debt extends Model
 {
-    protected $table = "spendings";
+    protected $table = "debts";
 
     protected $fillable = [
-      'spending_date',
-      'spending_desc',
-      'spending_type',
-      'spending_price',
+      'is_paid',
+      'description',
+      'due_date',
+      'debt_amount',
       'attribute_id',
       'year_id',
       'vendor_id'  

@@ -71,15 +71,15 @@
                                                     @if ($item->status == 'Unpaid')
                                                         <span
                                                             class="py-1 px-3 border border-danger rounded text-danger fw-bold"
-                                                            type="submit" id="pay-button">Belum Bayar</span>
+                                                            id="pay-button">Belum Bayar</span>
                                                     @elseif($item->status == 'Pending')
                                                         <span
                                                             class="py-1 px-3 border border-warning rounded text-warning fw-bold"
-                                                            type="submit" id="pay-button">Pending</span>
+                                                            id="pay-button">Pending</span>
                                                     @elseif($item->status == 'Paid')
                                                         <span
                                                             class="py-1 px-3 border border-success rounded text-success fw-bold"
-                                                            type="submit" id="pay-button">Lunas</span>
+                                                            id="pay-button">Lunas</span>
                                                     @endif
                                                 </td>
                                                 <td>

@@ -119,7 +119,9 @@
                                         <h4>Hutang</h4>
                                     </div>
                                     <div class="card-body py-1">
-                                        <h5>Rp5.000.000</h5>
+                                        <h5>
+                                            Rp{{ number_format($sumDebt, 0, ',', '.') }}
+                                        </h5>
                                     </div>
                                     <div class="py-2"></div>
                                 </div>
@@ -148,6 +150,7 @@
                                             <th>{{ __('Uraian') }}</th>
                                             <th>{{ __('Tipe Kredit') }}</th>
                                             <th>{{ __('Kredit') }}</th>
+                                            <th>{{ __('Vendor/Pihak Terkait') }}</th>
                                             <th>{{ __('Aksi') }}</th>
                                         </tr>
                                     </thead>
@@ -173,6 +176,9 @@
                                                     Rp{{ number_format($item->spending_price, 0, ',', '.') }}
                                                 </td>
                                                 <td>
+                                                    {{ $item->vendor->vendor_name }}
+                                                </td>
+                                                <td>
                                                     <div class="d-flex justify-content-start">
                                                         <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
                                                             data-target="#creditEdit{{ $item->id }}">
@@ -180,6 +186,84 @@
                                                         </div>
                                                         <div class="text-danger mx-2 cursor-pointer">
                                                             <i class="fas credit-delete fa-trash-alt"
+                                                                data-card-id="{{ $item->id }}"
+                                                                title="Delete Credit"></i>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="table-title">
+                                <h4>{{ __('Tabel Hutang') }}</h4>
+                            </div>
+                            <div class="action-content">
+                                <button class="btn btn-primary" data-toggle="modal"
+                                    data-target="#debtModal">{{ __('+ Tambah Data') }}</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-debt">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ __('No') }}</th>
+                                            <th>{{ __('Jatuh Tempo') }}</th>
+                                            <th>{{ __('Uraian') }}</th>
+                                            <th>{{ __('Jumlah Hutang') }}</th>
+                                            <th>{{ __('Status') }}</th>
+                                            <th>{{ __('Vendor/Pihak Terkait') }}</th>
+                                            <th>{{ __('Aksi') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($debts as $item)
+                                            <tr>
+                                                <td>
+                                                    {{ $no++ }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($item->due_date)->format('F d, Y') }}
+                                                </td>
+
+                                                <td>
+                                                    {{ $item->description }}
+                                                </td>
+                                                <td>
+                                                    Rp{{ number_format($item->debt_amount, 0, ',', '.') }}
+                                                </td>
+                                                <td>
+                                                    @if ($item->is_paid == 1)
+                                                        <span
+                                                            class="py-1 px-3 border border-success rounded text-success fw-bold"
+                                                            id="pay-button">Lunas</span>
+                                                    @elseif($item->is_paid == 0)
+                                                        <span
+                                                            class="py-1 px-3 border border-warning rounded text-warning fw-bold"
+                                                            id="pay-button">Belum Lunas</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $item->vendor->vendor_name }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex justify-content-start">
+                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                            data-target="#debtEdit{{ $item->id }}">
+                                                            <i class="fas fa-pen" title="Edit Credit"></i>
+                                                        </div>
+                                                        <div class="text-danger mx-2 cursor-pointer">
+                                                            <i class="fas debt-delete fa-trash-alt"
                                                                 data-card-id="{{ $item->id }}"
                                                                 title="Delete Credit"></i>
                                                         </div>
@@ -237,8 +321,76 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label>{{ __('Vendor/Pihak Terkait') }}</label>
+                            <select class="form-control select2" name="vendor_id">
+                                <option>{{ __('-- Pilih Vendor --') }}</option>
+                                @foreach ($vendors as $item)
+                                    <option value="{{ $item->id }}">{{ $item->vendor_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="spending_price">{{ __('Harga Pengeluaran') }} </label>
                             <input type="number" class="form-control" name="spending_price" id="spending_price"
+                                placeholder="Masukkan besaran pengeluaran" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="debtModal">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('Tambah Data Hutang') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="debtForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="due_date">{{ __('Tanggal Jatuh Tempo') }}</label>
+                            <input type="date" class="form-control" name="due_date" id="due_date">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">{{ __('Uraian Keperluan Hutang') }} </label>
+                            <input type="text" class="form-control" name="description" id="description"
+                                placeholder="Masukkan nama pengeluaran">
+                        </div>
+                        <div class="form-group">
+                            <label>{{ __('Status Hutang') }}</label>
+                            <select class="form-control select2" name="is_paid">
+                                <option>{{ __('-- Pilih Status --') }}</option>
+                                <option value="1">{{ __('Lunas') }}</option>
+                                <option value="0">{{ __('Belum Lunas') }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>{{ __('Nama Atribut') }}</label>
+                            <select class="form-control select2" name="attribute_id">
+                                <option value="{{ $attribute->id }}">{{ $attribute->attribute_name }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>{{ __('Vendor/Pihak Terkait') }}</label>
+                            <select class="form-control select2" name="vendor_id">
+                                <option>{{ __('-- Pilih Vendor --') }}</option>
+                                @foreach ($vendors as $item)
+                                    <option value="{{ $item->id }}">{{ $item->vendor_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="debt_amount">{{ __('Jumlah Hutang') }} </label>
+                            <input type="number" class="form-control" name="debt_amount" id="debt_amount"
                                 placeholder="Masukkan besaran pengeluaran" required>
                         </div>
                     </div>
@@ -292,9 +444,87 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label>{{ __('Penyedia Atribut') }}</label>
+                                <select class="form-control select2" name="vendor_id" required="">
+                                    <option selected disabled>{{ __('-- Pilih Penyedia --') }}</option>
+                                    @foreach ($vendors as $vendor)
+                                        <option value="{{ $vendor->id }}"
+                                            {{ $vendor->id == $item->vendor_id ? 'selected' : '' }}>
+                                            {{ $vendor->vendor_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="spending_price">{{ __('Harga Pengeluaran') }} </label>
                                 <input type="number" class="form-control" name="spending_price" id="spending_price"
                                     value="{{ round($item->spending_price) }}" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    @foreach ($debts as $item)
+        <div class="modal fade" tabindex="-1" role="dialog" id="debtEdit{{ $item->id }}">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Update Data Hutang') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form class="update-form" data-action="{{ url('/spending/debt/update/' . $item->id) }} }}"
+                        method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="due_date">{{ __('Tanggal Jatuh Tempo') }}</label>
+                                <input type="date" class="form-control" value="{{ $item->due_date }}"
+                                    name="due_date" id="due_date">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">{{ __('Uraian Keperluan Hutang') }} </label>
+                                <input type="text" class="form-control" value="{{ $item->description }}"
+                                    name="description" id="description" placeholder="Masukkan nama pengeluaran">
+                            </div>
+                            <div class="form-group">
+                                <label>{{ __('Tipe Pengeluaran') }}</label>
+                                <select class="form-control select2" name="is_paid">
+                                    <option value="1" {{ $item->spending_type == 1 ? 'selected' : '' }}>
+                                        {{ __('Lunas') }}</option>
+                                    <option value="0" {{ $item->spending_type == 0 ? 'selected' : '' }}>
+                                        {{ __('Belum Lunas') }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>{{ __('Nama Atribut') }}</label>
+                                <select class="form-control select2" name="attribute_id">
+                                    <option value="{{ $attribute->id }}">{{ $attribute->attribute_name }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>{{ __('Penyedia Atribut') }}</label>
+                                <select class="form-control select2" name="vendor_id" required="">
+                                    <option selected disabled>{{ __('-- Pilih Penyedia --') }}</option>
+                                    @foreach ($vendors as $vendor)
+                                        <option value="{{ $vendor->id }}"
+                                            {{ $vendor->id == $item->vendor_id ? 'selected' : '' }}>
+                                            {{ $vendor->vendor_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="debt_amount">{{ __('Total Hutang') }} </label>
+                                <input type="number" class="form-control" name="debt_amount" id="debt_amount"
+                                    value="{{ round($item->debt_amount) }}" required>
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -312,40 +542,39 @@
 @push('scripts')
     <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
 
-    @can('access-studentUpdate')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const updateForms = document.querySelectorAll('.update-form');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const updateForms = document.querySelectorAll('.update-form');
 
-                updateForms.forEach(form => {
-                    form.addEventListener('submit', function(event) {
-                        event.preventDefault();
+            updateForms.forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
 
-                        const formData = new FormData(form);
+                    const formData = new FormData(form);
 
-                        fetch(form.getAttribute('data-action'), {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                },
-                                body: formData
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                Notiflix.Notify.success("Data berhasil diperbarui!", {
-                                    timeout: 3000
-                                });
-
-                                location.reload();
-                            })
-                            .catch(error => {
-                                Notiflix.Notify.failure('Error:', error);
+                    fetch(form.getAttribute('data-action'), {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Notiflix.Notify.success("Data berhasil diperbarui!", {
+                                timeout: 3000
                             });
-                    });
+
+                            location.reload();
+                        })
+                        .catch(error => {
+                            Notiflix.Notify.failure('Error:', error);
+                        });
                 });
             });
-        </script>
-    @endcan
+        });
+    </script>
+
 
     <script>
         const deleteCategory = document.querySelectorAll('.credit-delete');
@@ -378,10 +607,39 @@
             });
         });
     </script>
-
     <script>
-        $("#table-student").dataTable();
+        const deleteDebt = document.querySelectorAll('.debt-delete');
+
+        deleteDebt.forEach(button => {
+            button.addEventListener('click', function() {
+                const cardId = button.dataset.cardId;
+
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                    'Batal',
+                    function() {
+                        fetch(`/spending/debt/delete/${cardId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Notiflix.Notify.success("Data hutang berhasil dihapus!", {
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure(
+                                    'Error: Data hutang telah berelasi dengan tabel lainnya');
+                            });
+                    });
+            });
+        });
     </script>
+
+
     <script>
         function updateYear() {
             const form = document.getElementById('updateYearForm');
@@ -447,5 +705,46 @@
                 }
             });
         });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const creditForm = document.getElementById('debtForm');
+            creditForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(creditForm);
+                const creditData = {};
+                formData.forEach((value, key) => {
+                    creditData[key] = value;
+                });
+
+                try {
+                    const response = await fetch(`/spending/debt/add`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(creditData)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        const errorMessages = Object.values(errorData.errors).join('\n');
+                        Notiflix.Notify.failure(
+                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                    } else {
+                        Notiflix.Notify.success('Data kredit berhasil dibuat!');
+                        location.reload();
+                    }
+                } catch (error) {
+                    Notiflix.Notify.failure('Error:',
+                        'An error occurred while processing the request.');
+                }
+            });
+        });
+    </script>
+    <script>
+        $("#table-student").dataTable();
+        $("#table-debt").dataTable();
     </script>
 @endpush

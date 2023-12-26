@@ -52,6 +52,11 @@ Route::prefix('spending')->group(function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\SpendingController::class, 'destroySpending'])->name('deleteSpending');
         Route::post('/update/{id}', [App\Http\Controllers\SpendingController::class, 'updateSpending'])->name('updateSpending');
     });
+    Route::prefix('debt')->group(function () {
+        Route::post('/add', [App\Http\Controllers\SpendingController::class, 'storeDebt'])->name('storeDebt');
+        Route::delete('/delete/{id}', [App\Http\Controllers\SpendingController::class, 'destroyDebt'])->name('deleteDebt');
+        Route::post('/update/{id}', [App\Http\Controllers\SpendingController::class, 'updateDebt'])->name('updateDebt');
+    });
 });
 
 
