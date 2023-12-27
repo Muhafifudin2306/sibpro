@@ -46,7 +46,7 @@
                                             <th>{{ __('NIS') }}</th>
                                             <th>{{ __('Nama Siswa') }}</th>
                                             <th>{{ __('Kategori') }}</th>
-                                            <th>{{ __('Terbayar') }}</th>
+                                            {{-- <th>{{ __('Terbayar') }}</th> --}}
                                             <th>{{ __('Tagihan') }}</th>
                                             <th>{{ __('Operasi') }}</th>
                                         </tr>
@@ -73,14 +73,14 @@
                                                     $totalattributePrice = 0;
                                                     $totalBilling = 0;
                                                 @endphp
-                                                <td>
+                                                {{-- <td>
                                                     @foreach ($item->paymentAttribute as $billing)
                                                         @php
                                                             $totalBilling += $billing->attribute_price;
                                                         @endphp
                                                     @endforeach
                                                     Rp{{ number_format($totalBilling, 0, ',', '.') }}
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     @foreach ($item->paymentAttribute as $total)
                                                         @php
