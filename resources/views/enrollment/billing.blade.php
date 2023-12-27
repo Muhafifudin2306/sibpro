@@ -106,8 +106,7 @@
                                             Total : <span id="totalChecked">0</span>
                                         </h5> --}}
                                         <div class="py-3">
-                                            <button class="btn btn-primary button-payment" onclick="submitForm()"
-                                                style="display: none;">Bayar
+                                            <button class="btn btn-primary button-payment" onclick="submitForm()">Bayar
                                                 Sekarang</button>
 
                                         </div>
