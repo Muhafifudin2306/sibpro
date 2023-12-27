@@ -102,9 +102,9 @@
                                     </table>
                                     <div class="py-4">
                                         <hr class="py-3">
-                                        <h5 class="fw-bold">
+                                        {{-- <h5 class="fw-bold">
                                             Total : <span id="totalChecked">0</span>
-                                        </h5>
+                                        </h5> --}}
                                         <div class="py-3">
                                             <button class="btn btn-primary button-payment" onclick="submitForm()"
                                                 style="display: none;">Bayar
