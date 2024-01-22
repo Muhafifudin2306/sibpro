@@ -175,6 +175,9 @@ Route::prefix('setting')->group(function () {
         Route::group(['middleware' => ['can:access-packageList']], function () {
             Route::get('/', [App\Http\Controllers\PackageController::class, 'index'])->name('packages');
         });
+        Route::group(['middleware' => ['can:access-packageList']], function () {
+            Route::get('/download/excel', [App\Http\Controllers\PackageController::class, 'downloadExcel'])->name('Excelpackages');
+        });
         Route::group(['middleware' => ['can:access-packageAdd']], function () {
             Route::get('/add', [App\Http\Controllers\PackageController::class, 'add'])->name('addPackage');
         });

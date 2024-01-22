@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('years', function (Blueprint $table) {
             $table->id();
             $table->string('year_name');
-            $table->enum('year_status', ['active', 'nonActive']);
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')
-                ->onDelete('cascade');
+            $table->enum('year_status', ['active', 'nonActive'])->default('nonActive');
+            $table->enum('year_current', ['selected', 'unSelected'])->default('unSelected');
+            $table->enum('year_semester', ['Ganjil', 'Genap']);
             $table->timestamps();
         });
     }

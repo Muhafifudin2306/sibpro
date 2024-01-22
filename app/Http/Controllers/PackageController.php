@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CategoriesExport;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use App\Models\Category;
 use App\Models\Credit;
 use App\Models\Notification;
 use App\Models\Year;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PackageController extends Controller
 {
@@ -121,5 +123,11 @@ class PackageController extends Controller
             'message' => 'Data paket berhasi diedit!',
             'data' => $category,
         ], 200);
+    }
+
+    public function downloadExcel()
+    {
+        // Menggunakan Ekspor Excel dengan dua tab
+        return Excel::download(new CategoriesExport(), 'categories.xlsx');
     }
 }
