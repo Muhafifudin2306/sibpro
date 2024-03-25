@@ -100,10 +100,10 @@ Route::prefix('account')->group(function () {
             Route::delete('/delete/{id}', [App\Http\Controllers\ProfileController::class, 'destroyUser'])->name('deleteUser');
         });
         Route::group(['middleware' => ['can:access-userEdit']], function () {
-            Route::get('/edit/{id}', [App\Http\Controllers\ProfileController::class, 'editUser'])->name('editUser');
+            Route::get('/edit/{uuid}', [App\Http\Controllers\ProfileController::class, 'editUser'])->name('editUser');
         });
         Route::group(['middleware' => ['can:access-userUpdate']], function () {
-            Route::post('/update/{id}', [App\Http\Controllers\ProfileController::class, 'updateUser'])->name('updateUser');
+            Route::post('/update/{uuid}', [App\Http\Controllers\ProfileController::class, 'updateUser'])->name('updateUser');
         });
     });
     Route::prefix('security')->group(function () {

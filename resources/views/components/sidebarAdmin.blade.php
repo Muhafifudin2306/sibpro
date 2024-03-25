@@ -90,15 +90,15 @@
             <li class="menu-header">Utilitas</li>
             <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i>
-                    <span>Account</span></a>
+                    <span>Pengaturan Akun</span></a>
                 <ul class="dropdown-menu">
                     @can('access-userProfile')
                     <li class="{{ Request::segment(2) === 'profile' ? 'active' : '' }}"><a
-                            href="{{ url('/account/profile') }}">Profile</a></li>
+                            href="{{ url('/account/profile') }}">Profil Saya</a></li>
                     @endcan
                     @can('access-userList')
                     <li class="{{ Request::segment(2) === 'users' ? 'active' : '' }}"><a
-                            href="{{ url('/account/users') }}">Users</a></li>
+                            href="{{ url('/account/users') }}">Manajemen Pengguna</a></li>
                     @endcan
                     @can('access-roleList')
                     <li class="{{ Request::segment(3) === 'role' ? 'active' : '' }}"><a

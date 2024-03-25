@@ -9,8 +9,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Credit;
 use App\Models\Attribute;
+use App\Models\Role as ModelsRole;
 use App\Models\StudentClass;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
@@ -25,11 +27,12 @@ class ProfileController extends Controller
 
     public function userList()
     {
-        $users = User::with('roles')->select('name','email','nis','id','class_id')->orderBy("updated_at", "DESC")->get();
-        $classes = StudentClass::orderBy("updated_at", "DESC")->get();
-        $categories = Category::orderBy("updated_at", "DESC")->get();
+        $users = User::with('roles','categories')->select('uuid','name','email','nis','id','class_id','category_id','gender')->orderBy("updated_at", "DESC")->get();
+        $classes = StudentClass::orderBy("class_name", "DESC")->get();
+        $categories = Category::orderBy("category_name", "DESC")->get();
+        $roles = ModelsRole::orderBy("name", "DESC")->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('account.users.index', compact('notifications', 'users', 'classes', 'categories'));
+        return view('account.users.index', compact('notifications', 'users', 'classes', 'categories','roles'));
     }
 
     public function profile()
@@ -69,58 +72,10 @@ class ProfileController extends Controller
             'gender' => $request->input('gender')
         ]);
 
-        $studentRole = Role::where('name', 'Student')->first();
-        $user->assignRole($studentRole);
-
-        
-        $id_credits = Category::find($request->input('category_id'))->credits()->pluck('credit_id');
+        $userRole = $request->input('role_id');
+        $user->assignRole($userRole);
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
-
-        foreach ($id_credits as $creditId) {
-            $uuidTwo = Uuid::uuid4()->toString();
-            $invoiceNumber = $this->generateInvoiceNumberCredit();
-
-            $creditType = Credit::find($creditId)->credit_type;
-
-            $status = ($creditType == 0) ? 'Paid' : 'Unpaid';
-
-            $user->paymentCredit()->attach($creditId, [
-                'type' => 1,
-                'year_id' => $activeYearId,
-                'uuid' => $uuidTwo,
-                'invoice_number' => $invoiceNumber,
-                'class_id' => $request->input('class_id'),
-                'status' => $status,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        $id_attributes = Attribute::find($request->input('category_id'))->attributes()->pluck('attribute_id');
-
-        $activeYearId = Year::where('year_status', 'active')->value('id');
-
-        foreach ($id_attributes as $attributeId) {
-            $uuidThree = Uuid::uuid4()->toString();
-            $invoiceNumber = $this->generateInvoiceNumberEnrollment();
-
-            $attributeType = Attribute::find($attributeId)->attribute_type;
-
-            $status = ($attributeType == 0) ? 'Paid' : 'Unpaid';
-
-            $user->paymentAttribute()->attach($attributeId, [
-                'type' => 2,
-                'year_id' => $activeYearId,
-                'uuid' => $uuidThree,
-                'invoice_number' => $invoiceNumber,
-                'class_id' => $request->input('class_id'),
-                'status' => $status,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
 
         $years = Year::find($activeYearId);
 
@@ -131,27 +86,7 @@ class ProfileController extends Controller
 
         return response()->json(['message' => 'Data user berhasil dibuat!'], 200);
     }
-    private function generateInvoiceNumberCredit()
-    {
-        $digits = mt_rand(1000000, 9999999);
 
-        $letters = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
-
-        $invoiceNumber = "SPP"."-".$digits ."-". $letters;
-
-        return $invoiceNumber;
-    }
-
-    private function generateInvoiceNumberEnrollment()
-    {
-        $digits = mt_rand(1000000, 9999999);
-
-        $letters = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
-
-        $invoiceNumber = "DU"."-".$digits ."-". $letters;
-
-        return $invoiceNumber;
-    }
     public function destroyUser($id)
     {
         $user = user::find($id);
@@ -172,26 +107,51 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Data user berhasil dihapus!']);
     }
 
-    public function editUser($id)
+    public function editUser($uuid)
     {
+        $data = User::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            // Handle jika data tidak ditemukan
+            abort(404);
+        }
+
+        $id = $data->id;
+
         $user = User::find($id);
-        $classes = StudentClass::orderBy("updated_at", "DESC")->get();
-        $categories = Category::orderBy("updated_at", "DESC")->get();
+
+        $roleUser = DB::table('model_has_roles')->where('model_id', $id)->first();
+        $classes = StudentClass::orderBy("class_name", "DESC")->get();
+        $categories = Category::orderBy("category_name", "DESC")->get();
+        $roles = ModelsRole::orderBy("name", "DESC")->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('account.users.edit', compact('notifications', 'user', 'classes', 'categories'));
+        return view('account.users.edit', compact('notifications', 'user', 'classes', 'categories', 'roleUser', 'roles'));
     }
 
-    public function updateUser(Request $request, $id)
+    public function updateUser(Request $request, $uuid)
     {
+        $data = User::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            // Handle jika data tidak ditemukan
+            abort(404);
+        }
+
+        $id = $data->id;
+
         $user = User::find($id);
 
         $user->update([
-            "name" =>  $request->input('name'),
-            "email" =>  $request->input('email'),
-            "gender" =>  $request->input('gender'),
-            "class_id" =>  $request->input('class_id'),
-            "category_id" =>  $request->input('category_id'),
-            "nis" =>  $request->input('nis'),
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'nis' => $request->input('nis'),
+            'class_id' => $request->input('class_id'),
+            'category_id' => $request->input('category_id'),
+            'gender' => $request->input('gender')
+        ]);
+
+        $roleUser = DB::table('model_has_roles')->where('model_id', $id)->update([
+            'role_id' => $request->input('role_id')
         ]);
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
