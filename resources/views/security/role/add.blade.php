@@ -34,6 +34,14 @@
                             <div class="form-group">
                                 <label>{{ __('Permission') }}</label>
                                 <div class="row">
+                                    <div class="col-12">
+                                        <div class="py-1 mx-3">
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" id="select-all">
+                                                <label class="custom-control-label" for="select-all">Pilih Semua</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @foreach ($permissions as $item)
                                         <div class="col-6 col-md-3">
                                             <div class="py-1 mx-3">
@@ -49,6 +57,7 @@
                                     @endforeach
                                 </div>
                             </div>
+                            
                             <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
                         </form>
                     </div>
@@ -65,6 +74,23 @@
 
 
 @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var selectAllCheckbox = document.getElementById('select-all');
+
+            var permissionCheckboxes = document.querySelectorAll('input[name="permission_id[]"]');
+            function toggleAllPermissions(checked) {
+                permissionCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = checked;
+                });
+            }
+
+            selectAllCheckbox.addEventListener('change', function() {
+                toggleAllPermissions(this.checked);
+            });
+        });
+    </script>
+
     @can('access-roleAdd')
         <script>
             document.addEventListener('DOMContentLoaded', function() {

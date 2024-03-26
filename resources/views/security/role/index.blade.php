@@ -31,7 +31,7 @@
                     @can('access-roleAdd')
                         <div class="action-content">
                             <a href="{{ route('addRole') }}">
-                                <button class="btn btn-primary">{{ __('+ Tambah Data') }}</button>
+                                <button class="btn btn-primary"><i class="fas fa-plus mx-1"></i> {{ __('Tambah Data') }}</button>
                             </a>
                         </div>
                     @endcan
@@ -52,6 +52,7 @@
                                         <th style="width: 10px">{{ __('No') }}</th>
                                         <th>{{ __('Nama') }}</th>
                                         <th>{{ __('Jumlah Permission') }}</th>
+                                        <th>{{ __('Guard Name') }}</th>
                                         <th>{{ __('Terakhir Diubah') }}</th>
                                         <th>{{ __('Aksi') }}</th>
                                     </tr>
@@ -78,6 +79,9 @@
                                                         Tidak ada permission.
                                                     </div>
                                                 @endif
+                                            </td>
+                                            <td>
+                                                {{ $item->guard_name }}
                                             </td>
                                             <td>
                                                 {{ $item->updated_at->format('d F Y') }}

@@ -14,11 +14,11 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Permissions') }}</h1>
+                    <h1>{{ __('Manajemen Permissions') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('Account') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Permissions') }}</div>
+                        <div class="breadcrumb-item">{{ __('Pengaturan Akun') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Manajemen Permissions') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
@@ -31,72 +31,70 @@
                     @can('access-permissionAdd')
                         <div class="action-content">
                             <button class="btn btn-primary" data-toggle="modal"
-                                data-target="#addModal">{{ __('+ Tambah Data') }}</button>
+                                data-target="#addModal"><i class="fas fa-plus mx-1"></i> {{ __('Tambah Data') }}</button>
                         </div>
                     @endcan
                 </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="title-class">
-                                    <h6> {{ __('Tabel Permission') }} </h6>
-                                </div>
+                <div class="card">
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="title-class">
+                                <h6> {{ __('Tabel Data Permission') }} </h6>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-permissions">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">{{ __('No') }}</th>
-                                            <th>{{ __('Nama') }}</th>
-                                            <th>{{ __('Guard Name') }}</th>
-                                            <th>{{ __('Diedit Pada') }}</th>
-                                            <th>{{ __('Action') }}</th>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="table-permissions">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px">{{ __('No') }}</th>
+                                        <th>{{ __('Nama') }}</th>
+                                        <th>{{ __('Guard Name') }}</th>
+                                        <th>{{ __('Diedit Pada') }}</th>
+                                        <th>{{ __('Action') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                        $modal = 1;
+                                    @endphp
+                                    @foreach ($permissions as $item)
+                                        <tr>
+                                            <td>
+                                                {{ $no++ }}
+                                            </td>
+                                            <td>
+                                                {{ $item->name }}
+                                            </td>
+                                            <td>
+                                                {{ $item->guard_name }}
+                                            </td>
+                                            <td>
+                                                {{ $item->updated_at->format('d F Y') }}
+                                            </td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    @can('access-permissionUpdate')
+                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                            data-target="#updateModal{{ $item->id }}">
+                                                            <i class="fas fa-pen" title="Edit Permission"></i>
+                                                        </div>
+                                                    @endcan
+                                                    @can('access-permissionDelete')
+                                                        <div class="text-danger mx-2 cursor-pointer permission-delete"
+                                                            data-card-id="{{ $item->id }}">
+                                                            <i class="fas data-delete fa-trash-alt"
+                                                                title="Delete Permission"></i>
+                                                        </div>
+                                                    @endcan
+                                                </div>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                            $modal = 1;
-                                        @endphp
-                                        @foreach ($permissions as $item)
-                                            <tr>
-                                                <td class="text-center">
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->name }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->guard_name }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        @can('access-permissionUpdate')
-                                                            <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                                data-target="#updateModal{{ $item->id }}">
-                                                                <i class="fas fa-pen" title="Edit Permission"></i>
-                                                            </div>
-                                                        @endcan
-                                                        @can('access-permissionDelete')
-                                                            <div class="text-danger mx-2 cursor-pointer permission-delete"
-                                                                data-card-id="{{ $item->id }}">
-                                                                <i class="fas data-delete fa-trash-alt"
-                                                                    title="Delete Permission"></i>
-                                                            </div>
-                                                        @endcan
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -153,7 +151,7 @@
                                 <div class="form-group">
                                     <label for="name">{{ __('Nama Permission') }}</label>
                                     <input type="text" class="form-control" name="name" id="name"
-                                        value="{{ $item->name }}">
+                                        value="{{ $item->name }}" required>
                                 </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">

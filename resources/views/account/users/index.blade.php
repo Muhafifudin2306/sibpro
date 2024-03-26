@@ -101,7 +101,7 @@
                                                 @endforeach
                                             </td>
                                             <td>
-                                                <div class="d-flex justify-content-start">
+                                                <div class="d-flex">
                                                     @can('access-userEdit')
                                                         <a href="{{ url('account/users/edit/' . $item->uuid) }}">
                                                             <div class="text-warning mx-2 cursor-pointer">

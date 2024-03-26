@@ -106,7 +106,7 @@
                     @endcan
                     @can('access-permissionList')
                     <li class="{{ Request::segment(3) === 'permission' ? 'active' : '' }}"><a
-                            href="{{ url('/account/security/permission') }}">Permissions</a></li>
+                            href="{{ url('/account/security/permission') }}">Manajemen Permissions</a></li>
                     @endcan
                 </ul>
             </li>
