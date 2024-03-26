@@ -14,11 +14,11 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Roles') }}</h1>
+                    <h1>{{ __('Manajemen Roles') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('Account') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Roles') }}</div>
+                        <div class="breadcrumb-item">{{ __('Pengaturan Akun') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Manajemen Roles') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
@@ -30,84 +30,79 @@
                     </div>
                     @can('access-roleAdd')
                         <div class="action-content">
-                            <button class="btn btn-primary" data-toggle="modal"
-                                data-target="#addModal">{{ __('+ Tambah Data') }}</button>
+                            <a href="{{ route('addRole') }}">
+                                <button class="btn btn-primary">{{ __('+ Tambah Data') }}</button>
+                            </a>
                         </div>
                     @endcan
                 </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="title-class">
-                                    <h6> {{ __('Tabel Roles') }} </h6>
-                                </div>
+                <div class="card">
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="title-class">
+                                <h6> {{ __('Tabel Data Roles') }} </h6>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-users">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th class="text-center">{{ __('No') }}</th>
-                                            <th>{{ __('Nama') }}</th>
-                                            <th>{{ __('Guard Name') }}</th>
-                                            <th>{{ __('Akses') }}</th>
-                                            <th>{{ __('Diedit Pada') }}</th>
-                                            <th>{{ __('Action') }}</th>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="table-users">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px">{{ __('No') }}</th>
+                                        <th>{{ __('Nama') }}</th>
+                                        <th>{{ __('Jumlah Permission') }}</th>
+                                        <th>{{ __('Terakhir Diubah') }}</th>
+                                        <th>{{ __('Aksi') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($roles as $item)
+                                        <tr>
+                                            <td>
+                                                {{ $no++ }}
+                                            </td>
+                                            <td>
+                                                {{ $item->name }}
+                                            </td>
+                                            <td>
+                                                @if ($item->permissions->count() > 0)
+                                                    <div class="mt-2 text-primary font-weight-bold">
+                                                        {{ $item->permissions->count() . ' ' . 'Permission' }}
+                                                    </div>
+                                                @else
+                                                    <div class="mt-2">
+                                                        Tidak ada permission.
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $item->updated_at->format('d F Y') }}
+                                            </td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    @can('access-roleEdit')
+                                                        <a href="{{ url('account/security/role/edit/' . $item->id) }}">
+                                                            <div class="text-warning mx-2 cursor-pointer">
+                                                                <i class="fas fa-pen" title="Edit Role"></i>
+                                                            </div>
+                                                        </a>
+                                                    @endcan
+                                                    @can('access-roleDelete')
+                                                        <div class="text-danger mx-2 cursor-pointer">
+                                                            <i class="fas data-delete fa-trash-alt role-delete"
+                                                                data-card-id="{{ $item->id }}" title="Delete Role"></i>
+                                                        </div>
+                                                    @endcan
+                                                </div>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                            $modal = 1;
-                                        @endphp
-                                        @foreach ($roles as $item)
-                                            <tr>
-                                                <td class="text-center">
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->name }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $item->guard_name }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex flex-wrap">
-                                                        @foreach ($item->permissions as $permission)
-                                                            <div class="mb-2 mx-1">
-                                                                <button
-                                                                    class="btn btn-outline-primary">{{ $permission->name }}</button>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        @can('access-roleEdit')
-                                                            <a href="{{ url('account/security/role/edit/' . $item->id) }}">
-                                                                <div class="text-warning mx-2 cursor-pointer">
-                                                                    <i class="fas fa-pen" title="Edit Role"></i>
-                                                                </div>
-                                                            </a>
-                                                        @endcan
-                                                        @can('access-roleDelete')
-                                                            <div class="text-danger mx-2 cursor-pointer">
-                                                                <i class="fas data-delete fa-trash-alt role-delete"
-                                                                    data-card-id="{{ $item->id }}" title="Delete Role"></i>
-                                                            </div>
-                                                        @endcan
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

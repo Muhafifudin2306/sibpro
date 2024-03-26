@@ -34,6 +34,15 @@ class SecurityController extends Controller
         return view("security.role.index", compact('roles', 'notifications', 'permissions'));
     }
 
+    public function addRole()
+    {
+        $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
+
+        $permissions = Permission::orderBy("updated_at", "DESC")->get();
+
+        return view("security.role.add", compact('notifications', 'permissions'));
+    }
+
     public function storePermission(Request $request)
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
@@ -60,9 +69,13 @@ class SecurityController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $roles = Role::create([
-            'name' => $request->input('name'),
+            'name' => $request->input('roleName'),
             'guard_name' => 'web'
         ]);
+
+        $permissionIds = $request->input('permission_id');
+
+        $roles->permissions()->attach($permissionIds);
 
         $years = Year::find($activeYearId);
 
@@ -142,7 +155,8 @@ class SecurityController extends Controller
     {
         $role = Role::find($id);
         $permissions = $role->permissions;
-        $allPermissions = Permission::all();
+        $allPermissions = Permission::orderBy("updated_at", "DESC")->get();
+
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
 
         return view('security.role.edit', compact('role', 'permissions', 'allPermissions', 'notifications'));

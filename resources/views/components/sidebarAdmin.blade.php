@@ -102,7 +102,7 @@
                     @endcan
                     @can('access-roleList')
                     <li class="{{ Request::segment(3) === 'role' ? 'active' : '' }}"><a
-                            href="{{ url('/account/security/role') }}">Roles</a></li>
+                            href="{{ url('/account/security/role') }}">Manajemen Roles</a></li>
                     @endcan
                     @can('access-permissionList')
                     <li class="{{ Request::segment(3) === 'permission' ? 'active' : '' }}"><a

@@ -123,9 +123,15 @@ Route::prefix('account')->group(function () {
         Route::group(['middleware' => ['can:access-roleList']], function () {
             Route::get('/role', [App\Http\Controllers\SecurityController::class, 'roleList'])->name('role');
         });
+
         Route::group(['middleware' => ['can:access-roleAdd']], function () {
-            Route::post('/role/add', [App\Http\Controllers\SecurityController::class, 'storeRole'])->name('storeRole');
+            Route::get('/role/add', [App\Http\Controllers\SecurityController::class, 'addRole'])->name('addRole');
         });
+
+        Route::group(['middleware' => ['can:access-roleAdd']], function () {
+            Route::post('/role/store', [App\Http\Controllers\SecurityController::class, 'storeRole'])->name('storeRole');
+        });
+        
         Route::group(['middleware' => ['can:access-roleDelete']], function () {
             Route::delete('/role/delete/{id}', [App\Http\Controllers\SecurityController::class, 'destroyRole'])->name('deleteRole');
         });
