@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ExternalIncome;
 use App\Models\Notification;
 use App\Models\PointOfSales;
+use App\Models\StudentClass;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,8 +21,9 @@ class ExternalIncomeController extends Controller
     {
         $externals = ExternalIncome::select('id','pos_id','income_desc','income_period','income_price','updated_at')->orderBy('updated_at','DESC')->get();
         $pos = PointOfSales::select('id','point_code','point_source','point_name')->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('external.index', compact('externals','notifications','pos'));
+        return view('external.index', compact('students', 'externals','notifications','pos'));
     }
 
     public function storeExternal(Request $request)

@@ -20,8 +20,9 @@ class PaymentController extends Controller
     public function index()
     {
         $credit = Payment::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('payment.credit.index', compact('notifications', 'credit'));
+        return view('payment.credit.index', compact('students', 'notifications', 'credit'));
     }
 
     public function allData()
@@ -33,8 +34,9 @@ class PaymentController extends Controller
         $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
-        return view('payment.allData', compact('notifications', 'studentClasses','credit','years'));
+        return view('payment.allData', compact('students', 'notifications', 'studentClasses','credit','years'));
     }
 
     public function detail($id)

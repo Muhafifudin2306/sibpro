@@ -10,7 +10,7 @@
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
-        <x-sidebarAdmin :student="$tudents"></x-sidebarAdmin>
+        <x-sidebarAdmin :students="$students"></x-sidebarAdmin>
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
@@ -35,73 +35,70 @@
                         @endcan
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Dana Eksternal') }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-tagihan-vendor">
-                                    <thead>
+                <div class="card">
+                    <div class="card-header">
+                        <h4>{{ __('Tabel Dana Eksternal') }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="table-tagihan-vendor">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px">
+                                            {{ __('No') }}
+                                        </th>
+                                        <th>{{ __('ID POS') }}</th>
+                                        <th>{{ __('Periode') }}</th>
+                                        <th>{{ __('Nominal') }}</th>
+                                        <th>{{ __('Keterangan') }}</th>
+                                        <th>{{ __('Terakhir Diubah') }}</th>
+                                        <th>{{ __('Aksi') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($externals as $item)
                                         <tr>
-                                            <th>
-                                                {{ __('No') }}
-                                            </th>
-                                            <th>{{ __('ID POS') }}</th>
-                                            <th>{{ __('Keterangan') }}</th>
-                                            <th>{{ __('Periode') }}</th>
-                                            <th>{{ __('Nominal') }}</th>
-                                            <th>{{ __('Diubah Pada') }}</th>
-                                            <th>{{ __('Aksi') }}</th>
+                                            <td>
+                                                {{ $no++ }}
+                                            </td>
+                                            <td>
+                                                {{ $item->pos->point_code . '-' . $item->pos->point_source . '-' . $item->pos->point_name }}
+                                            </td>
+                                            <td>
+                                                {{ \Carbon\Carbon::parse($item->income_period)->format('F, Y') }}
+                                            </td>
+                                            <td>
+                                                Rp{{ number_format($item->income_price, 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                {{ $item->income_desc }}
+                                            </td>
+                                            <td>
+                                                {{ $item->updated_at->format('d F Y') }}
+                                            </td>
+                                            <td>
+                                                <div class="d-flex justify-content-start">
+                                                    @can('access-classUpdate')
+                                                        <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
+                                                            data-target="#updateModal{{ $item->id }}">
+                                                            <i class="fas fa-pen" title="Edit Nama Kelas"></i>
+                                                        </div>
+                                                    @endcan
+                                                    @can('access-classDelete')
+                                                        <div class="text-danger mx-2 cursor-pointer">
+                                                            <i class="fas class-delete fa-trash-alt"
+                                                                data-card-id="{{ $item->id }}" title="Delete Kelas"></i>
+                                                        </div>
+                                                    @endcan
+                                                </div>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($externals as $item)
-                                            <tr>
-                                                <td>
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->pos->point_code . '-' . $item->pos->point_source . '-' . $item->pos->point_name }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->income_desc }}
-                                                </td>
-                                                <td>
-                                                    {{ \Carbon\Carbon::parse($item->income_period)->format('F, Y') }}
-                                                </td>
-                                                <td>
-                                                    Rp{{ number_format($item->income_price, 0, ',', '.') }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->updated_at->format('d F Y') }}
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex justify-content-start">
-                                                        @can('access-classUpdate')
-                                                            <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
-                                                                data-target="#updateModal{{ $item->id }}">
-                                                                <i class="fas fa-pen" title="Edit Nama Kelas"></i>
-                                                            </div>
-                                                        @endcan
-                                                        @can('access-classDelete')
-                                                            <div class="text-danger mx-2 cursor-pointer">
-                                                                <i class="fas class-delete fa-trash-alt"
-                                                                    data-card-id="{{ $item->id }}"
-                                                                    title="Delete Kelas"></i>
-                                                            </div>
-                                                        @endcan
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -126,7 +123,8 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="pos_code">ID POS</label>
-                            <select class="form-control" name="pos_id" id="pos_id">
+                            <select class="form-control" name="pos_id" id="pos_id" required>
+                                <option value="" selected> -- Pilih ID POS -- </option>
                                 @foreach ($pos as $item)
                                     <option value="{{ $item->id }}">
                                         {{ $item->point_code . '-' . $item->point_source . '-' . $item->point_name }}
@@ -135,19 +133,18 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="point_source">Keterangan</label>
-                            <input type="text" class="form-control" name="income_desc" id="income_desc"
-                                placeholder="Masukkan keterangan">
-                        </div>
-                        <div class="form-group">
                             <label for="point_source">Periode Dana</label>
-                            <input type="month" class="form-control" name="income_period" id="income_period"
-                                placeholder="Masukkan periode dana eksternal">
+                            <input type="month" class="form-control" name="income_period" id="income_period" required>
                         </div>
                         <div class="form-group">
                             <label for="point_name">Nominal Dana</label>
                             <input type="number" class="form-control" name="income_price" id="income_price"
-                                placeholder="Masukkan rincian POS">
+                                placeholder="100000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="point_source">Keterangan</label>
+                            <textarea type="text" class="form-control" name="income_desc" id="income_desc" placeholder="Masukkan keterangan"
+                                cols="3" required></textarea>
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
@@ -177,7 +174,8 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="pos_id">ID POS</label>
-                                    <select class="form-control" name="pos_id" id="pos_id">
+                                    <select class="form-control" name="pos_id" id="pos_id" required>
+                                        <option value=""> -- Pilih ID POS -- </option>
                                         @foreach ($pos as $point)
                                             <option value="{{ $point->id }}"
                                                 {{ $point->id == $item->pos_id ? 'selected' : '' }}>
@@ -187,20 +185,19 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="income_desc">Keterangan</label>
-                                    <input type="text" class="form-control" name="income_desc" id="income_desc"
-                                        placeholder="Masukkan keterangan" value="{{ $item->income_desc }}">
-                                </div>
-                                <div class="form-group">
                                     <label for="income_period">Periode Dana</label>
                                     <input type="month" class="form-control" name="income_period" id="income_period"
                                         placeholder="Masukkan periode dana eksternal"
-                                        value="{{ date('Y-m', strtotime($item->income_period)) }}">
+                                        value="{{ date('Y-m', strtotime($item->income_period)) }}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="income_price">Nominal Dana</label>
                                     <input type="number" class="form-control" name="income_price" id="income_price"
-                                        placeholder="Masukkan nominal dana" value="{{ $item->income_price }}">
+                                        placeholder="Masukkan nominal dana" value="{{ $item->income_price }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="income_desc">Keterangan</label>
+                                    <textarea class="form-control" name="income_desc" id="income_desc" placeholder="Masukkan keterangan" required>{{ $item->income_desc }}</textarea>
                                 </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">

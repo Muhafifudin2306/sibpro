@@ -12,7 +12,7 @@
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
-        <x-sidebarAdmin></x-sidebarAdmin>
+        <x-sidebarAdmin :students="$students"></x-sidebarAdmin>
         <div class="main-content">
             <section class="section">
                 <div class="section-header d-flex justify-content-lg-between">
@@ -50,11 +50,11 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">{{ __('Data Transaksi SPP') }}</h2>
+                        <h2 class="section-title">{{ __('Data Transaksi') }}</h2>
                     </div>
-                    <div class="action-content">
+                    {{-- <div class="action-content">
                         <button class="btn btn-warning">{{ __('Print Data') }}</button>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-12">
                     <div class="card">

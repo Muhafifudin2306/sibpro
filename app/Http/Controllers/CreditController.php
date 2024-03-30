@@ -23,8 +23,9 @@ class CreditController extends Controller
     {
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
-        return view('credit.index', compact('notifications', 'studentClasses'));
+        return view('credit.index', compact('students', 'notifications', 'studentClasses'));
     }
     
     public function detail($uuid)
@@ -45,10 +46,12 @@ class CreditController extends Controller
             }])
             ->get();
 
+        $studentSide = StudentClass::orderBy("class_name", 'ASC')->get();
+
         $class = StudentClass::find($id);
 
 
-        return view('credit.detail', compact('notifications', 'students', 'class'));
+        return view('credit.detail', compact('studentSide', 'notifications', 'students', 'class'));
     }
 
     public function billingStudent($uuid)
