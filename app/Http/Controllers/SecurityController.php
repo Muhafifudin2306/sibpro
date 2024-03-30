@@ -24,7 +24,8 @@ class SecurityController extends Controller
     {
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $permissions = Permission::orderBy("updated_at", "DESC")->get();
-        return view("security.permission.index", compact('notifications', 'permissions'));
+        $studentSide = StudentClass::orderBy("class_name", 'ASC')->get();
+        return view("security.permission.index", compact('notifications', 'permissions', 'studentSide'));
     }
     public function roleList()
     {
@@ -42,7 +43,9 @@ class SecurityController extends Controller
 
         $permissions = Permission::orderBy("updated_at", "DESC")->get();
 
-        return view("security.role.add", compact('notifications', 'permissions'));
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+
+        return view("security.role.add", compact('notifications', 'permissions', 'students'));
     }
 
     public function storePermission(Request $request)

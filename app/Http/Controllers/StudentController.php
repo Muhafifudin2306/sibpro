@@ -79,7 +79,7 @@ class StudentController extends Controller
         User::where('class_id', $id)
             ->delete();
 
-            $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
 
         Notification::create([

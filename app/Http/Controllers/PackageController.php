@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Credit;
 use App\Models\Notification;
 use App\Models\Student;
+use App\Models\StudentClass;
 use App\Models\Year;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -29,7 +30,7 @@ class PackageController extends Controller
         $credits = Credit::select('id','credit_type','credit_name','credit_price','semester','updated_at','slug')->orderBy("updated_at", "DESC")->get();
         $categoriesRelation = Category::has("attributes")->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
-        $students = Student::orderBy("class_name", 'ASC')->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $vendors = Vendor::select('id','vendor_name')->orderBy('updated_at','DESC')->get();
         return view('setting.attribute.index', compact('students','credits', 'attributes', 'categories','vendors', 'notifications', 'categoriesRelation'));
     }
@@ -41,9 +42,10 @@ class PackageController extends Controller
         $categories = Category::orderBy("updated_at", "DESC")->get();
         $attributes = Attribute::orderBy("updated_at", "DESC")->get();
         $credits = Credit::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
-        return view('setting.attribute.add', compact('credits', 'notifications', 'categories', 'attributes'));
+        return view('setting.attribute.add', compact('students', 'credits', 'notifications', 'categories', 'attributes'));
     }
 
     public function store(Request $request)
@@ -72,6 +74,7 @@ class PackageController extends Controller
     public function edit($id)
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
         $category = Category::find($id);
 
@@ -86,7 +89,7 @@ class PackageController extends Controller
 
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 
-        return view('setting.attribute.edit', compact('category', 'credits', 'notifications', 'categories', 'attributes', 'allAttribute', 'allCredit'));
+        return view('setting.attribute.edit', compact('students', 'category', 'credits', 'notifications', 'categories', 'attributes', 'allAttribute', 'allCredit'));
     }
 
     public function destroy($id)

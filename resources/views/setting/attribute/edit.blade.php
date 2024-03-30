@@ -10,7 +10,7 @@
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
-        <x-sidebarAdmin></x-sidebarAdmin>
+        <x-sidebarAdmin :students="$students"></x-sidebarAdmin>
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
@@ -43,38 +43,44 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>{{ __('Atribut Daftar Ulang') }}</label>
-                                    <div class="checkbox-list">
-                                        @foreach ($allAttribute as $item)
-                                            <div class="py-1 mx-3">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input" type="checkbox"
-                                                        name="attribute_id[]" id="{{ $item->slug }}"
-                                                        value="{{ $item->id }}"
-                                                        {{ in_array($item->id, $attributes->pluck('id')->toArray()) ? 'checked' : '' }}>
-                                                    <label class="custom-control-label"
-                                                        for="{{ $item->slug }}">{{ $item->attribute_name }}</label>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('Atribut Daftar Ulang') }}</label>
+                                            <div class="checkbox-list">
+                                                @foreach ($allAttribute as $item)
+                                                    <div class="py-1 mx-3">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox"
+                                                                name="attribute_id[]" id="{{ $item->slug }}"
+                                                                value="{{ $item->id }}"
+                                                                {{ in_array($item->id, $attributes->pluck('id')->toArray()) ? 'checked' : '' }}>
+                                                            <label class="custom-control-label"
+                                                                for="{{ $item->slug }}">{{ $item->attribute_name }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                        @endforeach
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>{{ __('Atribut SPP') }}</label>
-                                    <div class="checkbox-list">
-                                        @foreach ($allCredit as $item)
-                                            <div class="py-1 mx-3">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input" type="checkbox" name="credit_id[]"
-                                                        value="{{ $item->id }}"
-                                                        {{ in_array($item->id, $credits->pluck('id')->toArray()) ? 'checked' : '' }}
-                                                        id="{{ $item->slug }}">
-                                                    <label class="custom-control-label"
-                                                        for="{{ $item->slug }}">{{ $item->credit_name }}</label>
-                                                </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('Atribut SPP') }}</label>
+                                            <div class="checkbox-list">
+                                                @foreach ($allCredit as $item)
+                                                    <div class="py-1 mx-3">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox"
+                                                                name="credit_id[]" value="{{ $item->id }}"
+                                                                {{ in_array($item->id, $credits->pluck('id')->toArray()) ? 'checked' : '' }}
+                                                                id="{{ $item->slug }}">
+                                                            <label class="custom-control-label"
+                                                                for="{{ $item->slug }}">{{ $item->credit_name }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                        @endforeach
+                                        </div>
                                     </div>
                                 </div>
 

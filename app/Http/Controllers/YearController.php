@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Notification;
+use App\Models\StudentClass;
 use App\Models\Year;
 
 
@@ -21,7 +22,8 @@ class YearController extends Controller
     {
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $years = Year::orderByRaw('year_status = "active" desc, updated_at desc')->select('year_name','year_semester','year_status','id')->get();
-        return view('setting.year.index', compact('years', 'notifications'));
+        $studentSide = StudentClass::orderBy("class_name", 'ASC')->get();
+        return view('setting.year.index', compact('years', 'notifications', 'studentSide'));
     }
 
     public function store(Request $request)

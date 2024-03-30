@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use App\Models\StudentClass;
 use App\Models\Vendor;
 use App\Models\Year;
 use Illuminate\Http\Request;
@@ -20,7 +21,8 @@ class VendorController extends Controller
     {
         $vendors = Vendor::select('id','vendor_name','updated_at')->orderBy('updated_at', 'DESC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('master.vendor.index',compact('vendors','notifications'));
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+        return view('master.vendor.index',compact('students', 'vendors','notifications'));
     }
 
     public function storeVendor(Request $request)

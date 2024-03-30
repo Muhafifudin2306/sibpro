@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use App\Models\PointOfSales;
+use App\Models\StudentClass;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,8 @@ class PointOfSalesController extends Controller
     {
         $poses = PointOfSales::select('id','point_name','point_source','point_code','updated_at')->orderBy('updated_at', 'DESC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('master.pos.index',compact('poses','notifications'));
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+        return view('master.pos.index',compact('students', 'poses','notifications'));
     }
 
     public function storePos(Request $request)

@@ -9,7 +9,7 @@
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
-        <x-sidebarAdmin></x-sidebarAdmin>
+        <x-sidebarAdmin :students="$studentSide"></x-sidebarAdmin>
 
         <div class="main-content">
             <section class="section">
@@ -30,8 +30,8 @@
                     </div>
                     @can('access-permissionAdd')
                         <div class="action-content">
-                            <button class="btn btn-primary" data-toggle="modal"
-                                data-target="#addModal"><i class="fas fa-plus mx-1"></i> {{ __('Tambah Data') }}</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#addModal"><i
+                                    class="fas fa-plus mx-1"></i> {{ __('Tambah Data') }}</button>
                         </div>
                     @endcan
                 </div>
