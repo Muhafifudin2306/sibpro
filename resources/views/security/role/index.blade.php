@@ -9,7 +9,7 @@
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
-        <x-sidebarAdmin></x-sidebarAdmin>
+        <x-sidebarAdmin :students="$classes"></x-sidebarAdmin>
 
         <div class="main-content">
             <section class="section">

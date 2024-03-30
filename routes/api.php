@@ -18,5 +18,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/get-external-count', [App\Http\Controllers\HomeController::class, 'getExternalCount'])->name('externalCount');
 
 Route::post('/midtrans-callback', [App\Http\Controllers\MidtransController::class, 'callback'])->name('paymentCallback');

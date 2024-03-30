@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/get-admin-count', [App\Http\Controllers\HomeController::class, 'getAdminCount'])->name('adminCount');
 
 Auth::routes();
 Route::post('/readall', [App\Http\Controllers\NotificationController::class, 'store'])->name('storeNotification');
@@ -41,6 +42,39 @@ Route::prefix('master')->group(function () {
         Route::post('/add', [App\Http\Controllers\VendorController::class, 'storeVendor'])->name('storeVendor');
         Route::delete('/delete/{id}', [App\Http\Controllers\VendorController::class, 'destroyVendor'])->name('deleteVendor');
         Route::post('/update/{id}', [App\Http\Controllers\VendorController::class, 'updateVendor'])->name('updateVendor');
+    });
+});
+
+Route::prefix('student')->group(function () {
+    Route::group(['middleware' => ['can:access-studentList']], function () {
+        Route::get('/', [App\Http\Controllers\StudentController::class, 'index'])->name('student');
+    });
+    Route::group(['middleware' => ['can:access-studentList']], function () {
+        Route::get('/detail/{id}', [App\Http\Controllers\StudentController::class, 'detail'])->name('detailStudent');
+    });
+    Route::group(['middleware' => ['can:access-studentUpdate']], function () {
+        Route::post('/update/allClass/{id}', [App\Http\Controllers\StudentController::class, 'updateAllClass'])->name('updateAllClass');
+    });
+    Route::group(['middleware' => ['can:access-studentDelete']], function () {
+        Route::delete('/delete/allStudent/{id}', [App\Http\Controllers\StudentController::class, 'destroyAllStudent'])->name('deleteAllStudent');
+    });
+    Route::group(['middleware' => ['can:access-studentUpdate']], function () {
+        Route::post('/update/{uuid}', [App\Http\Controllers\StudentController::class, 'updateStudent'])->name('updateStudent');
+    });
+});
+
+Route::prefix('class')->group(function () {
+    Route::group(['middleware' => ['can:access-classList']], function () {
+        Route::get('/', [App\Http\Controllers\StudentClassController::class, 'index'])->name('class');
+    });
+    Route::group(['middleware' => ['can:access-classAdd']], function () {
+        Route::post('/add', [App\Http\Controllers\StudentClassController::class, 'store'])->name('storeClass');
+    });
+    Route::group(['middleware' => ['can:access-classDelete']], function () {
+        Route::delete('/delete/{id}', [App\Http\Controllers\StudentClassController::class, 'destroy'])->name('deleteClass');
+    });
+    Route::group(['middleware' => ['can:access-classUpdate']], function () {
+        Route::post('/update/{id}', [App\Http\Controllers\StudentClassController::class, 'update'])->name('updateClass');
     });
 });
 
@@ -210,36 +244,6 @@ Route::prefix('setting')->group(function () {
         });
         Route::group(['middleware' => ['can:access-categoryUpdate']], function () {
             Route::post('/update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('updateCategory');
-        });
-    });
-
-    Route::prefix('class')->group(function () {
-        Route::group(['middleware' => ['can:access-classList']], function () {
-            Route::get('/', [App\Http\Controllers\StudentClassController::class, 'index'])->name('class');
-        });
-        Route::group(['middleware' => ['can:access-classAdd']], function () {
-            Route::post('/add', [App\Http\Controllers\StudentClassController::class, 'store'])->name('storeClass');
-        });
-        Route::group(['middleware' => ['can:access-classDelete']], function () {
-            Route::delete('/delete/{id}', [App\Http\Controllers\StudentClassController::class, 'destroy'])->name('deleteClass');
-        });
-        Route::group(['middleware' => ['can:access-classUpdate']], function () {
-            Route::post('/update/{id}', [App\Http\Controllers\StudentClassController::class, 'update'])->name('updateClass');
-        });
-    });
-
-    Route::prefix('student')->group(function () {
-        Route::group(['middleware' => ['can:access-studentList']], function () {
-            Route::get('/', [App\Http\Controllers\StudentController::class, 'index'])->name('student');
-        });
-        Route::group(['middleware' => ['can:access-studentList']], function () {
-            Route::get('/detail/{id}', [App\Http\Controllers\StudentController::class, 'detail'])->name('detailStudent');
-        });
-        Route::group(['middleware' => ['can:access-studentUpdate']], function () {
-            Route::post('/update/allClass/{id}', [App\Http\Controllers\StudentController::class, 'updateAllClass'])->name('updateAllClass');
-        });
-        Route::group(['middleware' => ['can:access-studentDelete']], function () {
-            Route::delete('/delete/allStudent/{id}', [App\Http\Controllers\StudentController::class, 'destroyAllStudent'])->name('deleteAllStudent');
         });
     });
 

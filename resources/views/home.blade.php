@@ -6,7 +6,7 @@
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
-        <x-sidebarAdmin></x-sidebarAdmin>
+        <x-sidebarAdmin :students="$classList"></x-sidebarAdmin>
 
         <!-- Main Content -->
         <div class="main-content">
@@ -56,12 +56,24 @@
                                         <h4>Total User</h4>
                                     </div>
                                     <div class="card-body py-1">
-                                        <h5>{{ $adminCount }}</h5>
+                                        <div id="admin-count">
+                                            <h5>{{ $adminCount }}</h5>
+                                        </div>
                                     </div>
                                     <div class="py-2"></div>
                                 </div>
                             </div>
                         </div>
+                        <script>
+                            function fetchAdminCount() {
+                                fetch('/get-admin-count') 
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        document.getElementById('admin-count').innerHTML = `<h5>${data.adminCount}</h5>`;
+                                    });
+                            }
+                            setInterval(fetchAdminCount, 300000);
+                        </script>
                     @endcan
 
                     <div class="col-lg-3 col-md-4 col-sm-6 col-12">
@@ -74,12 +86,31 @@
                                     <h4>Dana Eksternal</h4>
                                 </div>
                                 <div class="card-body py-1">
-                                    <h5>Rp {{ number_format($externalCount, 0, ',', '.') }}</h5>
+                                    <div id="external-count">
+                                        <h5>Rp {{ number_format($externalCount, 0, ',', '.') }}</h5>
+                                    </div>
                                 </div>
                                 <div class="py-2"></div>
                             </div>
                         </div>
                     </div>
+                    <script>
+                        function fetchExternalCount() {
+                            fetch('/get-external-count') 
+                                .then(response => response.json())
+                                .then(data => {
+                                document.getElementById('external-count').innerHTML = `<h5>Rp ${numberWithCommas(data.externalCount)}</h5>`;
+                            });
+                    }
+
+                    setInterval(fetchExternalCount, 300000);
+
+                    fetchExternalCount();
+
+                    function numberWithCommas(x) {
+                        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    }
+                    </script>
 
                     @can('access-incomeSum')
                         <div class="col-lg-3 col-md-4 col-sm-6 col-12">
@@ -92,12 +123,31 @@
                                         <h4>SPP</h4>
                                     </div>
                                     <div class="card-body py-1">
-                                        <h5>Rp {{ number_format($totalCredit, 0, ',', '.') }}</h5>
+                                        <div id="total-credit">
+                                            <h5>Rp {{ number_format($totalCredit, 0, ',', '.') }}</h5>
+                                        </div>
                                     </div>
                                     <div class="py-2"></div>
                                 </div>
                             </div>
                         </div>
+                        <script>
+                            function fetchExternalCount() {
+                                fetch('/get-total-kredit') 
+                                    .then(response => response.json())
+                                    .then(data => {
+                                    document.getElementById('total-kredit').innerHTML = `<h5>Rp ${numberWithCommas(data.externalCount)}</h5>`;
+                                });
+                        }
+    
+                        setInterval(fetchExternalCount, 300000);
+    
+                        fetchExternalCount();
+    
+                        function numberWithCommas(x) {
+                            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
+                        </script>
                     @endcan
 
                     <div class="col-lg-3 col-md-4 col-sm-6 col-12">

@@ -79,7 +79,7 @@
             <li class="menu-header">Master Data</li>
             <li class="dropdown {{ Request::is('master*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-archive"></i>
-                    <span>Master Data</span></a>
+                    <span>Master Transaksi</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{ Request::segment(2) === 'pos' ? 'active' : '' }}"><a
                             href="{{ url('/master/pos') }}">Point Of Sales</a></li>
@@ -87,6 +87,26 @@
                             href="{{ url('/master/vendor') }}">Master Vendor</a></li>
                 </ul>
             </li>
+            @can('access-studentList')
+            <li class="dropdown {{ Request::is('student*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i>
+                    <span>Data Siswa</span></a>
+                <ul class="dropdown-menu">
+                    @foreach ($students as $item)
+                    <li class="{{ Request::segment(3) === $item->uuid ? 'active' : '' }}"><a
+                        href="{{ url('student/detail/' . $item->uuid ) }}">{{ $item->class_name }}</a></li>
+                    @endforeach
+                </ul>
+            </li>
+            @endcan
+            @can('access-classList')
+            <li class="{{ Request::is('class') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/class') }}">
+                    <i class="fas fa-home"></i>
+                    <span>Master Kelas</span>
+                </a>
+            </li>
+            @endcan
             <li class="menu-header">Utilitas</li>
             <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i>
@@ -125,19 +145,8 @@
                             href="{{ url('/setting/packages') }}">Paket</a></li>
                 </ul>
                 @endcan
-                @can('access-classList')
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'class' ? 'active' : '' }}"><a
-                            href="{{ url('/setting/class') }}">Kelas</a></li>
-                </ul>
-                @endcan
-                @can('access-studentList')
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'student' ? 'active' : '' }}"><a
-                            href="{{ url('/setting/student') }}">Siswa</a></li>
-                </ul>
-                @endcan
             </li>
         </ul>
     </aside>
+    <div class="my-5"></div>
 </div>

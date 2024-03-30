@@ -10,6 +10,7 @@ use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Credit;
 use App\Models\Notification;
+use App\Models\Student;
 use App\Models\Year;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -28,8 +29,9 @@ class PackageController extends Controller
         $credits = Credit::select('id','credit_type','credit_name','credit_price','semester','updated_at','slug')->orderBy("updated_at", "DESC")->get();
         $categoriesRelation = Category::has("attributes")->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $students = Student::orderBy("class_name", 'ASC')->get();
         $vendors = Vendor::select('id','vendor_name')->orderBy('updated_at','DESC')->get();
-        return view('setting.attribute.index', compact('credits', 'attributes', 'categories','vendors', 'notifications', 'categoriesRelation'));
+        return view('setting.attribute.index', compact('students','credits', 'attributes', 'categories','vendors', 'notifications', 'categoriesRelation'));
     }
 
 

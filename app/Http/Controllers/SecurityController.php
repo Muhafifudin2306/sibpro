@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use App\Models\StudentClass;
 //use App\Models\Permission;
 //use App\Models\Role;
 use App\Models\Year;
@@ -30,8 +31,9 @@ class SecurityController extends Controller
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $roles = Role::with('permissions')->orderBy("updated_at", "DESC")->get();
         $permissions = Permission::orderBy("updated_at", "DESC")->get();
+        $classes = StudentClass::orderBy("updated_at", "DESC")->get();
 
-        return view("security.role.index", compact('roles', 'notifications', 'permissions'));
+        return view("security.role.index", compact('classes','roles', 'notifications', 'permissions'));
     }
 
     public function addRole()
@@ -156,10 +158,11 @@ class SecurityController extends Controller
         $role = Role::find($id);
         $permissions = $role->permissions;
         $allPermissions = Permission::orderBy("updated_at", "DESC")->get();
+        $classes = StudentClass::orderBy("updated_at", "DESC")->get();
 
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
 
-        return view('security.role.edit', compact('role', 'permissions', 'allPermissions', 'notifications'));
+        return view('security.role.edit', compact('classes','role', 'permissions', 'allPermissions', 'notifications'));
     }
     public function updateRole(Request $request, $id)
     {

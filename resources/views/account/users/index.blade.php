@@ -12,7 +12,7 @@
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
-        <x-sidebarAdmin></x-sidebarAdmin>
+        <x-sidebarAdmin :students="$classes"></x-sidebarAdmin>
 
         <div class="main-content">
             <section class="section">
@@ -34,8 +34,8 @@
                     </div>
                     @can('access-userAdd')
                         <div class="action-content">
-                            <button class="btn btn-primary" data-toggle="modal"
-                                data-target="#PenggunaModal"><i class="fas fa-plus mx-1"></i> {{ __(' Tambah Data') }}</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#PenggunaModal"><i
+                                    class="fas fa-plus mx-1"></i> {{ __(' Tambah Data') }}</button>
                         </div>
                     @endcan
                 </div>
@@ -274,7 +274,7 @@
                     });
 
                     try {
-                        const response = await fetch(`/account/Pengguna/add`, {
+                        const response = await fetch(`/account/users/add`, {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -312,7 +312,7 @@
                     Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
                         'Batal',
                         function() {
-                            fetch(`/account/Pengguna/delete/${cardId}`, {
+                            fetch(`/account/users/delete/${cardId}`, {
                                     method: 'DELETE',
                                     headers: {
                                         'X-CSRF-TOKEN': '{{ csrf_token() }}',

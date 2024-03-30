@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Notification;
+use App\Models\Student;
 use App\Models\Year;
 use App\Models\StudentClass;
 use Illuminate\Support\Facades\Auth;
@@ -21,8 +22,9 @@ class StudentClassController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $classes = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
-        return view('setting.class.index', compact("notifications", "classes"));
+        return view('setting.class.index', compact("students","notifications", "classes"));
     }
     public function store(Request $request)
     {
