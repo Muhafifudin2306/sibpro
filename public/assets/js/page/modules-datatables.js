@@ -49,3 +49,6 @@ $("#table-vendor").dataTable();
 $("#table-category").dataTable();
 $("#table-relation").dataTable();
 $("#table-credit").dataTable();
+$("#table-spp").dataTable({
+    pageLength: 25,
+});

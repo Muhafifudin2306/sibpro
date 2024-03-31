@@ -25,7 +25,7 @@
                     </p>
 
                     <div class="row mt-sm-4">
-                        <div class="col-12 col-md-12 col-lg-5">
+                        <div class="col-12 col-md-5">
                             <div class="card profile-widget">
                                 <div class="profile-widget-header">
                                     <img alt="image" src="{{ asset('assets/img/avatar/avatar-1.png') }}"
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-12 col-lg-7">
+                        <div class="col-12 col-md-7">
                             <div class="card">
                                 <form method="post" class="needs-validation" novalidate="">
                                     <div class="card-header">
@@ -98,6 +98,45 @@
                                 </form>
                             </div>
                         </div>
+                        <div class="col-md-5"></div>
+                        <div class="col-12 col-md-7">
+                            <div class="card">
+                                <form class="update-form"
+                                    data-action="{{ url('/account/users/update-password/' . $student->uuid) }}"
+                                    method="POST">
+                                    @csrf
+                                    <div class="card-header">
+                                        <h4>{{ __('Ubah Password Akun Saya') }}</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="password" class="d-block">{{ __('Password Baru') }} <span
+                                                        class="text-danger">*</span></label>
+                                                <input id="password" type="password"
+                                                    class="form-control @error('password') is-invalid @enderror pwstrength lock"
+                                                    name="password" placeholder="*********" data-indicator="pwindicator"
+                                                    required autocomplete="new-password">
+                                                <div id="pwindicator" class="pwindicator">
+                                                    <div class="bar"></div>
+                                                    <div class="label"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="password" class="d-block">{{ __('Konfirmasi Password') }}
+                                                    <span class="text-danger">*</span></label>
+                                                <input id="password-confirm" type="password" class="form-control lock"
+                                                    name="password_confirmation" placeholder="*********" required
+                                                    autocomplete="new-password">
+                                            </div>
+                                        </div>
+                                        <div class="button-submit">
+                                            <button class="btn btn-primary"> Simpan Data </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -110,3 +149,38 @@
         </footer>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const updateForms = document.querySelectorAll('.update-form');
+
+            updateForms.forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    const formData = new FormData(form);
+
+                    fetch(form.getAttribute('data-action'), {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Notiflix.Notify.success("Data berhasil diperbarui!", {
+                                timeout: 3000
+                            });
+
+                            location.reload();
+                        })
+                        .catch(error => {
+                            Notiflix.Notify.failure('Error:', error);
+                        });
+                });
+            });
+        });
+    </script>
+@endpush

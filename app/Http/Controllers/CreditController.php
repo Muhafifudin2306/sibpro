@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribute;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Credit;
@@ -9,6 +11,8 @@ use App\Models\Notification;
 use App\Models\StudentClass;
 use App\Models\Payment;
 use App\Models\Year;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -21,12 +25,135 @@ class CreditController extends Controller
 
     public function index()
     {
+        $credit = Payment::orderBy("user_id", "DESC")
+                    ->get();
+        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
-        return view('credit.index', compact('students', 'notifications', 'studentClasses'));
+        return view('credit.index', compact('students', 'notifications', 'studentClasses','credit','years'));
     }
+
+    public function addPage()
+    {
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentSide = StudentClass::orderBy("class_name", 'ASC')->get();
+        $students = User::orderBy('name')->get();
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $years = Year::find($activeYearId)->year_semester;
+        $credits = Credit::where('semester', $years)->orderBy("updated_at", "DESC")->get();
+        return view('credit.add', compact('students', 'studentSide', 'notifications', 'credits', 'years'));
+    }
+
+    public function storeSPP(Request $request)
+    {
+        $credits = $request->input('credit_id');
+
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        // Mendapatkan invoice number terakhir untuk SPP bulan ini
+        $lastInvoiceNumber = Payment::where('type', 'SPP')
+                                    ->whereYear('created_at', Carbon::now()->year)
+                                    ->whereMonth('created_at', Carbon::now()->month)
+                                    ->orderBy('created_at', 'desc')
+                                    ->value('invoice_number');
+
+        // Mengambil increment dari invoice number terakhir
+        $increment = 1;
+        if ($lastInvoiceNumber) {
+            $lastInvoiceNumberParts = explode('-', $lastInvoiceNumber);
+            $lastIncrement = intval(end($lastInvoiceNumberParts));
+            $increment = $lastIncrement + 1;
+        }
+
+        // Format tanggal hari ini dalam format "ddMMyy"
+        $todayDate = Carbon::now()->format('dmy');
+
+        // Buat invoice number
+        $invoiceNumber = "SPP-$todayDate-$increment";
+
+        foreach($credits as $credit)
+        {
+            $creditPrice = Credit::find($credit)->credit_price;
+            $uuid = Str::uuid(); // Generate UUID
+            Payment::create([
+                'uuid' => $uuid,
+                'user_id' =>  $request->input('user_id'),
+                'credit_id' => $credit,
+                'year_id' => $activeYearId,
+                'type' => $request->input('type'),
+                'price' => $creditPrice,
+                'invoice_number' => '-'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Data berhasil dibuat!'
+        ], 201);
+    }
+
+    public function generateCredit()
+    {
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $categories = Category::pluck('id');
+
+        foreach ($categories as $category) {
+            $credits = DB::table('category_has_credit')->where('category_id', $category)->pluck('credit_id');
+            foreach($credits as $credit){
+                $users = User::where('category_id', $category)->pluck('id');
+                foreach($users as $user){
+                    $creditPrice = Credit::find($credit)->credit_price;
+                    $uuid = Str::uuid();
+                    // Cari pembayaran yang sesuai dengan kriteria yang diberikan
+                    $payment = Payment::firstOrNew([
+                        'user_id' => $user,
+                        'credit_id' => $credit,
+                        'year_id' => $activeYearId,
+                    ]);
+
+                    // Jika pembayaran belum ada, setel nilai atributnya dan simpan ke database
+                    if (!$payment->exists) {
+                        $payment->uuid = $uuid;
+                        $payment->type = 'SPP';
+                        $payment->price = $creditPrice;
+                        $payment->invoice_number = '-';
+                        $payment->save();
+                    }
+                }
+            } 
+        }
+
+        foreach ($categories as $category) {
+            $attributes = DB::table('category_has_attribute')->where('category_id', $category)->pluck('attribute_id');
+            foreach($attributes as $attribute){
+                $users = User::where('category_id', $category)->pluck('id');
+                foreach($users as $user){
+                    $attributePrice = Attribute::find($attribute)->attribute_price;
+                    $uuid = Str::uuid();
+                    // Cari pembayaran yang sesuai dengan kriteria yang diberikan
+                    $payment = Payment::firstOrNew([
+                        'user_id' => $user,
+                        'attribute_id' => $attribute,
+                        'year_id' => $activeYearId,
+                    ]);
+
+                    // Jika pembayaran belum ada, setel nilai atributnya dan simpan ke database
+                    if (!$payment->exists) {
+                        $payment->uuid = $uuid;
+                        $payment->type = 'Daftar Ulang';
+                        $payment->price = $attributePrice;
+                        $payment->invoice_number = '-';
+                        $payment->save();
+                    }
+                }
+            } 
+        }
+
+        return response()->json(['message' => 'Data paket berhasil dihapus.']);
+    }
+
     
     public function detail($uuid)
     {

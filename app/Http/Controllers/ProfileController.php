@@ -166,4 +166,30 @@ class ProfileController extends Controller
             'data' => $user,
         ], 200);
     }
+
+    public function updatePassword(Request $request, $uuid)
+    {
+        $data = User::where('uuid', $uuid)->first();
+
+        $id = $data->id;
+
+        $user = User::find($id);
+
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $years = Year::find($activeYearId);
+
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "telah memperbarui password" . " " . $user->name . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_status' => 0
+        ]);
+
+        return response()->json([
+            'message' => 'Data user berhasil diedit!',
+            'data' => $user,
+        ], 200);
+    }
 }
