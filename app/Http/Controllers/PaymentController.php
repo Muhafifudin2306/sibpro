@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Payment;
 use App\Models\Year;
 use App\Models\StudentClass;
+use Illuminate\Support\Carbon;
 
 class PaymentController extends Controller
 {
@@ -17,14 +19,94 @@ class PaymentController extends Controller
     }
 
 
-    public function index()
+    public function indexCart()
     {
-        $credit = Payment::orderBy("updated_at", "DESC")->get();
+        $credit = Payment::orderBy("user_id", "DESC")
+                    ->where('user_id', Auth::user()->id)
+                    ->where('status', 'Unpaid')
+                    ->get();
+        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
-        $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('payment.credit.index', compact('students', 'notifications', 'credit'));
+
+        return view('payment.user.cart.index', compact('students', 'notifications', 'studentClasses','credit','years'));
     }
 
+    public function indexPayment()
+    {
+        $credit = Payment::orderBy("invoice_number", "ASC")
+                    ->where('user_id', Auth::user()->id)
+                    ->where('status', 'Pending')
+                    ->get();
+        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+
+        return view('payment.user.payment.index', compact('students', 'notifications', 'studentClasses','credit','years'));
+    }
+
+    public function addToCart(Request $request)
+    {
+        // Validasi request
+        $request->validate([
+            'transactions' => 'required|array',
+            'transactions.*' => 'exists:payments,id' // Pastikan transaksi tersedia dalam database
+        ]);
+
+        $transactionIds = $request->input('transactions');
+
+        // Perbarui status pembayaran untuk transaksi yang dipilih
+        Payment::whereIn('id', $transactionIds)->update([
+            'status' => 'Pending'
+        ]);
+    
+        // Kembalikan respons sukses
+        return response()->json(['message' => 'Pembayaran online berhasil dilakukan'], 200);
+    }
+
+
+    public function processOnlinePayment(Request $request)
+    {
+        // Validasi request
+        $request->validate([
+            'transactions' => 'required|array',
+            'transactions.*' => 'exists:payments,id' // Pastikan transaksi tersedia dalam database
+        ]);
+
+        $transactionIds = $request->input('transactions');
+    
+        // Ambil invoice number terakhir
+        $lastInvoiceNumber = Payment::whereYear('updated_at', Carbon::now()->year)
+        ->whereMonth('updated_at', Carbon::now()->month)
+        ->latest()
+        ->where('status', '!=', 'Unpaid')
+        ->value('increment');
+
+
+        $increment = 1;
+        if ($lastInvoiceNumber != NULL) {
+        $increment = $lastInvoiceNumber + 1;
+        }
+
+        // Format tanggal hari ini dalam format "ddMMyy"
+        $todayDate = Carbon::now()->format('dmy');
+
+        // Buat invoice number baru
+        $invoiceNumber = 'PAY'. '-' . $todayDate . '-' . $increment;
+
+
+        // Perbarui status pembayaran untuk transaksi yang dipilih
+        Payment::whereIn('id', $transactionIds)->update([
+            'status' => 'Pending',
+            'increment' => $increment, 
+            'invoice_number' => $invoiceNumber
+        ]);
+    
+        // Kembalikan respons sukses
+        return response()->json(['message' => 'Pembayaran online berhasil dilakukan'], 200);
+    }
     public function allData()
     {
         $credit = Payment::where('status','!=','Unpaid')

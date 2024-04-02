@@ -16,7 +16,7 @@
             </li>
             </li>
 
-            <li class="menu-header">Transaksi</li>
+            {{-- <li class="menu-header">Transaksi</li>
             @can('access-paymentStudent')
                 <li class="dropdown {{ Request::is('payment*') ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-dollar-sign"></i>
@@ -27,6 +27,34 @@
                         <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
                                 href="{{ url('payment/credit') }}">SPP</a></li>
                     </ul>
+                </li>
+            @endcan --}}
+            <li class="menu-header">Transaksi</li>
+
+            @can('access-cartStudent')
+                <li class="{{ Request::is('cart') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/cart') }}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Loket Pemesanan</span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('access-paymentStudent')
+                <li class="{{ Request::is('payment') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/payment') }}">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Pembayaran Pending</span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('access-doneStudentPayment')
+                <li class="{{ Request::is('payment-done') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/payment-done') }}">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Pembayaran Berhasil</span>
+                    </a>
                 </li>
             @endcan
 
@@ -76,36 +104,38 @@
             <li><a class="nav-link" href="blank.html"><i class="fas fa-file-invoice-dollar"></i><span>Laporan
                         Konsolidasi</span></a>
             </li> --}}
-            <li class="menu-header">Master Data</li>
-            <li class="dropdown {{ Request::is('master*') ? 'active' : '' }}">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-archive"></i>
-                    <span>Master Transaksi</span></a>
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::segment(2) === 'pos' ? 'active' : '' }}"><a
-                            href="{{ url('/master/pos') }}">Point Of Sales</a></li>
-                    <li class="{{ Request::segment(2) === 'vendor' ? 'active' : '' }}"><a
-                            href="{{ url('/master/vendor') }}">Master Vendor</a></li>
-                </ul>
-            </li>
-            @can('access-studentList')
-                <li class="dropdown {{ Request::is('student*') ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i>
-                        <span>Data Siswa</span></a>
+            @can('access-dataMaster')
+                <li class="menu-header">Master Data</li>
+                <li class="dropdown {{ Request::is('master*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-archive"></i>
+                        <span>Master Transaksi</span></a>
                     <ul class="dropdown-menu">
-                        @foreach ($students as $item)
-                            <li class="{{ Request::segment(3) === $item->uuid ? 'active' : '' }}"><a
-                                    href="{{ url('student/detail/' . $item->uuid) }}">{{ $item->class_name }}</a></li>
-                        @endforeach
+                        <li class="{{ Request::segment(2) === 'pos' ? 'active' : '' }}"><a
+                                href="{{ url('/master/pos') }}">Point Of Sales</a></li>
+                        <li class="{{ Request::segment(2) === 'vendor' ? 'active' : '' }}"><a
+                                href="{{ url('/master/vendor') }}">Master Vendor</a></li>
                     </ul>
                 </li>
-            @endcan
-            @can('access-classList')
-                <li class="{{ Request::is('class') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('/class') }}">
-                        <i class="fas fa-home"></i>
-                        <span>Master Kelas</span>
-                    </a>
-                </li>
+                @can('access-studentList')
+                    <li class="dropdown {{ Request::is('student*') ? 'active' : '' }}">
+                        <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i>
+                            <span>Data Siswa</span></a>
+                        <ul class="dropdown-menu">
+                            @foreach ($students as $item)
+                                <li class="{{ Request::segment(3) === $item->uuid ? 'active' : '' }}"><a
+                                        href="{{ url('student/detail/' . $item->uuid) }}">{{ $item->class_name }}</a></li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @endcan
+                @can('access-classList')
+                    <li class="{{ Request::is('class') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('/class') }}">
+                            <i class="fas fa-home"></i>
+                            <span>Master Kelas</span>
+                        </a>
+                    </li>
+                @endcan
             @endcan
             <li class="menu-header">Utilitas</li>
             <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">

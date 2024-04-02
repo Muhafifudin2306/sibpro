@@ -10,6 +10,7 @@ class Payment extends Model
 
     protected $fillable = [
         'uuid',
+        'increment',
         'invoice_number',
         'type',
         'user_id',

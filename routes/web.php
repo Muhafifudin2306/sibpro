@@ -266,13 +266,11 @@ Route::prefix('setting')->group(function () {
     });
 });
 
-Route::prefix('payment')->group(function () {
-    Route::prefix('credit')->group(function () {
-        Route::get('/', [App\Http\Controllers\PaymentController::class, 'index']);
-        Route::get('/detail/{id}', [App\Http\Controllers\PaymentController::class, 'detail'])->name('detailpayment');
-    });
+Route::prefix('cart')->group(function () {
+    Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexCart']);
+    Route::post('/online', [App\Http\Controllers\PaymentController::class, 'addToCart']);
+});
 
-    Route::prefix('enrollment')->group(function () {
-        Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index']);
-    });
+Route::prefix('payment')->group(function () {
+    Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPayment']);
 });

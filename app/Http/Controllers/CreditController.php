@@ -84,7 +84,7 @@ class CreditController extends Controller
                 'year_id' => $activeYearId,
                 'type' => $request->input('type'),
                 'price' => $creditPrice,
-                'invoice_number' => '-'
+                'invoice_number' => 0
             ]);
         }
 
@@ -118,7 +118,7 @@ class CreditController extends Controller
                         $payment->uuid = $uuid;
                         $payment->type = 'SPP';
                         $payment->price = $creditPrice;
-                        $payment->invoice_number = '-';
+                        $payment->increment = 0;
                         $payment->save();
                     }
                 }
@@ -144,7 +144,7 @@ class CreditController extends Controller
                         $payment->uuid = $uuid;
                         $payment->type = 'Daftar Ulang';
                         $payment->price = $attributePrice;
-                        $payment->invoice_number = '-';
+                        $payment->increment = 0;
                         $payment->save();
                     }
                 }
