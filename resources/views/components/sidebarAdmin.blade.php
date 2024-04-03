@@ -65,6 +65,8 @@
                     <ul class="dropdown-menu">
                         <li class="{{ Request::segment(2) === 'attribute' ? 'active' : '' }}"><a class="nav-link"
                                 href="{{ url('spending/attribute') }}">Realisasi Atribut Siswa</a></li>
+                        <li class="{{ Request::segment(2) === 'bahan' ? 'active' : '' }}"><a class="nav-link"
+                                href="{{ url('spending/bahan') }}">Belanja Bahan dan Alat</a></li>
                     </ul>
                 </li>
             @endcan

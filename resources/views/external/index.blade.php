@@ -192,7 +192,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="income_price">Nominal Dana</label>
-                                    <input type="number" class="form-control" name="income_price" id="income_price"
+                                    <input type="number" class="form-control" name="income_price"
                                         placeholder="Masukkan nominal dana" value="{{ $item->income_price }}" required>
                                 </div>
                                 <div class="form-group">

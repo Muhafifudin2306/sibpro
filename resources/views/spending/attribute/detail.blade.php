@@ -244,13 +244,9 @@
                                                 </td>
                                                 <td>
                                                     @if ($item->is_paid == 1)
-                                                        <span
-                                                            class="py-1 px-3 border border-success rounded text-success fw-bold"
-                                                            id="pay-button">Lunas</span>
+                                                        <div class="badge badge-success"> Lunas</div>
                                                     @elseif($item->is_paid == 0)
-                                                        <span
-                                                            class="py-1 px-3 border border-warning rounded text-warning fw-bold"
-                                                            id="pay-button">Belum Lunas</span>
+                                                        <div class="badge badge-warning">Belum Lunas</div>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -498,9 +494,9 @@
                             <div class="form-group">
                                 <label>{{ __('Tipe Pengeluaran') }}</label>
                                 <select class="form-control select2" name="is_paid">
-                                    <option value="1" {{ $item->spending_type == 1 ? 'selected' : '' }}>
+                                    <option value="1" {{ $item->is_paid == 1 ? 'selected' : '' }}>
                                         {{ __('Lunas') }}</option>
-                                    <option value="0" {{ $item->spending_type == 0 ? 'selected' : '' }}>
+                                    <option value="0" {{ $item->is_paid == 0 ? 'selected' : '' }}>
                                         {{ __('Belum Lunas') }}</option>
                                 </select>
                             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title_page', 'Class List')
+@section('title_page', 'Petugas List')
 
 @section('content')
     @push('styles')
@@ -16,17 +16,17 @@
         <div class="main-content">
             <section class="section">
                 <div class="section-header">
-                    <h1>{{ __('Master Kelas') }}</h1>
+                    <h1>{{ __('Master Petugas') }}</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Master Kelas') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Master Petugas') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">{{ __('Data Kelas') }}</h2>
+                        <h2 class="section-title">{{ __('Data Petugas') }}</h2>
                         <p class="section-lead">
-                            {{ __('Pilih dan Tambah Data Kelas') }}
+                            {{ __('Pilih dan Tambah Data Petugas') }}
                         </p>
                     </div>
                     <div class="action-content">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h4>{{ __('Tabel Kelas') }}</h4>
+                        <h4>{{ __('Tabel Petugas') }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -71,13 +71,13 @@
                                                     @can('access-petugasUpdate')
                                                         <div class="text-warning mx-2 cursor-pointer" data-toggle="modal"
                                                             data-target="#updateModal{{ $item->id }}">
-                                                            <i class="fas fa-pen" title="Edit Nama Kelas"></i>
+                                                            <i class="fas fa-pen" title="Edit Nama Petugas"></i>
                                                         </div>
                                                     @endcan
                                                     {{-- @can('access-petugasDelete') --}}
                                                     <div class="text-danger mx-2 cursor-pointer">
                                                         <i class="fas class-delete fa-trash-alt"
-                                                            data-card-id="{{ $item->id }}" title="Delete Kelas"></i>
+                                                            data-card-id="{{ $item->id }}" title="Delete Petugas"></i>
                                                     </div>
                                                     {{-- @endcan --}}
                                                 </div>
@@ -102,7 +102,7 @@
             <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Tambah Data Kelas</h5>
+                        <h5 class="modal-title">Tambah Data Petugas</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -136,7 +136,7 @@
                 <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Update Data Kelas</h5>
+                            <h5 class="modal-title">Update Data Petugas</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -187,7 +187,7 @@
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    Notiflix.Notify.success("Data kelas berhasil dihapus!", {
+                                    Notiflix.Notify.success("Data Petugas berhasil dihapus!", {
                                         timeout: 3000
                                     });
                                     location.reload();
@@ -223,7 +223,7 @@
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    Notiflix.Notify.success("Data kelas berhasil diperbarui!", {
+                                    Notiflix.Notify.success("Data Petugas berhasil diperbarui!", {
                                         timeout: 3000
                                     });
 

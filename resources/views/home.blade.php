@@ -47,6 +47,27 @@
                     @endcan
                 </div>
                 <div class="row">
+                    @can('access-recentDebite')
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-primary">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total Debit</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($sumDebit + $externalCount, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
+
                     @can('access-userSum')
                         <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                             <div class="card card-statistic-1">
@@ -207,7 +228,7 @@
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
-                                            Rp{{ number_format($sumDebit - $sumSpending, 0, ',', '.') }}
+                                            Rp{{ number_format($sumDebit - $sumSpending + $externalCount, 0, ',', '.') }}
                                         </h5>
                                     </div>
                                     <div class="py-2"></div>
@@ -216,7 +237,7 @@
                         </div>
                     @endcan
 
-                    @can('access-recentDebite')
+                    @can('access-recentBahan')
                         <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-success">
@@ -224,11 +245,11 @@
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Total Debit</h4>
+                                        <h4>Total Belanja Bahan dan Alat</h4>
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
-                                            Rp{{ number_format($sumDebit, 0, ',', '.') }}
+                                            Rp{{ number_format($totalBahan, 0, ',', '.') }}
                                         </h5>
                                     </div>
                                     <div class="py-2"></div>

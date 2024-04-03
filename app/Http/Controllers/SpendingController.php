@@ -41,7 +41,7 @@ class SpendingController extends Controller
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $sumDebit = Payment::where('attribute_id', $id)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->where('status', 'Paid')->sum('price');
-        $sumSpending = Spending::where('attribute_id', $id)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->where('spending_type',1)->sum('spending_price');
+        $sumSpending = Spending::where('attribute_id', $id)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->sum('spending_price');
         $spendings = Spending::select('id','spending_desc','spending_price', 'spending_type','spending_date','vendor_id')
                                     ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
                                     ->orderBy("updated_at", "DESC")

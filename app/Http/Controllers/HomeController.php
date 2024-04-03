@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bahan;
 use App\Models\Debt;
 use App\Models\ExternalIncome;
 use App\Models\Spending;
@@ -43,6 +44,7 @@ class HomeController extends Controller
         // Menghitung total external income
         $externalCount = ExternalIncome::where('year_id', $activeYearId)
                                         ->orderBy("updated_at", "DESC")
+                                        ->where('year_id', $activeYearId)
                                         ->sum('income_price');
 
         // Menghitung total kredit dan atribut yang dibayar
@@ -56,9 +58,12 @@ class HomeController extends Controller
                                     ->where('status', 'Paid')
                                     ->sum('price');
 
+        $totalBahan = Bahan::where('year_id', $activeYearId)
+                                    ->sum('spending_price');
+
         // Menghitung total yang dibayarkan oleh pengguna saat ini
         $userId = Auth::user()->id;
-        $totalPaid =  Payment::where('user_id', $userId)->where('status', 'Paid')->sum('price');
+        $totalPaid =  Payment::where('user_id', $userId)->where('year_id', $activeYearId)->where('status', 'Paid')->sum('price');
 
         // Mengambil 5 pembayaran terbaru
         $credit = Payment::where('status', '!=', 'Unpaid')
@@ -85,7 +90,7 @@ class HomeController extends Controller
                                         ->limit(3)
                                         ->get();
 
-        return view('home', compact('classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years'));
+        return view('home', compact('totalBahan', 'classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years'));
     }
 
     public function getAdminCount()

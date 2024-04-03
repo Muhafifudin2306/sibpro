@@ -260,7 +260,8 @@
         </script>
         <script>
             document.querySelector('.submit').addEventListener('click', function() {
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin melakukan verifikasi pembayaran ?', 'Ya',
+                    'Tidak',
                     function() {
                         var selectedIds = [];
                         document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
@@ -275,6 +276,11 @@
 
                         // Dapatkan nilai petugas_id dari elemen select
                         var petugasId = document.getElementById('petugas_id').value;
+
+                        if (petugasId == '') {
+                            Notiflix.Notify.failure('Pilih Petugas Verifikator!');
+                            return;
+                        }
 
                         fetch('/payment/confirm', {
                                 method: 'POST',

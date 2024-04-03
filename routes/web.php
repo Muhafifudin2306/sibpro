@@ -91,6 +91,12 @@ Route::prefix('spending')->group(function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\SpendingController::class, 'destroyDebt'])->name('deleteDebt');
         Route::post('/update/{id}', [App\Http\Controllers\SpendingController::class, 'updateDebt'])->name('updateDebt');
     });
+    Route::prefix('bahan')->group(function () {
+        Route::get('/', [App\Http\Controllers\BahanController::class, 'index'])->name('bahanSpending');
+        Route::post('/store', [App\Http\Controllers\BahanController::class, 'store'])->name('storeBahan');
+        Route::delete('/delete/{id}', [App\Http\Controllers\BahanController::class, 'destroy'])->name('deleteBahan');
+        Route::post('/update/{id}', [App\Http\Controllers\BahanController::class, 'update'])->name('updateBahan');
+    });
 });
 
 Route::prefix('credit')->group(function () {
