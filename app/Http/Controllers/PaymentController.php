@@ -80,7 +80,7 @@ class PaymentController extends Controller
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-        $credit = Payment::orderBy("invoice_number", "DESC")
+        $credit = Payment::orderBy("updated_at", "DESC")
                     ->where('user_id', Auth::user()->id)
                     ->where('status', 'Paid')
                     ->where('year_id', $activeYearId)
