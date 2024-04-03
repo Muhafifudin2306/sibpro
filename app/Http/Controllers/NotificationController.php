@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use App\Models\StudentClass;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -16,7 +17,8 @@ class NotificationController extends Controller
     {
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $notification_list = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->get();
-        return view('notification', compact('notifications', 'notification_list'));
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+        return view('notification', compact('students','notifications', 'notification_list'));
     }
     public function store()
     {

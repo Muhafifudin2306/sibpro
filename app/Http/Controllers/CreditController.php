@@ -10,6 +10,7 @@ use App\Models\Credit;
 use App\Models\Notification;
 use App\Models\StudentClass;
 use App\Models\Payment;
+use App\Models\Petugas;
 use App\Models\Year;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -25,15 +26,22 @@ class CreditController extends Controller
 
     public function index()
     {
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
         $credit = Payment::orderBy("user_id", "DESC")
+                    ->where('status','!=', 'Paid')
+                    ->where('year_id', $activeYearId)
                     ->get();
+
+        $petugas = Petugas::orderBy("updated_at", "DESC")->get();
         $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
-        return view('credit.index', compact('students', 'notifications', 'studentClasses','credit','years'));
+        return view('credit.index', compact('petugas','students', 'notifications', 'studentClasses','credit','years'));
     }
+
 
     public function addPage()
     {

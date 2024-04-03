@@ -204,7 +204,7 @@
                             });
 
                         if (selectedIds.length === 0) {
-                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran online');
+                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
                             return;
                         }
 

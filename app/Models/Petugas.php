@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StudentClass extends Model
+class Petugas extends Model
 {
-    protected $table = "student_classes";
+    protected $table = "petugas";
     protected $fillable = [
-        'uuid',
-        'class_name',
+        'name',
+        'signature',
     ];
 
     public function users()

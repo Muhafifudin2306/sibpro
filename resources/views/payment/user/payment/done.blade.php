@@ -1,12 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title_page', 'All Transaction')
+@section('title_page', 'Pembayaran Berhasil')
 
 @section('content')
     @push('styles')
-        @can('access-classList')
-            <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-        @endcan
+        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
     @endpush
 
     <div class="main-wrapper main-wrapper-1">
@@ -17,38 +15,34 @@
             <section class="section">
                 <div class="section-header d-flex justify-content-lg-between">
                     <div class="title">
-                        <h1>{{ __('Data Tagihan Siswa') }}</h1>
+                        <h1>{{ __('Pembayaran Berhasil') }}</h1>
                     </div>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('Pemasukan') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Tagihan Siswa') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Pembayaran Berhasil') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">{{ __('Data Tagihan Siswa') }}</h2>
+                        <h2 class="section-title">{{ __('Pembayaran Berhasil') }}</h2>
                         <p class="section-lead">
-                            {{ __('Lihat kumpulan pembayaran SPP dan Daftar Ulang di semester ini') }}
+                            {{ __('Lihat kumpulan transaksi dan unduh kwitansi pembayaran') }}
                         </p>
                     </div>
-                    {{-- <div class="action-content">
-                        <button class="btn btn-warning">{{ __('Print Data') }}</button>
-                    </div> --}}
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h4>{{ __('Tabel Data Tagihan Siswa') }}</h4>
+                        <h4>{{ __('Tabel Data Transaksi') }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped" id="table-tagihan-vendor">
+                            <table class="table table-striped" id="table-spp">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">{{ __('No') }}</th>
+                                        <th>{{ __('No') }}</th>
                                         <th>{{ __('ID Transaksi') }}</th>
                                         <th>{{ __('Pembayaran') }}</th>
-                                        <th>{{ __('Tipe Pembayaran') }}</th>
+                                        <th>{{ __('Tipe') }}</th>
                                         <th>{{ __('Nama Siswa') }}</th>
                                         <th>{{ __('Nominal Pembayaran') }}</th>
                                         <th>{{ __('Verifikator') }}</th>
@@ -62,9 +56,7 @@
                                     @endphp
                                     @foreach ($credit as $item)
                                         <tr>
-                                            <td class="text-center">
-                                                {{ $no++ }}
-                                            </td>
+                                            <td>{{ $no++ }}</td>
                                             <td>{{ $item->invoice_number }}</td>
                                             @if ($item->credit == null)
                                                 <td>{{ $item->attribute->attribute_name }}</td>
@@ -72,14 +64,14 @@
                                                 <td>{{ $item->credit->credit_name }}</td>
                                             @endif
                                             <td>{{ $item->type }}</td>
-                                            <td class="font-weight-600">{{ $item->user->name }}</td>
+                                            <td>{{ $item->user->name }}</td>
                                             <td>
                                                 Rp{{ number_format($item->price, 0, ',', '.') }}
                                             </td>
                                             <td>{{ $item->petugas->name }}</td>
                                             @if ($item->status == 'Paid')
                                                 <td>
-                                                    <div class="badge badge-success">Lunas</div>
+                                                    <div class="badge badge-success">{{ __('Lunas') }}</div>
                                                 </td>
                                             @else
                                                 <td>
@@ -106,34 +98,5 @@
     @push('scripts')
         <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
-        <script>
-            function updateYear() {
-                const form = document.getElementById('updateYearForm');
-                const formData = new FormData(form);
-
-                fetch('/current-year', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Terjadi kesalahan');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        Notiflix.Notify.success(data.message, {
-                            timeout: 3000
-                        });
-                        location.reload();
-                    })
-                    .catch(error => {
-                        Notiflix.Notify.failure('Error: Data tidak ditemukan!');
-                    });
-            }
-        </script>
     @endpush
 @endsection

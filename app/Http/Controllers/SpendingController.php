@@ -21,9 +21,10 @@ class SpendingController extends Controller
     }
     public function indexAttribute()
     {
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $attributes = Attribute::select('attribute_name','slug')->where('attribute_type',1)->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('spending.attribute.index', compact('attributes','notifications'));
+        return view('spending.attribute.index', compact('students','attributes','notifications'));
     }
 
     public function detailAttribute($slug)
@@ -37,6 +38,7 @@ class SpendingController extends Controller
         $id = $data->id;
 
         $attribute = Attribute::find($id);
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $sumDebit = Payment::where('attribute_id', $id)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->where('status', 'Paid')->sum('price');
         $sumSpending = Spending::where('attribute_id', $id)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->where('spending_type',1)->sum('spending_price');
@@ -54,7 +56,7 @@ class SpendingController extends Controller
 
         $vendors = Vendor::select('id','vendor_name')->orderBy("updated_at", "DESC")->get();
         $years = Year::orderBy("updated_at", "DESC")->get();
-        return view('spending.attribute.detail', compact('debts','sumDebt','vendors','years','attribute','notifications','sumDebit','sumSpending','spendings'));
+        return view('spending.attribute.detail', compact('students','debts','sumDebt','vendors','years','attribute','notifications','sumDebit','sumSpending','spendings'));
     }
     public function storeSpending(Request $request)
     {

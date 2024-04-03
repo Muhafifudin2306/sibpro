@@ -21,8 +21,7 @@
                     </div>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('Pemasukan') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Tagihan Siswa') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Riwayat Transaksi') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
@@ -65,7 +64,7 @@
                                             <td class="text-center">
                                                 {{ $no++ }}
                                             </td>
-                                            <td>{{ $item->invoice_number }}</td>
+                                            <td>{{ $item->invoice_number ?? '-' }}</td>
                                             @if ($item->credit == null)
                                                 <td>{{ $item->attribute->attribute_name }}</td>
                                             @elseif($item->credit != null)
@@ -76,7 +75,7 @@
                                             <td>
                                                 Rp{{ number_format($item->price, 0, ',', '.') }}
                                             </td>
-                                            <td>{{ $item->petugas->name }}</td>
+                                            <td>{{ $item->petugas->name ?? '-' }}</td>
                                             @if ($item->status == 'Paid')
                                                 <td>
                                                     <div class="badge badge-success">Lunas</div>

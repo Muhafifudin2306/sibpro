@@ -93,17 +93,21 @@ Route::prefix('spending')->group(function () {
     });
 });
 
+Route::prefix('credit')->group(function () {
+    Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
+    Route::get('/add', [App\Http\Controllers\CreditController::class, 'addPage'])->name('addCredit');
+    Route::get('/generate', [App\Http\Controllers\CreditController::class, 'generateCredit'])->name('generateCredit');
+    Route::post('/store', [App\Http\Controllers\CreditController::class, 'storeSPP'])->name('storeSPP');
+    Route::get('/detail/{uuid}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
+    Route::get('/detail/student/{uuid}', [App\Http\Controllers\CreditController::class, 'billingStudent'])->name('billingStudent');
+    Route::get('/payment/{uuid}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
+});
+
+Route::prefix('transaction')->group(function () {
+    Route::get('/recent', [App\Http\Controllers\PaymentController::class, 'allTransaction'])->name('allTransaction');
+});
 
 Route::prefix('income')->group(function () {
-    Route::prefix('credit')->group(function () {
-        Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
-        Route::get('/add', [App\Http\Controllers\CreditController::class, 'addPage'])->name('addCredit');
-        Route::get('/generate', [App\Http\Controllers\CreditController::class, 'generateCredit'])->name('generateCredit');
-        Route::post('/store', [App\Http\Controllers\CreditController::class, 'storeSPP'])->name('storeSPP');
-        Route::get('/detail/{uuid}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
-        Route::get('/detail/student/{uuid}', [App\Http\Controllers\CreditController::class, 'billingStudent'])->name('billingStudent');
-        Route::get('/payment/{uuid}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
-    });
 
     Route::prefix('enrollment')->group(function () {
         Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index'])->name('enrollment');
@@ -273,4 +277,15 @@ Route::prefix('cart')->group(function () {
 
 Route::prefix('payment')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPayment']);
+    Route::post('/confirm', [App\Http\Controllers\PaymentController::class, 'confirmPayment']);
+});
+
+Route::prefix('payment-done')->group(function () {
+    Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPaymentDone']);
+});
+
+Route::prefix('petugas')->group(function () {
+    Route::get('/', [App\Http\Controllers\PetugasController::class, 'index']);
+    Route::post('/add', [App\Http\Controllers\PetugasController::class, 'store'])->name('storePetugas');
+    Route::delete('/delete/{id}', [App\Http\Controllers\PetugasController::class, 'destroy'])->name('deletePetugas');
 });

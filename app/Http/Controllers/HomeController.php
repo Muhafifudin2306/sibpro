@@ -46,19 +46,19 @@ class HomeController extends Controller
                                         ->sum('income_price');
 
         // Menghitung total kredit dan atribut yang dibayar
-        $totalCredit = Payment::where('type', '1')
+        $totalCredit = Payment::where('type', 'SPP')
                                 ->where('year_id', $activeYearId)
                                 ->where('status', 'Paid')
                                 ->sum('price');
 
-        $totalAttribute = Payment::where('type', '2')
+        $totalAttribute = Payment::where('type', 'Daftar Ulang')
                                     ->where('year_id', $activeYearId)
                                     ->where('status', 'Paid')
                                     ->sum('price');
 
         // Menghitung total yang dibayarkan oleh pengguna saat ini
         $userId = Auth::user()->id;
-        $totalPaid =  Payment::where('user_id', $userId)->sum('price');
+        $totalPaid =  Payment::where('user_id', $userId)->where('status', 'Paid')->sum('price');
 
         // Mengambil 5 pembayaran terbaru
         $credit = Payment::where('status', '!=', 'Unpaid')

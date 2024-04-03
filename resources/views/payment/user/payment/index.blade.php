@@ -34,7 +34,7 @@
                     <div class="col-lg-5">
                         <div class="card">
                             <div class="card-header bg-warning">
-                                <h4>{{ __('Petunjuk Pembayaran Taghan') }}</h4>
+                                <h4>{{ __('Petunjuk Pembayaran Tagihan') }}</h4>
                             </div>
                             <div class="card-body">
                                 <p>1. Pilih item tagihan pada tabel <span class="font-weight-bold">"Daftar
@@ -94,7 +94,7 @@
                     <div class="col-lg-7">
                         <div class="card">
                             <div class="card-header">
-                                <h4>{{ __('Daftar Item Tagihan') }}</h4>
+                                <h4>{{ __('Daftar Tagihan Dipesan') }}</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -263,7 +263,7 @@
                             });
 
                         if (selectedIds.length === 0) {
-                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran online');
+                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
                             return;
                         }
 

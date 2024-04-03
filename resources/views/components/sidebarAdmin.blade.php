@@ -74,14 +74,14 @@
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-dollar-sign"></i>
                         <span>Pemasukan</span></a>
                     <ul class="dropdown-menu">
-                        <li class="{{ Request::segment(2) === 'enrollment' ? 'active' : '' }}"><a
+                        {{-- <li class="{{ Request::segment(2) === 'enrollment' ? 'active' : '' }}"><a
                                 href="{{ url('income/enrollment') }}">Manajemen Daftar Ulang</a></li>
                         <li class="{{ Request::segment(2) === 'credit' ? 'active' : '' }}"><a
-                                href="{{ url('income/credit') }}">Manajemen SPP</a></li>
+                                href="{{ url('income/credit') }}">Manajemen SPP</a></li> --}}
                         <li class="{{ Request::segment(2) === 'external' ? 'active' : '' }}"><a
                                 href="{{ url('income/external') }}">Dana Eksternal</a></li>
                         <li class="{{ Request::segment(2) === 'payment' ? 'active' : '' }}"><a
-                                href="{{ url('income/payment/all') }}">Riwayat Transaksi</a></li>
+                                href="{{ url('income/payment/all') }}">Tagihan Siswa</a></li>
                     </ul>
                 </li>
             @endcan
@@ -104,6 +104,25 @@
             <li><a class="nav-link" href="blank.html"><i class="fas fa-file-invoice-dollar"></i><span>Laporan
                         Konsolidasi</span></a>
             </li> --}}
+
+            @can('access-confirmCredit')
+                <li class="{{ Request::is('credit') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/credit') }}">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verifikasi Tagihan Siswa</span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('access-recentTransaction')
+                <li class="{{ Request::is('transaction*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/transaction/recent') }}">
+                        <i class="fas fa-clock"></i>
+                        <span>Riwayat Transaksi</span>
+                    </a>
+                </li>
+            @endcan
+
             @can('access-dataMaster')
                 <li class="menu-header">Master Data</li>
                 <li class="dropdown {{ Request::is('master*') ? 'active' : '' }}">
@@ -136,6 +155,13 @@
                         </a>
                     </li>
                 @endcan
+
+                <li class="{{ Request::is('petugas') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/petugas') }}">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Master Petugas</span>
+                    </a>
+                </li>
             @endcan
             <li class="menu-header">Utilitas</li>
             <li class="dropdown {{ Request::is('account*') ? 'active' : '' }}">

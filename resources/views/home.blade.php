@@ -15,34 +15,36 @@
                     <div class="title">
                         <h1>{{ __('Dashboard') }}</h1>
                     </div>
-                    <form id="updateYearForm">
-                        @csrf
-                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                            <div class="semester__active mr-2">
-                                <select class="form-control" name="year_semester">
-                                    @foreach ($years as $item)
-                                        <option value="{{ $item->year_semester }}"
-                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                            Semester: {{ $item->year_semester }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                    @can('access-changeYear')
+                        <form id="updateYearForm">
+                            @csrf
+                            <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                                <div class="semester__active mr-2">
+                                    <select class="form-control" name="year_semester">
+                                        @foreach ($years as $item)
+                                            <option value="{{ $item->year_semester }}"
+                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                Semester: {{ $item->year_semester }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="year__active mr-2">
+                                    <select class="form-control" name="year_name">
+                                        @foreach ($years as $item)
+                                            <option value="{{ $item->year_name }}"
+                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                Tahun Ajaran: {{ $item->year_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="button-submit">
+                                    <button type="button" onclick="updateYear()" class="btn btn-primary h-100">Simpan</button>
+                                </div>
                             </div>
-                            <div class="year__active mr-2">
-                                <select class="form-control" name="year_name">
-                                    @foreach ($years as $item)
-                                        <option value="{{ $item->year_name }}"
-                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                            Tahun Ajaran: {{ $item->year_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="button-submit">
-                                <button type="button" onclick="updateYear()" class="btn btn-primary h-100">Simpan</button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    @endcan
                 </div>
                 <div class="row">
                     @can('access-userSum')
@@ -55,7 +57,7 @@
                                     <div class="card-header">
                                         <h4>Total User</h4>
                                     </div>
-                                    <div class="card-body py-1">
+                                    <div class="card-body py-2">
                                         <div id="admin-count">
                                             <h5>{{ $adminCount }}</h5>
                                         </div>
@@ -66,7 +68,7 @@
                         </div>
                         <script>
                             function fetchAdminCount() {
-                                fetch('/get-admin-count') 
+                                fetch('/get-admin-count')
                                     .then(response => response.json())
                                     .then(data => {
                                         document.getElementById('admin-count').innerHTML = `<h5>${data.adminCount}</h5>`;
@@ -75,41 +77,43 @@
                             setInterval(fetchAdminCount, 300000);
                         </script>
                     @endcan
-
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="card card-statistic-1">
-                            <div class="bg-success">
-                                <div class="py-1"></div>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Dana Eksternal</h4>
+                    @can('access-externalIncomeSum')
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-success">
+                                    <div class="py-1"></div>
                                 </div>
-                                <div class="card-body py-1">
-                                    <div id="external-count">
-                                        <h5>Rp {{ number_format($externalCount, 0, ',', '.') }}</h5>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Dana Eksternal</h4>
                                     </div>
+                                    <div class="card-body py-2">
+                                        <div id="external-count">
+                                            <h5>Rp {{ number_format($externalCount, 0, ',', '.') }}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="py-2"></div>
                                 </div>
-                                <div class="py-2"></div>
                             </div>
                         </div>
-                    </div>
+                    @endcan
                     <script>
                         function fetchExternalCount() {
-                            fetch('/get-external-count') 
+                            fetch('/get-external-count')
                                 .then(response => response.json())
                                 .then(data => {
-                                document.getElementById('external-count').innerHTML = `<h5>Rp ${numberWithCommas(data.externalCount)}</h5>`;
-                            });
-                    }
+                                    document.getElementById('external-count').innerHTML =
+                                        `<h5>Rp ${numberWithCommas(data.externalCount)}</h5>`;
+                                });
+                        }
 
-                    setInterval(fetchExternalCount, 300000);
+                        setInterval(fetchExternalCount, 300000);
 
-                    fetchExternalCount();
+                        fetchExternalCount();
 
-                    function numberWithCommas(x) {
-                        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                    }
+                        function numberWithCommas(x) {
+                            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
                     </script>
 
                     @can('access-incomeSum')
@@ -122,7 +126,7 @@
                                     <div class="card-header">
                                         <h4>SPP</h4>
                                     </div>
-                                    <div class="card-body py-1">
+                                    <div class="card-body py-2">
                                         <div id="total-credit">
                                             <h5>Rp {{ number_format($totalCredit, 0, ',', '.') }}</h5>
                                         </div>
@@ -133,213 +137,233 @@
                         </div>
                         <script>
                             function fetchExternalCount() {
-                                fetch('/get-total-kredit') 
+                                fetch('/get-total-kredit')
                                     .then(response => response.json())
                                     .then(data => {
-                                    document.getElementById('total-kredit').innerHTML = `<h5>Rp ${numberWithCommas(data.externalCount)}</h5>`;
-                                });
-                        }
-    
-                        setInterval(fetchExternalCount, 300000);
-    
-                        fetchExternalCount();
-    
-                        function numberWithCommas(x) {
-                            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                        }
+                                        document.getElementById('total-kredit').innerHTML =
+                                            `<h5>Rp ${numberWithCommas(data.externalCount)}</h5>`;
+                                    });
+                            }
+
+                            setInterval(fetchExternalCount, 300000);
+
+                            fetchExternalCount();
+
+                            function numberWithCommas(x) {
+                                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                            }
                         </script>
                     @endcan
 
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="card card-statistic-1">
-                            <div class="bg-danger">
-                                <div class="py-1"></div>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Daftar Ulang</h4>
-                                </div>
-                                <div class="card-body py-1">
-                                    <h5>Rp {{ number_format($totalAttribute, 0, ',', '.') }}</h5>
-                                </div>
-                                <div class="py-2"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @can('access-paidSum')
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                    @can('access-allAttributeSum')
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-danger">
-                                    <i class="fas fa-dollar-sign"></i>
+                                    <div class="py-1"></div>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Total Pembayaran</h4>
+                                        <h4>Daftar Ulang</h4>
                                     </div>
-                                    <div class="card-body py-1">
+                                    <div class="card-body py-2">
+                                        <h5>Rp {{ number_format($totalAttribute, 0, ',', '.') }}</h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
+
+
+                    @can('access-paidSum')
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-success">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total Pembayaran Berhasil</h4>
+                                    </div>
+                                    <div class="card-body py-2">
                                         <h4>Rp {{ number_format($totalPaid, 0, ',', '.') }}</h4>
                                     </div>
+                                    <div class="py-2"></div>
                                 </div>
                             </div>
                         </div>
                     @endcan
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="card card-statistic-1">
-                            <div class="bg-primary">
-                                <div class="py-1"></div>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Sisa Saldo</h4>
+                    @can('access-recentBalance')
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-primary">
+                                    <div class="py-1"></div>
                                 </div>
-                                <div class="card-body py-1">
-                                    <h5>
-                                        Rp{{ number_format($sumDebit - $sumSpending, 0, ',', '.') }}
-                                    </h5>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Sisa Saldo</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($sumDebit - $sumSpending, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
                                 </div>
-                                <div class="py-2"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="card card-statistic-1">
-                            <div class="bg-success">
-                                <div class="py-1"></div>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Total Debit</h4>
-                                </div>
-                                <div class="card-body py-1">
-                                    <h5>
-                                        Rp{{ number_format($sumDebit, 0, ',', '.') }}
-                                    </h5>
-                                </div>
-                                <div class="py-2"></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="card card-statistic-1">
-                            <div class="bg-warning">
-                                <div class="py-1"></div>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Hutang</h4>
+                    @endcan
+
+                    @can('access-recentDebite')
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-success">
+                                    <div class="py-1"></div>
                                 </div>
-                                <div class="card-body py-1">
-                                    <h5>
-                                        Rp{{ number_format($sumDebt, 0, ',', '.') }}
-                                    </h5>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total Debit</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($sumDebit, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
                                 </div>
-                                <div class="py-2"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="card card-statistic-1">
-                            <div class="bg-danger">
-                                <div class="py-1"></div>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Total Kredit</h4>
-                                </div>
-                                <div class="card-body py-1">
-                                    <h5>
-                                        Rp{{ number_format($sumSpending, 0, ',', '.') }}
-                                    </h5>
-                                </div>
-                                <div class="py-2"></div>
                             </div>
                         </div>
-                    </div>
+                    @endcan
+
+                    @can('access-recentHutang')
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-warning">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Hutang</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($sumDebt, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
+
+                    @can('access-recentKredit')
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-danger">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total Kredit</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($sumSpending, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
                 </div>
 
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Transaksi Terbaru</h4>
-                                @if ($credit->isNotEmpty())
+                    @can('access-recentTransaction')
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Transaksi Terbaru</h4>
+                                    @if ($credit->isNotEmpty())
+                                        <div class="card-header-action">
+                                            <a href="{{ url('transaction/recent') }}" class="btn btn-danger">View More <i
+                                                    class="fas fa-chevron-right"></i></a>
+                                        </div>
+                                    @endif
+
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive table-invoice">
+                                        @if ($credit->isEmpty())
+                                            <p class="text-center">Belum ada transaksi pada periode ini</p>
+                                        @else
+                                            <table class="table table-striped">
+                                                <tr>
+                                                    <th>ID Transaksi</th>
+                                                    <th>Pembayaran</th>
+                                                    <th>Nama</th>
+                                                    <th>Status</th>
+                                                    <th>Tanggal</th>
+                                                </tr>
+                                                @foreach ($credit as $item)
+                                                    <tr>
+                                                        <td>{{ $item->invoice_number ?? '-' }}</td>
+                                                        @if ($item->credit == null)
+                                                            <td>{{ $item->attribute->attribute_name }}</td>
+                                                        @elseif($item->credit != null)
+                                                            <td>{{ $item->credit->credit_name }}</td>
+                                                        @endif
+                                                        <td>{{ $item->user->name }}</td>
+                                                        <td>
+                                                            @if ($item->status == 'Pending')
+                                                                <div class="badge badge-warning">{{ $item->status }}</div>
+                                                            @elseif($item->status == 'Paid')
+                                                                <div class="badge badge-success">{{ $item->status }}</div>
+                                                            @endif
+
+                                                        </td>
+                                                        <td>{{ $item->updated_at->format('F d, Y') }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
+                    @can('access-notification')
+                        <div class="col-lg-4 col-md-12 col-12 col-sm-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Aktivitas Terbaru</h4>
                                     <div class="card-header-action">
-                                        <a href="{{ url('/income/payment/all') }}" class="btn btn-danger">View More <i
+                                        <a href="{{ url('/notifications') }}" class="btn btn-primary">View More <i
                                                 class="fas fa-chevron-right"></i></a>
                                     </div>
-                                @endif
-
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive table-invoice">
-                                    @if ($credit->isEmpty())
-                                        <p class="text-center">Belum ada transaksi pada periode ini</p>
-                                    @else
-                                        <table class="table table-striped">
-                                            <tr>
-                                                <th>ID Transaksi</th>
-                                                <th>Pembayaran</th>
-                                                <th>Nama</th>
-                                                <th>Status</th>
-                                                <th>Tanggal</th>
-                                            </tr>
-                                            @foreach ($credit as $item)
-                                                <tr>
-                                                    <td>{{ $item->invoice_number }}</td>
-                                                    @if ($item->credit == null)
-                                                        <td>{{ $item->attribute->attribute_name }}</td>
-                                                    @elseif($item->credit != null)
-                                                        <td>{{ $item->credit->credit_name }}</td>
-                                                    @endif
-                                                    <td>{{ $item->user->name }}</td>
-                                                    <td>
-                                                        @if ($item->status == 'Pending')
-                                                            <div class="badge badge-warning">{{ $item->status }}</div>
-                                                        @elseif($item->status == 'Paid')
-                                                            <div class="badge badge-success">{{ $item->status }}</div>
-                                                        @endif
-
-                                                    </td>
-                                                    <td>{{ $item->updated_at->format('F d, Y') }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </table>
-                                    @endif
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-12 col-12 col-sm-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Aktivitas Terbaru</h4>
-                                <div class="card-header-action">
-                                    <a href="{{ url('/notifications') }}" class="btn btn-primary">View More <i
-                                            class="fas fa-chevron-right"></i></a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <ul class="list-unstyled list-unstyled-border">
-                                    @foreach ($notifications as $item)
-                                        <li class="media">
-                                            <img class="mr-3 rounded-circle" width="50"
-                                                src="assets/img/avatar/avatar-1.png" alt="avatar">
-                                            <div class="media-body">
-                                                <span class="text-small">{{ $item->notification_content }}</span>
-                                                <div class="media-title py-1">
-                                                    <span
-                                                        class="text-small text-muted">{{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</span>
+                                <div class="card-body">
+                                    <ul class="list-unstyled list-unstyled-border">
+                                        @foreach ($notifications as $item)
+                                            <li class="media">
+                                                <img class="mr-3 rounded-circle" width="50"
+                                                    src="assets/img/avatar/avatar-1.png" alt="avatar">
+                                                <div class="media-body">
+                                                    <span class="text-small">{{ $item->notification_content }}</span>
+                                                    <div class="media-title py-1">
+                                                        <span
+                                                            class="text-small text-muted">{{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endcan
                 </div>
             </section>
         </div>

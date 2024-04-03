@@ -1,14 +1,11 @@
 @extends('layouts.admin.app')
 
-@section('title_page', 'All Transaction')
+@section('title_page', 'Verifikasi Tagihan Siswa')
 
 @section('content')
     @push('styles')
-        @can('access-classList')
-            <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-        @endcan
+        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
     @endpush
-
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
@@ -17,126 +14,163 @@
             <section class="section">
                 <div class="section-header d-flex justify-content-lg-between">
                     <div class="title">
-                        <h1>{{ __('Data Transaksi') }}</h1>
+                        <h1>{{ __('Verifikasi Tagihan Siswa') }}</h1>
+                    </div>
+                    <div class="section-header-breadcrumb">
+                        <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
+                        <div class="breadcrumb-item active">{{ __('Verifikasi Tagihan Siswa') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">{{ __('Data Transaksi') }}</h2>
-                    </div>
-                    <div class="action-content">
-                        <button class="btn btn-primary generate">{{ __('+ Tambah Data') }}</button>
+                        <h2 class="section-title">{{ __('Verifikasi Tagihan Siswa') }}</h2>
+                        <p class="section-lead">
+                            {{ __('Pilih item dan lakukan pembayaran') }}
+                        </p>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h4>{{ __('Pembayaran SPP dan Daftar Ulang') }}</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <p class="font-weight-bold">Daftar Item</p>
+
+                <div class="row flex-row-reverse">
+                    <div class="col-lg-5">
+                        <div class="card">
+                            <div class="card-header bg-warning">
+                                <h4>{{ __('Petunjuk Verifikasi Tagihan Siswa') }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <p>1. Pilih item tagihan pada tabel <span class="font-weight-bold">"Daftar Item
+                                        Tagihan"</span> </p>
+                                <p>2. Untuk siswa yang telah melakukan pemesanan, maka item tagihan akan memiliki status
+                                    <span class="font-weight-bold">"Pending"</span>
+                                </p>
+                                <p>2. Untuk siswa yang belum melakukan pemesanan, maka item tagihan akan memiliki status
+                                    <span class="font-weight-bold">"Belum Lunas"</span>
+                                </p>
+                                <p>2. Tabel <span class="font-weight-bold">"Estimasi Pembayaran"</span> akan menghitung
+                                    total
+                                    tagihan </p>
+                                <p>3. Keduanya dapat dilanjutkan proses pembayarannya dan tekan tombol <span
+                                        class="font-weight-bold">"Konfirmasi Pembayaran"</span> ketika telah menerima uang
+                                    tunai dari siswa
+                                    maka </p>
+                                <p>4. Tidak lupa memasukkan data <span class="font-weight-bold">"Petugas"</span> penerima
+                                    transaksi saat itu</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{ __('Estimasi Pembayaran') }}</h4>
+                            </div>
+                            <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-hover table-md">
+                                    <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>Pembayaran</th>
-                                                <th>Tipe Pembayaran</th>
-                                                <th>Nominal Pembayaran</th>
+                                                <th>Tipe</th>
+                                                <th>Nominal</th>
                                             </tr>
                                         </thead>
-
-                                        <tbody id="selectedItems">
+                                        <tbody class="selectedItems"></tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                                <td><span id="totalPrice">Rp0</span></td>
+                                            </tr>
                                         </tbody>
-
-                                        <tr>
-                                            <td colspan="2" class="text-center font-weight-bold">Total</td>
-                                            <td><span id="totalPrice">Rp0</span></td>
-                                        </tr>
                                     </table>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <p class="font-weight-bold">Pilih Metode Pembayaran</p>
-                                <div class="mb-3">
-                                    <button class="btn btn-warning w-100"> Bayar Langsung </button>
+                                <div class="form-group">
+                                    <label for="signature">Petugas</label>
+                                    <select name="petugas_id" id="petugas_id" required class="form-control">
+                                        <option value="">Pilih Petugas</option>
+                                        @foreach ($petugas as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="mb-3">
-                                    <button class="btn btn-info w-100"> Bayar Online </button>
-                                </div>
+
+                                <button class="btn btn-primary w-100 submit"> Konfirmasi Pembayaran
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Tabel Data Transaksi') }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-spp">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">
-                                                <div class="custom-checkbox custom-control">
-                                                    <input type="checkbox" data-checkbox-role="dad"
-                                                        data-checkboxes="mygroup" class="custom-control-input"
-                                                        id="checkbox-all">
-                                                    <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
-                                                </div>
-                                            </th>
-                                            <th>{{ __('ID Transaksi') }}</th>
-                                            <th>{{ __('Pembayaran') }}</th>
-                                            <th>{{ __('Tipe') }}</th>
-                                            <th>{{ __('Nama Siswa') }}</th>
-                                            <th>{{ __('Nominal Pembayaran') }}</th>
-                                            <th>{{ __('Status') }}</th>
-                                            <th>{{ __('Tanggal') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($credit as $item)
+
+                    <div class="col-lg-7">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{ __('Daftar Item Tagihan') }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-spp">
+                                        <thead>
                                             <tr>
-                                                <td>
+                                                <th class="text-center">
                                                     <div class="custom-checkbox custom-control">
-                                                        <input type="checkbox" data-checkboxes="mygroup"
-                                                            class="custom-control-input" id="checkbox-{{ $item->uuid }}"
-                                                            data-price="{{ $item->price }}"
-                                                            data-type="{{ $item->type }}"
-                                                            @if ($item->credit == null) data-label="{{ $item->attribute->attribute_name }}"
-                                                            @elseif($item->credit != null)
-                                                            data-label="{{ $item->credit->credit_name }}" @endif
-                                                            onchange="updateTotalPrice()">
-                                                        <label for="checkbox-{{ $item->uuid }}"
+                                                        <input type="checkbox" data-checkbox-role="dad"
+                                                            data-checkboxes="mygroup" class="custom-control-input"
+                                                            id="checkbox-all">
+                                                        <label for="checkbox-all"
                                                             class="custom-control-label">&nbsp;</label>
                                                     </div>
-                                                </td>
-                                                <td>{{ $item->invoice_number }}</td>
-                                                @if ($item->credit == null)
-                                                    <td>{{ $item->attribute->attribute_name }}</td>
-                                                @elseif($item->credit != null)
-                                                    <td>{{ $item->credit->credit_name }}</td>
-                                                @endif
-                                                <td>{{ $item->type }}</td>
-                                                <td>{{ $item->user->name }}</td>
-                                                <td>
-                                                    Rp{{ number_format($item->price, 0, ',', '.') }}
-                                                </td>
-                                                @if ($item->status == 'Paid')
-                                                    <td>
-                                                        <div class="badge badge-success">{{ $item->status }}</div>
-                                                    </td>
-                                                @else
-                                                    <td>
-                                                        <div class="badge badge-warning">{{ $item->status }}</div>
-                                                    </td>
-                                                @endif
-                                                <td>{{ $item->updated_at->format('F d, Y') }}</td>
+                                                </th>
+                                                <th>{{ __('Pembayaran') }}</th>
+                                                <th>{{ __('Tipe') }}</th>
+                                                <th>{{ __('Nama Siswa') }}</th>
+                                                <th>{{ __('Nominal') }}</th>
+                                                <th>{{ __('Status') }}</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($credit as $item)
+                                                <tr>
+                                                    <td>
+                                                        <div class="custom-checkbox custom-control">
+                                                            <input type="checkbox" data-checkboxes="mygroup"
+                                                                class="custom-control-input"
+                                                                id="checkbox-{{ $item->uuid }}"
+                                                                data-price="{{ $item->price }}"
+                                                                data-type="{{ $item->type }}"
+                                                                @if ($item->credit == null) data-label="{{ $item->attribute->attribute_name }}"
+                                                            @elseif($item->credit != null)
+                                                            data-label="{{ $item->credit->credit_name }}" @endif
+                                                                onchange="updateTotalPrice()"
+                                                                data-id="{{ $item->id }}">
+                                                            <label for="checkbox-{{ $item->uuid }}"
+                                                                class="custom-control-label">&nbsp;</label>
+                                                        </div>
+                                                    </td>
+                                                    @if ($item->credit == null)
+                                                        <td>{{ $item->attribute->attribute_name }}</td>
+                                                    @elseif($item->credit != null)
+                                                        <td>{{ $item->credit->credit_name }}</td>
+                                                    @endif
+                                                    <td>{{ $item->type }}</td>
+                                                    <td>{{ $item->user->name }}</td>
+                                                    <td>
+                                                        Rp{{ number_format($item->price, 0, ',', '.') }}
+                                                    </td>
+                                                    @if ($item->status == 'Paid')
+                                                        <td>
+                                                            <div class="badge badge-success">{{ $item->status }}
+                                                            </div>
+                                                        </td>
+                                                    @elseif ($item->status == 'Unpaid')
+                                                        <td>
+                                                            <div class="badge badge-danger">Belum Lunas
+                                                            </div>
+                                                        </td>
+                                                    @else
+                                                        <td>
+                                                            <div class="badge badge-warning">{{ $item->status }}
+                                                            </div>
+                                                        </td>
+                                                    @endif
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -148,6 +182,50 @@
                 {{ __('Development by Muhammad Afifudin') }}</a>
             </div>
         </footer>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="offlineModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('Instruksi Pembayaran Offline') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                    <div class="d-flex justify-content-center mb-3">
+                        <dotlottie-player src="https://lottie.host/e90dedc4-f416-4022-a3b2-c3c2c67728dc/vt2riNUNbu.json"
+                            background="transparent" speed="1" style="width: 200px; height: 200px;" loop
+                            autoplay></dotlottie-player>
+                    </div>
+                    <div class="py-3">
+                        <p>1. Pergi menuju ke Ruang TU dan menemui petugas yang sedang bertugas melayani pembayaran siswa
+                        </p>
+                        <p>2. Ajukan pembayaran untuk item tagihan dengan rincian </p>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Pembayaran</th>
+                                    <th>Tipe</th>
+                                    <th>Nominal</th>
+                                </tr>
+                            </thead>
+                            <tbody class="selectedItems"></tbody>
+                        </table>
+                        <p>3. Lakukan pembayaran dengan nominal pembayaran <span class="font-weight-bold"
+                                id="totalPricePay">Rp0</span></p>
+                        <p>4. Pembayaran selesai dan cek laman <span class="font-weight-bold">Pembayaran Berhasil</span>
+                            untuk mengunduh nota pembayaran</p>
+                    </div>
+                </div>
+                <div class="modal-footer bg-whitesmoke br">
+                    <button type="button" class="btn btn-danger"
+                        data-dismiss="modal">{{ __('Tutup Instruksi') }}</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     @push('scripts')
@@ -181,23 +259,63 @@
             }
         </script>
         <script>
-            // Fungsi untuk memperbarui total harga
-            function updateTotalPrice() {
-                // Ambil semua checkbox yang dicentang, kecuali checkbox "Select All"
-                var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)');
+            document.querySelector('.submit').addEventListener('click', function() {
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
+                    function() {
+                        var selectedIds = [];
+                        document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
+                            function(checkbox) {
+                                selectedIds.push(checkbox.getAttribute('data-id'));
+                            });
 
-                // Inisialisasi total harga
+                        if (selectedIds.length === 0) {
+                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
+                            return;
+                        }
+
+                        // Dapatkan nilai petugas_id dari elemen select
+                        var petugasId = document.getElementById('petugas_id').value;
+
+                        fetch('/payment/confirm', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    transactions: selectedIds,
+                                    petugas_id: petugasId // Sisipkan nilai petugas_id ke dalam objek
+                                })
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal melakukan pembayaran online');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                Notiflix.Notify.success(data.message);
+                                location.reload();
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure(error
+                                    .message);
+                            });
+                    });
+            });
+        </script>
+
+        <script>
+            function updateTotalPrice() {
+                var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)');
                 var totalPrice = 0;
                 var labelItem = '';
 
-                // Loop melalui checkbox yang dicentang
                 checkboxes.forEach(function(checkbox) {
-                    // Ambil nilai harga dari atribut data-price
                     var price = parseFloat(checkbox.getAttribute('data-price'));
                     var label = checkbox.getAttribute('data-label');
                     var type = checkbox.getAttribute('data-type');
                     var priceItem = parseFloat(checkbox.getAttribute('data-price'));
-                    // Tambahkan harga ke total harga
                     totalPrice += price;
 
                     labelItem += '<tr>' + '<td>' + label + '</td>' + '<td>' + type + '</td>' + '<td>' + 'Rp' +
@@ -205,55 +323,48 @@
                         '</td>' + '</tr>';
                 });
 
-                // Tampilkan total harga di luar loop foreach
-                // Tampilkan daftar elemen yang dipilih di luar loop foreach
-                var selectedItemsTable = document.getElementById('selectedItems');
-                selectedItemsTable.innerHTML = labelItem;
+                var selectedItemsTables = document.getElementsByClassName('selectedItems');
+                for (var i = 0; i < selectedItemsTables.length; i++) {
+                    selectedItemsTables[i].innerHTML = labelItem;
+                }
 
                 var totalPriceSpan = document.getElementById('totalPrice');
                 totalPriceSpan.textContent = 'Rp' + totalPrice
                     .toLocaleString();
+
+                var totalPricePay = document.getElementById('totalPricePay');
+                totalPricePay.textContent = 'Rp' + totalPrice
+                    .toLocaleString();
             }
 
-            // Ambil checkbox "Select All"
             var checkboxAll = document.getElementById('checkbox-all');
 
-            // Tambahkan event listener untuk checkbox "Select All"
             checkboxAll.addEventListener('change', function() {
-                // Ambil semua checkbox dalam grup
                 var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
 
-                // Tentukan apakah checkbox "Select All" dicentang atau tidak
                 var isChecked = checkboxAll.checked;
 
-                // Setel status centang pada semua checkbox dalam grup
                 checkboxes.forEach(function(checkbox) {
                     checkbox.checked = isChecked;
                 });
 
-                // Perbarui total harga
                 updateTotalPrice();
             });
 
-            // // Ambil semua checkbox dalam grup
             var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
 
-            // // Tambahkan event listener untuk setiap checkbox dalam grup
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', updateTotalPrice);
             });
         </script>
         <script>
-            // Simpan status checkbox di luar DOM
             var checkboxStatus = {};
 
-            // Fungsi untuk memperbarui status checkbox saat checkbox diubah
             function updateCheckboxStatus(checkbox) {
                 var id = checkbox.getAttribute('id');
                 checkboxStatus[id] = checkbox.checked;
             }
 
-            // Fungsi untuk menandai ulang checkbox sesuai dengan status yang disimpan
             function restoreCheckboxStatus() {
                 var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
                 checkboxes.forEach(function(checkbox) {
@@ -266,12 +377,10 @@
                 });
             }
 
-            // Ketika halaman dimuat, panggil fungsi untuk menandai ulang checkbox
             document.addEventListener('DOMContentLoaded', function() {
                 restoreCheckboxStatus();
             });
 
-            // Tambahkan event listener untuk setiap checkbox dalam grup
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', function() {
                     updateTotalPrice();
@@ -279,45 +388,7 @@
                 });
             });
         </script>
-        <script>
-            const generateButton = document.querySelectorAll('.generate');
 
-            generateButton.forEach(button => {
-                button.addEventListener('click', function() {
-                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin Melanjutkan Proses ini?', 'Ya',
-                        'Batal',
-                        function() {
-                            // Show loading animation only if user clicks "Ya"
-                            Notiflix.Loading.standard('Proses sedang berlangsung, harap tunggu...');
-
-                            fetch(`/income/credit/generate/`, {
-                                    method: 'GET',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    Notiflix.Notify.success("Data atribut SPP berhasil dibuat!", {
-                                        timeout: 3000
-                                    });
-
-                                    // Remove loading animation after the process is complete
-                                    Notiflix.Loading.remove();
-
-                                    // Reload the page
-                                    location.reload();
-                                })
-                                .catch(error => {
-                                    Notiflix.Notify.failure('Error:', error);
-
-                                    // Remove loading animation in case of error
-                                    Notiflix.Loading.remove();
-                                });
-                        });
-                });
-            });
-        </script>
         <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
     @endpush

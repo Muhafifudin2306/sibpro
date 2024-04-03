@@ -19,7 +19,8 @@ class Payment extends Model
         'class_id',
         'year_id',
         'status',
-        'price'
+        'price',
+        'petugas_id'
     ];
 
     public function credit()
@@ -35,6 +36,11 @@ class Payment extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function petugas()
+    {
+        return $this->belongsTo(Petugas::class, 'petugas_id', 'id');
     }
 
     public function year()
