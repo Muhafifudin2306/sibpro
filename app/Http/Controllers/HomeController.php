@@ -64,7 +64,9 @@ class HomeController extends Controller
         // Menghitung total yang dibayarkan oleh pengguna saat ini
         $userId = Auth::user()->id;
         $totalPaid =  Payment::where('user_id', $userId)->where('year_id', $activeYearId)->where('status', 'Paid')->sum('price');
+        $totalUnpaidSPP =  Payment::where('user_id', $userId)->where('year_id', $activeYearId)->where('type', 'SPP')->where('status', '!=','Paid')->sum('price');
 
+        $totalUnpaidDU =  Payment::where('user_id', $userId)->where('year_id', $activeYearId)->where('type', 'Daftar Ulang')->where('status', '!=','Paid')->sum('price');
         // Mengambil 5 pembayaran terbaru
         $credit = Payment::where('status', '!=', 'Unpaid')
                             ->where('year_id', $activeYearId)
@@ -90,7 +92,12 @@ class HomeController extends Controller
                                         ->limit(3)
                                         ->get();
 
-        return view('home', compact('totalBahan', 'classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years'));
+        $credits = Payment::orderBy("updated_at", "DESC")
+                                        ->where('user_id', Auth::user()->id)
+                                        ->where('year_id', $activeYearId)
+                                        ->get();
+
+        return view('home', compact('totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
     }
 
     public function getAdminCount()

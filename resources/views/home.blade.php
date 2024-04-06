@@ -3,6 +3,10 @@
 @section('title_page', 'Dashboard')
 
 @section('content')
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
+    @endpush
+
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
         <x-navbarAdmin :notifications="$notifications"></x-navbarAdmin>
@@ -15,6 +19,32 @@
                     <div class="title">
                         <h1>{{ __('Dashboard') }}</h1>
                     </div>
+
+                    @can('access-currentYear')
+                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                            <div class="semester__active mr-2">
+                                <select class="form-control" name="year_semester" disabled>
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_semester }}"
+                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                            Semester: {{ $item->year_semester }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="year__active mr-2">
+                                <select class="form-control" name="year_name" disabled>
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_name }}"
+                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                            Tahun Ajaran: {{ $item->year_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endcan
+
                     @can('access-changeYear')
                         <form id="updateYearForm">
                             @csrf
@@ -118,24 +148,6 @@
                             </div>
                         </div>
                     @endcan
-                    <script>
-                        function fetchExternalCount() {
-                            fetch('/get-external-count')
-                                .then(response => response.json())
-                                .then(data => {
-                                    document.getElementById('external-count').innerHTML =
-                                        `<h5>Rp ${numberWithCommas(data.externalCount)}</h5>`;
-                                });
-                        }
-
-                        setInterval(fetchExternalCount, 300000);
-
-                        fetchExternalCount();
-
-                        function numberWithCommas(x) {
-                            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                        }
-                    </script>
 
                     @can('access-incomeSum')
                         <div class="col-lg-3 col-md-4 col-sm-6 col-12">
@@ -197,17 +209,49 @@
 
 
                     @can('access-paidSum')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-success">
                                     <div class="py-1"></div>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Total Pembayaran Berhasil</h4>
+                                        <h4>Total Pembayaran Lunas</h4>
                                     </div>
                                     <div class="card-body py-2">
                                         <h4>Rp {{ number_format($totalPaid, 0, ',', '.') }}</h4>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-danger">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total SPP Belum Lunas</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h4>Rp {{ number_format($totalUnpaidSPP, 0, ',', '.') }}</h4>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-warning">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Daftar Ulang Belum Lunas</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h4>Rp {{ number_format($totalUnpaidDU, 0, ',', '.') }}</h4>
                                     </div>
                                     <div class="py-2"></div>
                                 </div>
@@ -338,10 +382,10 @@
                                                         @endif
                                                         <td>{{ $item->user->name }}</td>
                                                         <td>
-                                                            @if ($item->status == 'Pending')
+                                                            @if ($item->status == 'Paid')
+                                                                <div class="badge badge-success">Lunas</div>
+                                                            @elseif($item->status != 'Paid')
                                                                 <div class="badge badge-warning">{{ $item->status }}</div>
-                                                            @elseif($item->status == 'Paid')
-                                                                <div class="badge badge-success">{{ $item->status }}</div>
                                                             @endif
 
                                                         </td>
@@ -386,6 +430,55 @@
                         </div>
                     @endcan
                 </div>
+
+                @can('access-paidList')
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h4>{{ __('Tabel Kewajiban Pembayaran Siswa') }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-spp">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px">{{ __('No') }}</th>
+                                            <th>{{ __('Pembayaran') }}</th>
+                                            <th>{{ __('Tipe') }}</th>
+                                            <th>{{ __('Nominal') }}</th>
+                                            <th>{{ __('Status') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($credits as $item)
+                                            <tr>
+                                                <td>{{ $no++ }}</td>
+                                                @if ($item->credit == null)
+                                                    <td>{{ $item->attribute->attribute_name }}</td>
+                                                @elseif($item->credit != null)
+                                                    <td>{{ $item->credit->credit_name }}</td>
+                                                @endif
+                                                <td>{{ $item->type }}</td>
+                                                <td>
+                                                    Rp{{ number_format($item->price, 0, ',', '.') }}
+                                                </td>
+                                                <td>
+                                                    @if ($item->status == 'Paid')
+                                                        <div class="badge badge-success">Lunas</div>
+                                                    @else
+                                                        <div class="badge badge-danger">Belum Lunas</div>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @endcan
             </section>
         </div>
         <footer class="main-footer">
@@ -424,5 +517,8 @@
         }
     </script>
 
-
+    @push('scripts')
+        <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+        <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
+    @endpush
 @endsection

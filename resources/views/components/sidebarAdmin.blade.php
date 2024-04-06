@@ -50,7 +50,7 @@
             @endcan
 
             @can('access-doneStudentPayment')
-                <li class="{{ Request::is('payment-done') ? 'active' : '' }}">
+                <li class="{{ Request::is('payment-done*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('/payment-done') }}">
                         <i class="fas fa-check-circle"></i>
                         <span>Pembayaran Berhasil</span>

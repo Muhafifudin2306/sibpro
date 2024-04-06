@@ -32,9 +32,6 @@
                             {{ __('Lihat kumpulan pembayaran SPP dan Daftar Ulang di semester ini') }}
                         </p>
                     </div>
-                    {{-- <div class="action-content">
-                        <button class="btn btn-warning">{{ __('Print Data') }}</button>
-                    </div> --}}
                 </div>
                 <div class="card">
                     <div class="card-header">

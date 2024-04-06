@@ -28,6 +28,11 @@
                             {{ __('Pilih item dan lakukan pembayaran') }}
                         </p>
                     </div>
+                    @can('access-generatePayment')
+                        <div class="action-content">
+                            <button class="btn btn-primary generate">{{ __('+ Buat Data Tagihan') }}</button>
+                        </div>
+                    @endcan
                 </div>
 
                 <div class="row flex-row-reverse">
@@ -391,6 +396,46 @@
                 checkbox.addEventListener('change', function() {
                     updateTotalPrice();
                     updateCheckboxStatus(checkbox);
+                });
+            });
+        </script>
+
+        <script>
+            const generateButton = document.querySelectorAll('.generate');
+
+            generateButton.forEach(button => {
+                button.addEventListener('click', function() {
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin Melanjutkan Proses ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            // Show loading animation only if user clicks "Ya"
+                            Notiflix.Loading.standard('Proses sedang berlangsung, harap tunggu...');
+
+                            fetch(`/credit/generate/`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success("Data atribut SPP berhasil dibuat!", {
+                                        timeout: 3000
+                                    });
+
+                                    // Remove loading animation after the process is complete
+                                    Notiflix.Loading.remove();
+
+                                    // Reload the page
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
+
+                                    // Remove loading animation in case of error
+                                    Notiflix.Loading.remove();
+                                });
+                        });
                 });
             });
         </script>

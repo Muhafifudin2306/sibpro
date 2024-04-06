@@ -40,14 +40,16 @@
                                 <thead>
                                     <tr>
                                         <th>{{ __('No') }}</th>
-                                        <th>{{ __('ID Transaksi') }}</th>
+                                        <th>{{ __('No. Kwitansi') }}</th>
                                         <th>{{ __('Pembayaran') }}</th>
                                         <th>{{ __('Tipe') }}</th>
-                                        <th>{{ __('Nama Siswa') }}</th>
-                                        <th>{{ __('Nominal Pembayaran') }}</th>
+                                        <th>{{ __('Nominal') }}</th>
                                         <th>{{ __('Verifikator') }}</th>
+                                        <th>{{ __('Semester') }}</th>
+                                        <th>{{ __('Tahun') }}</th>
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Tanggal') }}</th>
+                                        <th>{{ __('Aksi') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,11 +66,12 @@
                                                 <td>{{ $item->credit->credit_name }}</td>
                                             @endif
                                             <td>{{ $item->type }}</td>
-                                            <td>{{ $item->user->name }}</td>
                                             <td>
                                                 Rp{{ number_format($item->price, 0, ',', '.') }}
                                             </td>
                                             <td>{{ $item->petugas->name }}</td>
+                                            <td>{{ $item->year->year_semester }}</td>
+                                            <td>{{ $item->year->year_name }}</td>
                                             @if ($item->status == 'Paid')
                                                 <td>
                                                     <div class="badge badge-success">{{ __('Lunas') }}</div>
@@ -79,6 +82,11 @@
                                                 </td>
                                             @endif
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
+                                            <td>
+                                                <a href="{{ url('/payment-done/detail/' . $item->invoice_number) }}">
+                                                    <i class="fas fa-file text-primary" title="Detail"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

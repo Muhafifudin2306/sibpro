@@ -83,7 +83,6 @@ class PaymentController extends Controller
         $credit = Payment::orderBy("updated_at", "DESC")
                     ->where('user_id', Auth::user()->id)
                     ->where('status', 'Paid')
-                    ->where('year_id', $activeYearId)
                     ->get();
         $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
@@ -92,6 +91,31 @@ class PaymentController extends Controller
         
 
         return view('payment.user.payment.done', compact('students', 'notifications', 'studentClasses','credit','years'));
+    }
+
+    public function detailPaymentDone($invoice_number)
+    {
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $credit = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
+                    ->first();
+
+        $credits = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
+                    ->get();
+
+        $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
+                    ->sum('price');
+
+        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+        
+
+        return view('payment.user.payment.detail', compact('totalPriceCredits','students', 'credits', 'notifications', 'studentClasses','credit','years'));
     }
 
     public function confirmPayment(Request $request)

@@ -288,6 +288,7 @@ Route::prefix('payment')->group(function () {
 
 Route::prefix('payment-done')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPaymentDone']);
+    Route::get('/detail/{invoice_number}', [App\Http\Controllers\PaymentController::class, 'detailPaymentDone']);
 });
 
 Route::prefix('petugas')->group(function () {
