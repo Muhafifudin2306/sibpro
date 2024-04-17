@@ -47,6 +47,7 @@
                                     <tr>
                                         <th style="width:10px">{{ __('No') }}</th>
                                         <th>{{ __('Nama Petugas') }}</th>
+                                        <th>{{ __('Tanda Tangan') }}</th>
                                         <th>{{ __('Diubah pada') }}</th>
                                         <th>{{ __('Aksi') }}</th>
                                     </tr>
@@ -62,6 +63,11 @@
                                             </td>
                                             <td>
                                                 {{ $item->name }}
+                                            </td>
+                                            <td>
+                                                <a target="_blank"
+                                                    href="{{ asset('storage/petugas/' . $item->signature) }}">Lihat
+                                                    Disini</a>
                                             </td>
                                             <td>
                                                 {{ $item->updated_at->format('d F Y') }}

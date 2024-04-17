@@ -19,7 +19,7 @@ class VendorController extends Controller
 
     public function index()
     {
-        $vendors = Vendor::select('id','vendor_name','updated_at')->orderBy('updated_at', 'DESC')->get();
+        $vendors = Vendor::select('id','vendor_name','vendor_email', 'vendor_contact','updated_at')->orderBy('updated_at', 'DESC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
         return view('master.vendor.index',compact('students', 'vendors','notifications'));
@@ -29,6 +29,8 @@ class VendorController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'vendor_name' => 'required|max:255',
+            'vendor_email' => 'required|max:255',
+            'vendor_contact' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -36,7 +38,9 @@ class VendorController extends Controller
         }
 
         Vendor::create([
-            'vendor_name' => $request->input('vendor_name')
+            'vendor_name' => $request->input('vendor_name'),
+            'vendor_contact' => $request->input('vendor_contact'),
+            'vendor_email' => $request->input('vendor_email')
         ]);
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
@@ -72,7 +76,9 @@ class VendorController extends Controller
      public function updateVendor(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'vendor_name' => 'required|max:255'
+            'vendor_name' => 'required|max:255',
+            'vendor_email' => 'required|max:255',
+            'vendor_contact' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -86,7 +92,9 @@ class VendorController extends Controller
         }
 
         $vendor->update([
-            'vendor_name' => $request->input('vendor_name')
+            'vendor_name' => $request->input('vendor_name'),
+            'vendor_contact' => $request->input('vendor_contact'),
+            'vendor_email' => $request->input('vendor_email')
         ]);
 
         $activeYearId = Year::where('year_status', 'active')->value('id');

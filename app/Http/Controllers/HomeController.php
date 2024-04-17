@@ -62,11 +62,13 @@ class HomeController extends Controller
                                     ->sum('spending_price');
 
         // Menghitung total yang dibayarkan oleh pengguna saat ini
-        $userId = Auth::user()->id;
-        $totalPaid =  Payment::where('user_id', $userId)->where('year_id', $activeYearId)->where('status', 'Paid')->sum('price');
-        $totalUnpaidSPP =  Payment::where('user_id', $userId)->where('year_id', $activeYearId)->where('type', 'SPP')->where('status', '!=','Paid')->sum('price');
+        $activeYear = Year::where('year_status', 'active')->value('id');
 
-        $totalUnpaidDU =  Payment::where('user_id', $userId)->where('year_id', $activeYearId)->where('type', 'Daftar Ulang')->where('status', '!=','Paid')->sum('price');
+        $userId = Auth::user()->id;
+        $totalPaid =  Payment::where('user_id', $userId)->where('year_id', $activeYear)->where('status', 'Paid')->sum('price');
+        $totalUnpaidSPP =  Payment::where('user_id', $userId)->where('year_id', $activeYear)->where('type', 'SPP')->where('status', '!=','Paid')->sum('price');
+
+        $totalUnpaidDU =  Payment::where('user_id', $userId)->where('year_id', $activeYear)->where('type', 'Daftar Ulang')->where('status', '!=','Paid')->sum('price');
         // Mengambil 5 pembayaran terbaru
         $credit = Payment::where('status', '!=', 'Unpaid')
                             ->where('year_id', $activeYearId)
@@ -94,7 +96,7 @@ class HomeController extends Controller
 
         $credits = Payment::orderBy("updated_at", "DESC")
                                         ->where('user_id', Auth::user()->id)
-                                        ->where('year_id', $activeYearId)
+                                        ->where('year_id', $activeYear)
                                         ->get();
 
         return view('home', compact('totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));

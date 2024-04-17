@@ -9,6 +9,7 @@ class Credit extends Model
     protected $table = 'credits';
 
     protected $fillable = [
+        'slug',
         'credit_name',
         'credit_price',
         'credit_type',

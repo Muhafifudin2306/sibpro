@@ -16,6 +16,7 @@ class Payment extends Model
         'user_id',
         'credit_id',
         'attribute_id',
+        'payment_type',
         'class_id',
         'year_id',
         'status',

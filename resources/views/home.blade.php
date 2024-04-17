@@ -26,7 +26,7 @@
                                 <select class="form-control" name="year_semester" disabled>
                                     @foreach ($years as $item)
                                         <option value="{{ $item->year_semester }}"
-                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
                                             Semester: {{ $item->year_semester }}
                                         </option>
                                     @endforeach
@@ -36,7 +36,7 @@
                                 <select class="form-control" name="year_name" disabled>
                                     @foreach ($years as $item)
                                         <option value="{{ $item->year_name }}"
-                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
                                             Tahun Ajaran: {{ $item->year_name }}
                                         </option>
                                     @endforeach

@@ -136,8 +136,7 @@
                         @can('access-attributeAdd')
                             <div class="action-content">
                                 <button class="btn btn-primary" data-toggle="modal"
-                                    data-target="#attributeModal">{{ __('+ Tambah
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Data') }}</button>
+                                    data-target="#attributeModal">{{ __('+ Tambah Data') }}</button>
                             </div>
                         @endcan
                     </div>
@@ -177,7 +176,7 @@
                                                 <td>
                                                     Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
                                                 </td>
-                                                <td>{{ $item->attribute_type == 1 ? 'Reguler' : 'Khusus' }}</td>
+                                                <td>{{ $item->attribute_type == 1 ? 'Pembelian' : 'Non-Pembelian' }}</td>
                                                 <td>
                                                     {{ $item->vendors->vendor_name }}
                                                 </td>
@@ -220,8 +219,7 @@
                         @can('access-creditAdd')
                             <div class="action-content">
                                 <button class="btn btn-primary" data-toggle="modal"
-                                    data-target="#creditModal">{{ __('+ Tambah
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Data') }}</button>
+                                    data-target="#creditModal">{{ __('+ Tambah Data') }}</button>
                             </div>
                         @endcan
                     </div>
@@ -239,7 +237,6 @@
                                             </th>
                                             <th>{{ __('Nama Atribut') }}</th>
                                             <th>{{ __('Harga Atribut') }}</th>
-                                            <th>{{ __('Tipe Atribut') }}</th>
                                             <th>{{ __('Semester') }}</th>
                                             <th>{{ __('Diubah pada') }}</th>
                                             <th>{{ __('Action') }}</th>
@@ -260,7 +257,6 @@
                                                 <td>
                                                     Rp{{ number_format($credit->credit_price, 0, ',', '.') }}
                                                 </td>
-                                                <td>{{ $credit->credit_type == 1 ? 'Reguler' : 'Khusus' }}</td>
                                                 <td>
                                                     {{ $credit->semester }}
                                                 </td>
@@ -278,7 +274,7 @@
                                                         @can('access-creditDelete')
                                                             <div class="text-danger mx-2 cursor-pointer">
                                                                 <i class="fas credit-delete fa-trash-alt"
-                                                                    data-card-id="{{ $item->id }}" title="Delete Credit"></i>
+                                                                    data-card-id="{{ $credit->id }}" title="Delete Credit"></i>
                                                             </div>
                                                         @endcan
                                                     </div>
@@ -350,7 +346,7 @@
                                                         @can('access-categoryDelete')
                                                             <div class="text-danger mx-2 cursor-pointer">
                                                                 <i class="fas category-delete fa-trash-alt"
-                                                                    data-card-id="{{ $item->slug }}" title="Delete"></i>
+                                                                    data-card-id="{{ $item->id }}" title="Delete"></i>
                                                             </div>
                                                         @endcan
                                                     </div>
@@ -398,8 +394,8 @@
                                 <label>{{ __('Tipe Atribut') }}</label>
                                 <select class="form-control select2" name="attribute_type" required="">
                                     <option>{{ __('-- Pilih Tipe --') }}</option>
-                                    <option value="1">{{ __('Reguler') }}</option>
-                                    <option value="0">{{ __('Khusus') }}</option>
+                                    <option value="1">{{ __('Pembelian') }}</option>
+                                    <option value="0">{{ __('Non-Pembelian') }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -454,14 +450,6 @@
                                     <option value="Gasal">{{ __('Gasal') }}</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label>{{ __('Tipe Atribut') }}</label>
-                                <select class="form-control select2" name="attribute_type">
-                                    <option>{{ __('-- Pilih Tipe --') }}</option>
-                                    <option value="1">{{ __('Reguler') }}</option>
-                                    <option value="0">{{ __('Khusus') }}</option>
-                                </select>
-                            </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-secondary"
@@ -490,14 +478,6 @@
                                 <label for="category_name">{{ __('Nama Kategori') }}</label>
                                 <input type="text" class="form-control" name="category_name" id="category_name"
                                     placeholder="Reguler" autofocus="" required="">
-                            </div>
-                            <div class="form-group">
-                                <label>{{ __('Tipe Kategori') }}</label>
-                                <select class="form-control select2" name="category_type" required="">
-                                    <option>{{ __('-- Pilih Tipe --') }}</option>
-                                    <option value="1">{{ __('Reguler') }}</option>
-                                    <option value="0">{{ __('Khusus') }}</option>
-                                </select>
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -540,9 +520,9 @@
                                     <label>{{ __('Tipe Kategori') }}</label>
                                     <select class="form-control select2" name="attribute_type" required="">
                                         <option value="1" {{ $item->attribute_type == 1 ? 'selected' : '' }}>
-                                            {{ __('Reguler') }}</option>
+                                            {{ __('Pembelian') }}</option>
                                         <option value="0" {{ $item->attribute_type == 0 ? 'selected' : '' }}>
-                                            {{ __('Khusus') }}</option>
+                                            {{ __('Non-Pembelian') }}</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -635,15 +615,6 @@
                                     <label for="category_name">{{ __('Nama Kategori') }}</label>
                                     <input type="text" class="form-control" name="category_name" id="category_name"
                                         value="{{ $item->category_name }}" autofocus="" required="">
-                                </div>
-                                <div class="form-group">
-                                    <label>{{ __('Tipe Kategori') }}</label>
-                                    <select class="form-control select2" name="category_type" required="">
-                                        <option value="1" {{ $item->category_type == 1 ? 'selected' : '' }}>
-                                            {{ __('Reguler') }}</option>
-                                        <option value="0" {{ $item->category_type == 0 ? 'selected' : '' }}>
-                                            {{ __('Khusus') }}</option>
-                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">

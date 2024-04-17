@@ -16,10 +16,30 @@
                     <div class="title">
                         <h1>{{ __('Loket Pemesanan') }}</h1>
                     </div>
-                    <div class="section-header-breadcrumb">
-                        <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Loket Pemesanan') }}</div>
-                    </div>
+                    @can('access-currentYear')
+                        <div class="current__year d-md-flex d-block py-lg-0 pt-3 pb-1">
+                            <div class="semester__active mr-2 mb-3">
+                                <select class="form-control" name="year_semester" disabled>
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_semester }}"
+                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
+                                            Semester: {{ $item->year_semester }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="year__active mr-2 mb-3">
+                                <select class="form-control" name="year_name" disabled>
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_name }}"
+                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
+                                            Tahun Ajaran: {{ $item->year_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endcan
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
@@ -51,26 +71,38 @@
                                 <h4>{{ __('Estimasi Pembayaran') }}</h4>
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
+                                <div class="w-100">
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>Pembayaran</th>
-                                                <th>Tipe</th>
                                                 <th>Nominal</th>
                                             </tr>
                                         </thead>
                                         <tbody id="selectedItems"></tbody>
                                         <tbody>
                                             <tr>
-                                                <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                                <td class="text-center font-weight-bold">Total</td>
                                                 <td><span id="totalPrice">Rp0</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="mb-3">
-                                    <button class="btn btn-primary w-100 submit"> Pesan Sekarang </button>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <button data-toggle="modal" data-target="#offlineModal"
+                                                class="btn btn-primary w-100 submit"> Bayar Offline
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <button class="btn btn-success w-100 submit-online"> Bayar Online
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +140,7 @@
                                                         <div class="custom-checkbox custom-control">
                                                             <input type="checkbox" data-checkboxes="mygroup"
                                                                 class="custom-control-input"
-                                                                id="checkbox-{{ $item->uuid }}"
+                                                                id="checkbox-{{ $item->id }}"
                                                                 data-price="{{ $item->price }}"
                                                                 data-type="{{ $item->type }}"
                                                                 @if ($item->credit == null) data-label="{{ $item->attribute->attribute_name }}"
@@ -116,14 +148,22 @@
                                                             data-label="{{ $item->credit->credit_name }}" @endif
                                                                 onchange="updateTotalPrice()"
                                                                 data-id="{{ $item->id }}">
-                                                            <label for="checkbox-{{ $item->uuid }}"
+                                                            <label for="checkbox-{{ $item->id }}"
                                                                 class="custom-control-label">&nbsp;</label>
                                                         </div>
                                                     </td>
                                                     @if ($item->credit == null)
-                                                        <td>{{ $item->attribute->attribute_name }}</td>
+                                                        <td>
+                                                            {{ $item->attribute->attribute_name }}
+                                                            <p class="font-weight-bold d-block d-md-none">Harga :
+                                                                Rp{{ number_format($item->price, 0, ',', '.') }}</p>
+                                                        </td>
                                                     @elseif($item->credit != null)
-                                                        <td>{{ $item->credit->credit_name }}</td>
+                                                        <td>{{ $item->credit->credit_name }}
+
+                                                            <p class="font-weight-bold d-block d-md-none">Harga :
+                                                                Rp{{ number_format($item->price, 0, ',', '.') }}</p>
+                                                        </td>
                                                     @endif
                                                     <td>{{ $item->type }}</td>
                                                     <td>
@@ -164,6 +204,50 @@
     </div>
 
     @push('scripts')
+        <script>
+            document.querySelector('.submit-online').addEventListener('click', function() {
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
+                    function() {
+                        var selectedIds = [];
+                        document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
+                            function(checkbox) {
+                                selectedIds.push(checkbox.getAttribute('data-id'));
+                            });
+
+                        if (selectedIds.length === 0) {
+                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
+                            return;
+                        }
+
+                        fetch('/api/payment/confirm', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    transactions: selectedIds
+                                })
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal melakukan pembayaran online');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                Notiflix.Notify.success(data.message);
+                                window.location.href =
+                                    '/payment';
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure(error
+                                    .message);
+                            });
+                    });
+            });
+        </script>
+
         <script>
             function updateYear() {
                 const form = document.getElementById('updateYearForm');
@@ -208,7 +292,7 @@
                             return;
                         }
 
-                        fetch('/cart/online', {
+                        fetch('/cart/offline', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -220,7 +304,7 @@
                             })
                             .then(response => {
                                 if (!response.ok) {
-                                    throw new Error('Gagal melakukan pembayaran online');
+                                    throw new Error('Gagal melakukan pemesanan data!');
                                 }
                                 return response.json();
                             })
@@ -250,7 +334,7 @@
                     var priceItem = parseFloat(checkbox.getAttribute('data-price'));
                     totalPrice += price;
 
-                    labelItem += '<tr>' + '<td>' + label + '</td>' + '<td>' + type + '</td>' + '<td>' + 'Rp' +
+                    labelItem += '<tr>' + '<td>' + label + '</td>' + '<td>' + 'Rp' +
                         priceItem +
                         '</td>' + '</tr>';
                 });

@@ -84,9 +84,7 @@ class CreditController extends Controller
         foreach($credits as $credit)
         {
             $creditPrice = Credit::find($credit)->credit_price;
-            $uuid = Str::uuid(); // Generate UUID
             Payment::create([
-                'uuid' => $uuid,
                 'user_id' =>  $request->input('user_id'),
                 'credit_id' => $credit,
                 'year_id' => $activeYearId,
@@ -113,7 +111,6 @@ class CreditController extends Controller
                 $users = User::where('category_id', $category)->pluck('id');
                 foreach($users as $user){
                     $creditPrice = Credit::find($credit)->credit_price;
-                    $uuid = Str::uuid();
                     // Cari pembayaran yang sesuai dengan kriteria yang diberikan
                     $payment = Payment::firstOrNew([
                         'user_id' => $user,
@@ -123,7 +120,6 @@ class CreditController extends Controller
 
                     // Jika pembayaran belum ada, setel nilai atributnya dan simpan ke database
                     if (!$payment->exists) {
-                        $payment->uuid = $uuid;
                         $payment->type = 'SPP';
                         $payment->price = $creditPrice;
                         $payment->increment = 0;
@@ -139,7 +135,6 @@ class CreditController extends Controller
                 $users = User::where('category_id', $category)->pluck('id');
                 foreach($users as $user){
                     $attributePrice = Attribute::find($attribute)->attribute_price;
-                    $uuid = Str::uuid();
                     // Cari pembayaran yang sesuai dengan kriteria yang diberikan
                     $payment = Payment::firstOrNew([
                         'user_id' => $user,
@@ -149,7 +144,6 @@ class CreditController extends Controller
 
                     // Jika pembayaran belum ada, setel nilai atributnya dan simpan ke database
                     if (!$payment->exists) {
-                        $payment->uuid = $uuid;
                         $payment->type = 'Daftar Ulang';
                         $payment->price = $attributePrice;
                         $payment->increment = 0;
@@ -213,7 +207,12 @@ class CreditController extends Controller
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
+        $creditName = $request->input('credit_name');
+
+        $slug = Str::slug($creditName);
+
         $credit = Credit::create([
+            'slug' => $slug,
             'credit_name'   => $request->input('credit_name'),
             'credit_price'  => $request->input('credit_price'),
             'semester'      => $request->input('semester')
@@ -257,11 +256,15 @@ class CreditController extends Controller
     {
         $credit = Credit::find($id);
 
+        $creditName = $request->input('credit_name');
+
+        $slug = Str::slug($creditName);
+
         $credit->update([
             'credit_name' => $request->input('credit_name'),
             'credit_price' => $request->input('credit_price'),
             'semester' => $request->input('semester'),
-            'user_id' => Auth::user()->id
+            'slug' => $slug
         ]);
 
         $activeYearId = Year::where('year_status', 'active')->value('id');

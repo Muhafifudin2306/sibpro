@@ -107,6 +107,7 @@ Route::prefix('credit')->group(function () {
     Route::get('/detail/{uuid}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
     Route::get('/detail/student/{uuid}', [App\Http\Controllers\CreditController::class, 'billingStudent'])->name('billingStudent');
     Route::get('/payment/{uuid}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
+    
 });
 
 Route::prefix('transaction')->group(function () {
@@ -125,6 +126,7 @@ Route::prefix('income')->group(function () {
 
     Route::prefix('payment')->group(function () {
         Route::get('/all', [App\Http\Controllers\PaymentController::class, 'allData'])->name('allData');
+        Route::get('/confirm/{uuid}', [App\Http\Controllers\PaymentController::class, 'confirmXendit'])->name('paymentXendit');
     });
 
     Route::prefix('external')->group(function () {
@@ -278,7 +280,7 @@ Route::prefix('setting')->group(function () {
 
 Route::prefix('cart')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexCart']);
-    Route::post('/online', [App\Http\Controllers\PaymentController::class, 'addToCart']);
+    Route::post('/offline', [App\Http\Controllers\PaymentController::class, 'addToCart']);
 });
 
 Route::prefix('payment')->group(function () {

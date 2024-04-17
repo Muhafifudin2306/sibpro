@@ -16,10 +16,30 @@
                     <div class="title">
                         <h1>{{ __('Pembayaran Tagihan') }}</h1>
                     </div>
-                    <div class="section-header-breadcrumb">
-                        <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Pembayaran Tagihan') }}</div>
-                    </div>
+                    @can('access-currentYear')
+                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                            <div class="semester__active mr-2">
+                                <select class="form-control" name="year_semester" disabled>
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_semester }}"
+                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
+                                            Semester: {{ $item->year_semester }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="year__active mr-2">
+                                <select class="form-control" name="year_name" disabled>
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_name }}"
+                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
+                                            Tahun Ajaran: {{ $item->year_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endcan
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
@@ -82,7 +102,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <button class="btn btn-success w-100 submit"> Bayar Online
+                                            <button class="btn btn-success w-100 submit-online"> Bayar Online
                                             </button>
                                         </div>
                                     </div>
@@ -268,6 +288,50 @@
                         }
 
                         fetch('/cart/online', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    transactions: selectedIds
+                                })
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal melakukan pembayaran online');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                Notiflix.Notify.success(data.message);
+                                window.location.href =
+                                    '/payment';
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure(error
+                                    .message);
+                            });
+                    });
+            });
+        </script>
+
+        <script>
+            document.querySelector('.submit-online').addEventListener('click', function() {
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
+                    function() {
+                        var selectedIds = [];
+                        document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
+                            function(checkbox) {
+                                selectedIds.push(checkbox.getAttribute('data-id'));
+                            });
+
+                        if (selectedIds.length === 0) {
+                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
+                            return;
+                        }
+
+                        fetch('/api/payment/confirm', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',

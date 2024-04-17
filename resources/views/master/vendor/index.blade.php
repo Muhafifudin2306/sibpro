@@ -49,6 +49,8 @@
                                                 {{ __('No') }}
                                             </th>
                                             <th>{{ __('Nama Vendor') }}</th>
+                                            <th>{{ __('Email Vendor') }}</th>
+                                            <th>{{ __('Kontak Vendor') }}</th>
                                             <th>{{ __('Diubah Pada') }}</th>
                                             <th>{{ __('Aksi') }}</th>
                                         </tr>
@@ -64,6 +66,12 @@
                                                 </td>
                                                 <td>
                                                     {{ $item->vendor_name }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->vendor_email }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->vendor_contact }}
                                                 </td>
                                                 <td>
                                                     {{ $item->updated_at->format('d F Y') }}
@@ -115,7 +123,17 @@
                         <div class="form-group">
                             <label for="vendor_name">Nama Vendor</label>
                             <input type="text" class="form-control" name="vendor_name" id="vendor_name"
-                                placeholder="Masukkan nama vendor">
+                                placeholder="Masukkan nama vendor" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor_name">Email Vendor</label>
+                            <input type="email" class="form-control" name="vendor_email" id="vendor_email"
+                                placeholder="Masukkan email vendor" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor_name">Kontak Vendor</label>
+                            <input type="text" class="form-control" name="vendor_contact" id="vendor_contact"
+                                placeholder="Masukkan nomor telpon/WA vendor">
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
@@ -147,6 +165,16 @@
                                     <label for="vendor_name">Nama Vendor</label>
                                     <input type="text" class="form-control" name="vendor_name" id="vendor_name"
                                         value="{{ $item->vendor_name }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="vendor_name">Email Vendor</label>
+                                    <input type="email" class="form-control" name="vendor_email" id="vendor_email"
+                                        value="{{ $item->vendor_email }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="vendor_name">Kontak Vendor</label>
+                                    <input type="text" class="form-control" name="vendor_contact" id="vendor_contact"
+                                        value="{{ $item->vendor_contact }}">
                                 </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">

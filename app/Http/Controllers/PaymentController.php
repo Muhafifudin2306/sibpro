@@ -7,6 +7,8 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Payment;
 use App\Models\Year;
+
+use Illuminate\Support\Str;
 use App\Models\StudentClass;
 use Illuminate\Support\Carbon;
 
@@ -64,12 +66,34 @@ class PaymentController extends Controller
 
         $transactionIds = $request->input('transactions');
 
-        $petugasId = $request->input('petugas_id');
+        $uuid = Str::uuid(); // Generate UUID
 
-        // Perbarui status pembayaran untuk transaksi yang dipilih
+         // Ambil invoice number terakhir
+         $lastInvoiceNumber = Payment::whereYear('updated_at', Carbon::now()->year)
+                ->whereMonth('updated_at', Carbon::now()->month)
+                ->orderBy('updated_at', 'DESC')
+                ->whereNotNull('uuid')
+                ->value('increment');
+
+        // dd($lastInvoiceNumber);
+
+        $increment = 1;
+        if ($lastInvoiceNumber != NULL) {
+        $increment = $lastInvoiceNumber + 1;
+        }
+
+        // Format tanggal hari ini dalam format "ddMMyy"
+        $todayDate = Carbon::now()->format('dmy');
+
+        // Buat invoice number baru
+        $invoiceNumber = 'PAY'. '-' . $todayDate . '-' . $increment;
+        
         Payment::whereIn('id', $transactionIds)->update([
             'status' => 'Pending',
-            'petugas_id' => $petugasId
+            'payment_type' => 'offline',
+            'uuid' => $uuid,
+            'invoice_number' => $invoiceNumber,
+            'increment' => $increment,
         ]);
     
         // Kembalikan respons sukses
@@ -162,6 +186,17 @@ class PaymentController extends Controller
         // Kembalikan respons sukses
         return response()->json(['message' => 'Pembayaran online berhasil dilakukan'], 200);
     }
+
+    public function confirmXendit($uuid)
+    {
+        $payment = Payment::where('uuid', $uuid)->update([
+            'status' => 'Paid',
+            'petugas_id' => 1
+        ]);
+    
+        return redirect('payment-done');
+    }
+    
     public function allData()
     {
         $credit = Payment::where('status','Paid')

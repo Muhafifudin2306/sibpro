@@ -44,7 +44,7 @@
                 <li class="{{ Request::is('payment') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('/payment') }}">
                         <i class="fas fa-dollar-sign"></i>
-                        <span>Pembayaran Pending</span>
+                        <span>Pembayaran Tagihan</span>
                     </a>
                 </li>
             @endcan
