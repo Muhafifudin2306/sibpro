@@ -17,8 +17,8 @@
                         <h1>{{ __('Pembayaran Tagihan') }}</h1>
                     </div>
                     @can('access-currentYear')
-                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                            <div class="semester__active mr-2">
+                        <div class="current__year d-md-flex d-block py-lg-0 pt-3 pb-1">
+                            <div class="semester__active mr-2 mb-3">
                                 <select class="form-control" name="year_semester" disabled>
                                     @foreach ($years as $item)
                                         <option value="{{ $item->year_semester }}"
@@ -28,7 +28,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="year__active mr-2">
+                            <div class="year__active mr-2 mb-3">
                                 <select class="form-control" name="year_name" disabled>
                                     @foreach ($years as $item)
                                         <option value="{{ $item->year_name }}"
@@ -50,7 +50,7 @@
                     </div>
                 </div>
 
-                <div class="row flex-row-reverse">
+                {{-- <div class="row flex-row-reverse">
                     <div class="col-lg-5">
                         <div class="card">
                             <div class="card-header bg-warning">
@@ -188,6 +188,107 @@
                             </div>
                         </div>
                     </div>
+                </div> --}}
+                @if ($credit == '[]')
+                    <div class="d-flex justify-content-center">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/12fdb98b-48bb-439a-bdcb-4fa4d29594e5/oHVweoRcJ6.json"
+                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                            autoplay></dotlottie-player>
+                    </div>
+                    <p class="text-center font-weight-bold">Belum ada data pembayaran</p>
+                @endif
+                <div class="row">
+                    @foreach ($credit as $item)
+                        <div class="col-12 col-md-6 col-lg-6">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h4>Nomor Kwitansi : {{ $item->invoice_number }}</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="left-label">
+                                            <p> Tanggal Transaksi : </p>
+                                        </div>
+                                        <div class="right-label">
+                                            <h6 class="font-weight-light">{{ $item->updated_at->format('Y-m-d') }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="left-label">
+                                            <p> Metode Pembayaran : </p>
+                                        </div>
+                                        <div class="right-label">
+                                            <h6 class="font-weight-light">{{ $item->payment_type }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="left-label">
+                                            <p> Status Pembayaran : </p>
+                                        </div>
+                                        <div class="right-label">
+                                            <h6 class="font-weight-light">{{ $item->status }}</h6>
+                                        </div>
+                                    </div>
+                                    <h6 class="py-2">Penghitungan Biaya</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="left-label ml-3">
+                                            <p>Jumlah Pembayaran : </p>
+                                        </div>
+                                        <div class="right-label">
+                                            <h6 class="font-weight-light" id="amount-{{ $item->invoice_number }}">
+                                                Rp{{ number_format($item->total_price, 0, ',', '.') }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="left-label ml-3">
+                                            <p> Biaya Administrasi : </p>
+                                        </div>
+                                        <div class="right-label">
+                                            @if ($item->payment_type == 'Online')
+                                                <h6 class="font-weight-light" id="fee-{{ $item->invoice_number }}">
+                                                    Rp{{ number_format(4500, 0, ',', '.') }}</h6>
+                                            @elseif($item->payment_type == 'Offline')
+                                                <h6 class="font-weight-light" id="fee-{{ $item->invoice_number }}">
+                                                    Rp{{ number_format(0, 0, ',', '.') }}</h6>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="left-label ml-3">
+                                            <p> Total Pembayaran :
+                                            </p>
+                                        </div>
+                                        <div class="right-label">
+                                            <h6 class="font-weight-bold" id="total-{{ $item->invoice_number }}"></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-whitesmoke br">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            @if ($item->payment_type == 'Online')
+                                                <a href="{{ $item->checkout_link }}">
+                                                    <button class="btn btn-primary w-100">Bayar Sekarang</button>
+                                                </a>
+                                            @elseif($item->payment_type == 'Offline')
+                                                <button class="btn btn-primary w-100" data-toggle="modal"
+                                                    data-target="#offlineModal{{ $item->invoice_number }}">Bayar
+                                                    Sekarang</button>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <a href="{{ url('payment/cancel/' . $item->uuid) }}">
+                                                <button class="btn btn-danger w-100">Batalkan Transaksi</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </section>
         </div>
@@ -197,253 +298,69 @@
             </div>
         </footer>
     </div>
-
-    <div class="modal fade" tabindex="-1" role="dialog" id="offlineModal">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ __('Instruksi Pembayaran Offline') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-                    <div class="d-flex justify-content-center mb-3">
-                        <dotlottie-player src="https://lottie.host/e90dedc4-f416-4022-a3b2-c3c2c67728dc/vt2riNUNbu.json"
-                            background="transparent" speed="1" style="width: 200px; height: 200px;" loop
-                            autoplay></dotlottie-player>
+    @foreach ($credit as $item)
+        <div class="modal fade" tabindex="-1" role="dialog" id="offlineModal{{ $item->invoice_number }}">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Instruksi Pembayaran Offline') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="py-3">
-                        <p>1. Pergi menuju ke Ruang TU dan menemui petugas yang sedang bertugas melayani pembayaran siswa
-                        </p>
-                        <p>2. Ajukan pembayaran untuk item tagihan dengan rincian </p>
-                        <table class="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Pembayaran</th>
-                                    <th>Tipe</th>
-                                    <th>Nominal</th>
-                                </tr>
-                            </thead>
-                            <tbody class="selectedItems"></tbody>
-                        </table>
-                        <p>3. Lakukan pembayaran dengan nominal pembayaran <span class="font-weight-bold"
-                                id="totalPricePay">Rp0</span></p>
-                        <p>4. Pembayaran selesai dan cek laman <span class="font-weight-bold">Pembayaran Berhasil</span>
-                            untuk mengunduh nota pembayaran</p>
+                    <div class="modal-body">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                        <div class="d-flex justify-content-center mb-3">
+                            <dotlottie-player src="https://lottie.host/e90dedc4-f416-4022-a3b2-c3c2c67728dc/vt2riNUNbu.json"
+                                background="transparent" speed="1" style="width: 200px; height: 200px;" loop
+                                autoplay></dotlottie-player>
+                        </div>
+                        <div class="py-3">
+                            <p>1. Pergi menuju ke Ruang TU dan menemui petugas yang sedang bertugas melayani
+                                pembayaran siswa
+                            </p>
+                            <p>2. Ajukan pembayaran untuk item tagihan dengan nomor kwitansi <span class="font-weight-bold">
+                                    {{ $item->invoice_number }} </span>
+                            </p>
+                            <p>3. Lakukan pembayaran dengan nominal pembayaran <span class="font-weight-bold"
+                                    id="total-pay-{{ $item->invoice_number }}"></span> </p>
+                            <p>4. Pembayaran selesai dan cek laman <span class="font-weight-bold">Pembayaran
+                                    Berhasil</span>
+                                untuk melihat nota pembayaran</p>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer bg-whitesmoke br">
-                    <button type="button" class="btn btn-danger"
-                        data-dismiss="modal">{{ __('Tutup Instruksi') }}</button>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-danger"
+                            data-dismiss="modal">{{ __('Tutup Instruksi') }}</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endforeach
 
     @push('scripts')
-        <script>
-            function updateYear() {
-                const form = document.getElementById('updateYearForm');
-                const formData = new FormData(form);
+        @foreach ($credit as $item)
+            <script>
+                // Ambil nilai fee dan total
+                var feeElement = document.getElementById('fee-{{ $item->invoice_number }}');
+                var amountElement = document.getElementById('amount-{{ $item->invoice_number }}');
+                var totalElement = document.getElementById('total-{{ $item->invoice_number }}');
+                var totalPayElement = document.getElementById('total-pay-{{ $item->invoice_number }}');
 
-                fetch('/current-year', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Terjadi kesalahan');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        Notiflix.Notify.success(data.message, {
-                            timeout: 3000
-                        });
-                        location.reload();
-                    })
-                    .catch(error => {
-                        Notiflix.Notify.failure('Error: Data tidak ditemukan!');
-                    });
-            }
-        </script>
-        <script>
-            document.querySelector('.submit').addEventListener('click', function() {
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
-                    function() {
-                        var selectedIds = [];
-                        document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
-                            function(checkbox) {
-                                selectedIds.push(checkbox.getAttribute('data-id'));
-                            });
+                // Ambil nilai fee dari teks dalam elemen
+                var fee = parseFloat(feeElement.textContent.replace('Rp', '').replace(',', ''));
 
-                        if (selectedIds.length === 0) {
-                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
-                            return;
-                        }
+                // Ambil nilai total dari teks dalam elemen
+                var amount = parseFloat(amountElement.textContent.replace('Rp', '').replace(',', ''));
 
-                        fetch('/cart/online', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                },
-                                body: JSON.stringify({
-                                    transactions: selectedIds
-                                })
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Gagal melakukan pembayaran online');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                Notiflix.Notify.success(data.message);
-                                window.location.href =
-                                    '/payment';
-                            })
-                            .catch(error => {
-                                Notiflix.Notify.failure(error
-                                    .message);
-                            });
-                    });
-            });
-        </script>
+                // Tambahkan nilai fee ke dalam nilai total
+                var newTotal = (fee + amount) * 1000;
 
-        <script>
-            document.querySelector('.submit-online').addEventListener('click', function() {
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
-                    function() {
-                        var selectedIds = [];
-                        document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
-                            function(checkbox) {
-                                selectedIds.push(checkbox.getAttribute('data-id'));
-                            });
-
-                        if (selectedIds.length === 0) {
-                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
-                            return;
-                        }
-
-                        fetch('/api/payment/confirm', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                },
-                                body: JSON.stringify({
-                                    transactions: selectedIds
-                                })
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Gagal melakukan pembayaran online');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                Notiflix.Notify.success(data.message);
-                                window.location.href =
-                                    '/payment';
-                            })
-                            .catch(error => {
-                                Notiflix.Notify.failure(error
-                                    .message);
-                            });
-                    });
-            });
-        </script>
-
-        <script>
-            function updateTotalPrice() {
-                var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)');
-                var totalPrice = 0;
-                var labelItem = '';
-
-                checkboxes.forEach(function(checkbox) {
-                    var price = parseFloat(checkbox.getAttribute('data-price'));
-                    var label = checkbox.getAttribute('data-label');
-                    var type = checkbox.getAttribute('data-type');
-                    var priceItem = parseFloat(checkbox.getAttribute('data-price'));
-                    totalPrice += price;
-
-                    labelItem += '<tr>' + '<td>' + label + '</td>' + '<td>' + type + '</td>' + '<td>' + 'Rp' +
-                        priceItem +
-                        '</td>' + '</tr>';
-                });
-
-                var selectedItemsTables = document.getElementsByClassName('selectedItems');
-                for (var i = 0; i < selectedItemsTables.length; i++) {
-                    selectedItemsTables[i].innerHTML = labelItem;
-                }
-
-                var totalPriceSpan = document.getElementById('totalPrice');
-                totalPriceSpan.textContent = 'Rp' + totalPrice
-                    .toLocaleString();
-
-                var totalPricePay = document.getElementById('totalPricePay');
-                totalPricePay.textContent = 'Rp' + totalPrice
-                    .toLocaleString();
-            }
-
-            var checkboxAll = document.getElementById('checkbox-all');
-
-            checkboxAll.addEventListener('change', function() {
-                var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
-
-                var isChecked = checkboxAll.checked;
-
-                checkboxes.forEach(function(checkbox) {
-                    checkbox.checked = isChecked;
-                });
-
-                updateTotalPrice();
-            });
-
-            var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', updateTotalPrice);
-            });
-        </script>
-        <script>
-            var checkboxStatus = {};
-
-            function updateCheckboxStatus(checkbox) {
-                var id = checkbox.getAttribute('id');
-                checkboxStatus[id] = checkbox.checked;
-            }
-
-            function restoreCheckboxStatus() {
-                var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
-                checkboxes.forEach(function(checkbox) {
-                    var id = checkbox.getAttribute('id');
-                    if (checkboxStatus[id] === true) {
-                        checkbox.checked = true;
-                    } else {
-                        checkbox.checked = false;
-                    }
-                });
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-                restoreCheckboxStatus();
-            });
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    updateTotalPrice();
-                    updateCheckboxStatus(checkbox);
-                });
-            });
-        </script>
-
+                // Ubah teks dalam elemen total menjadi nilai total yang baru
+                totalElement.textContent = 'Rp ' + newTotal.toLocaleString();
+                totalPayElement.textContent = 'Rp ' + newTotal.toLocaleString();
+            </script>
+        @endforeach
         <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
     @endpush

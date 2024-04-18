@@ -11,6 +11,7 @@ use App\Models\Year;
 use Illuminate\Support\Str;
 use App\Models\StudentClass;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -42,11 +43,15 @@ class PaymentController extends Controller
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
-        $credit = Payment::orderBy("invoice_number", "ASC")
-                    ->where('user_id', Auth::user()->id)
-                    ->where('status', 'Pending')
-                    ->where('year_id', $activeYearId)
-                    ->get();
+        $credit = Payment::where('user_id', Auth::user()->id)
+        ->where('status', 'Pending')
+        ->where('year_id', $activeYearId)
+        ->orderBy('invoice_number', 'DESC')
+        ->groupBy('invoice_number', 'payment_type', 'checkout_link', 'uuid', 'updated_at', 'status') // Mengelompokkan berdasarkan invoice_number dan payment_type
+        ->select('invoice_number', 'uuid', 'payment_type', 'status', 'updated_at', DB::raw('SUM(price) as total_price'), 'checkout_link') // Memilih invoice_number dan payment_type
+        ->get();
+        
+                    
         $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
@@ -72,8 +77,7 @@ class PaymentController extends Controller
          $lastInvoiceNumber = Payment::whereYear('updated_at', Carbon::now()->year)
                 ->whereMonth('updated_at', Carbon::now()->month)
                 ->orderBy('updated_at', 'DESC')
-                ->whereNotNull('uuid')
-                ->value('increment');
+                ->max('increment');
 
         // dd($lastInvoiceNumber);
 
@@ -90,7 +94,7 @@ class PaymentController extends Controller
         
         Payment::whereIn('id', $transactionIds)->update([
             'status' => 'Pending',
-            'payment_type' => 'offline',
+            'payment_type' => 'Offline',
             'uuid' => $uuid,
             'invoice_number' => $invoiceNumber,
             'increment' => $increment,
@@ -195,6 +199,22 @@ class PaymentController extends Controller
         ]);
     
         return redirect('payment-done');
+    }
+
+    public function cancelPayment($uuid)
+    {
+        $payment = Payment::where('uuid', $uuid)->update([
+            'status' => 'Unpaid',
+            'uuid' => NULL,
+            'increment' => NULL,
+            'invoice_number' => NULL,
+            'payment_type' => NULL,
+            'checkout_link' => NULL, 
+            'external_id' => NULL,
+            'petugas_id' => NULL
+        ]);
+    
+        return redirect('payment');
     }
     
     public function allData()

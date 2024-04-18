@@ -219,6 +219,9 @@
                             return;
                         }
 
+                        // Tampilkan pesan "Please wait"
+                        Notiflix.Loading.standard('Please wait...');
+
                         fetch('/api/payment/confirm', {
                                 method: 'POST',
                                 headers: {
@@ -243,10 +246,15 @@
                             .catch(error => {
                                 Notiflix.Notify.failure(error
                                     .message);
+                            })
+                            .finally(() => {
+                                // Tutup pesan "Please wait" setelah selesai
+                                Notiflix.Loading.remove();
                             });
                     });
             });
         </script>
+
 
         <script>
             function updateYear() {

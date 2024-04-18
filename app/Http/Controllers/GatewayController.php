@@ -25,8 +25,7 @@ class GatewayController extends Controller
         $lastInvoiceNumber = Payment::whereYear('updated_at', Carbon::now()->year)
                                         ->whereMonth('updated_at', Carbon::now()->month)
                                         ->orderBy('updated_at', 'DESC')
-                                        ->whereNotNull('uuid')
-                                        ->value('increment');
+                                        ->max('increment');
 
         // dd($lastInvoiceNumber);
 
@@ -53,9 +52,7 @@ class GatewayController extends Controller
         
         $create_invoice_request = new \Xendit\Invoice\CreateInvoiceRequest([
             'external_id' => (string) Str::uuid(),
-            'payer_email' => 'muhafifudin2306@gmail.com',
-            'description' => 'hello guys!',
-            'fees_paid_amount' => $fee,
+            'description' => 'Checkout Pembayaran Kwitansi'. ' ' . $invoiceNumber, 
             'amount' => $totalAmount,
             'success_redirect_url' =>  $successRedirectUrl
         ]);
@@ -77,7 +74,7 @@ class GatewayController extends Controller
             'invoice_number' => $invoiceNumber,
             'increment' => $increment,
             'status'   => 'Pending',
-            'payment_type' => 'online',
+            'payment_type' => 'Online',
             'external_id' => $create_invoice_request['external_id']
         ]);
     
