@@ -19,11 +19,36 @@
                     <div class="title">
                         <h1>{{ __('Data Tagihan Siswa') }}</h1>
                     </div>
-                    <div class="section-header-breadcrumb">
-                        <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('Pemasukan') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Tagihan Siswa') }}</div>
-                    </div>
+                    @can('access-changeYear')
+                        <form id="updateYearForm">
+                            @csrf
+                            <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                                <div class="semester__active mr-2">
+                                    <select class="form-control" name="year_semester">
+                                        @foreach ($years as $item)
+                                            <option value="{{ $item->year_semester }}"
+                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                Semester: {{ $item->year_semester }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="year__active mr-2">
+                                    <select class="form-control" name="year_name">
+                                        @foreach ($years as $item)
+                                            <option value="{{ $item->year_name }}"
+                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                Tahun Ajaran: {{ $item->year_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="button-submit">
+                                    <button type="button" onclick="updateYear()" class="btn btn-primary h-100">Simpan</button>
+                                </div>
+                            </div>
+                        </form>
+                    @endcan
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
@@ -74,7 +99,7 @@
                                             <td>
                                                 Rp{{ number_format($item->price, 0, ',', '.') }}
                                             </td>
-                                            <td>{{ $item->petugas->name }}</td>
+                                            <td>{{ $item->petugas->name ?? '-' }}</td>
                                             @if ($item->status == 'Paid')
                                                 <td>
                                                     <div class="badge badge-success">Lunas</div>
@@ -107,8 +132,6 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-        <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
         <script>
             function updateYear() {
                 const form = document.getElementById('updateYearForm');
@@ -138,5 +161,8 @@
                     });
             }
         </script>
+
+        <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+        <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
     @endpush
 @endsection

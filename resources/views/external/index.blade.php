@@ -13,13 +13,38 @@
         <x-sidebarAdmin :students="$students"></x-sidebarAdmin>
         <div class="main-content">
             <section class="section">
-                <div class="section-header">
+                <div class="section-header d-flex justify-content-lg-between">
                     <h1>{{ __('Data Dana Eksternal') }}</h1>
-                    <div class="section-header-breadcrumb">
-                        <div class="breadcrumb-item">{{ __('Dashboard') }}</div>
-                        <div class="breadcrumb-item">{{ __('Income') }}</div>
-                        <div class="breadcrumb-item active">{{ __('Dana Eksternal') }}</div>
-                    </div>
+                    @can('access-changeYear')
+                        <form id="updateYearForm">
+                            @csrf
+                            <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                                <div class="semester__active mr-2">
+                                    <select class="form-control" name="year_semester">
+                                        @foreach ($years as $item)
+                                            <option value="{{ $item->year_semester }}"
+                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                Semester: {{ $item->year_semester }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="year__active mr-2">
+                                    <select class="form-control" name="year_name">
+                                        @foreach ($years as $item)
+                                            <option value="{{ $item->year_name }}"
+                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                Tahun Ajaran: {{ $item->year_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="button-submit">
+                                    <button type="button" onclick="updateYear()" class="btn btn-primary h-100">Simpan</button>
+                                </div>
+                            </div>
+                        </form>
+                    @endcan
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
@@ -212,6 +237,35 @@
     @endcan
 
     @push('scripts')
+        <script>
+            function updateYear() {
+                const form = document.getElementById('updateYearForm');
+                const formData = new FormData(form);
+
+                fetch('/current-year', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Terjadi kesalahan');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        Notiflix.Notify.success(data.message, {
+                            timeout: 3000
+                        });
+                        location.reload();
+                    })
+                    .catch(error => {
+                        Notiflix.Notify.failure('Error: Data tidak ditemukan!');
+                    });
+            }
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const classForm = document.getElementById('classForm');

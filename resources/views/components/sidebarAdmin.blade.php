@@ -107,12 +107,14 @@
                         Konsolidasi</span></a>
             </li> --}}
 
-            <li class="{{ Request::is('enrollment') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('/enrollment') }}">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                    <span>Blangko Tagihan Siswa</span>
-                </a>
-            </li>
+            @can('access-blangkoSiswa')
+                <li class="{{ Request::is('enrollment') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/enrollment') }}">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Blangko Tagihan Siswa</span>
+                    </a>
+                </li>
+            @endcan
 
             @can('access-confirmCredit')
                 <li class="{{ Request::is('credit') ? 'active' : '' }}">

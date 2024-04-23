@@ -204,7 +204,9 @@ class EnrollmentController extends Controller
 
         if($inputStatus == 'Paid'){
             $payment->update([
-                'payment_type' => 'Khusus'
+                'payment_type' => 'Khusus',
+                'petugas_id' => 1,
+                'invoice_number' => '-'
             ]);
         }
 

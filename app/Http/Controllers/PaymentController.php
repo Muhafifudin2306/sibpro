@@ -219,10 +219,13 @@ class PaymentController extends Controller
     
     public function allData()
     {
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+
         $credit = Payment::where('status','Paid')
-                    ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
+                    ->where('year_id', $activeYearId)
                     ->orderBy("updated_at", "DESC")
                     ->get();
+                    
         $years = Year::orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();

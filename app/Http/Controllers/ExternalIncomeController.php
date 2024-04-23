@@ -19,11 +19,14 @@ class ExternalIncomeController extends Controller
     }
     public function index()
     {
-        $externals = ExternalIncome::select('id','pos_id','income_desc','income_period','income_price','updated_at')->orderBy('updated_at','DESC')->get();
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+
+        $years = Year::orderBy("updated_at", "DESC")->get();
+        $externals = ExternalIncome::select('id','pos_id','income_desc','income_period','income_price','updated_at')->orderBy('updated_at','DESC')->where('year_id', $activeYearId)->get();
         $pos = PointOfSales::select('id','point_code','point_source','point_name')->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('external.index', compact('students', 'externals','notifications','pos'));
+        return view('external.index', compact('students', 'externals','notifications','pos', 'years'));
     }
 
     public function storeExternal(Request $request)

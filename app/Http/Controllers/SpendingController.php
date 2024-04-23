@@ -37,19 +37,21 @@ class SpendingController extends Controller
 
         $id = $data->id;
 
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+        
         $attribute = Attribute::find($id);
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        $sumDebit = Payment::where('attribute_id', $id)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->where('status', 'Paid')->sum('price');
-        $sumSpending = Spending::where('attribute_id', $id)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->sum('spending_price');
+        $sumDebit = Payment::where('attribute_id', $id)->where('year_id', $activeYearId)->where('status', 'Paid')->sum('price');
+        $sumSpending = Spending::where('attribute_id', $id)->where('year_id', $activeYearId)->sum('spending_price');
         $spendings = Spending::select('id','spending_desc','spending_price', 'spending_type','spending_date','vendor_id')
-                                    ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
+                                    ->where('year_id', $activeYearId)
                                     ->orderBy("updated_at", "DESC")
                                     ->where('attribute_id',$id)
                                     ->get();
-        $sumDebt = Debt::where('is_paid',0)->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})->where('attribute_id', $id)->sum('debt_amount');
+        $sumDebt = Debt::where('is_paid',0)->where('year_id', $activeYearId)->where('attribute_id', $id)->sum('debt_amount');
 
-        $debts = Debt::select('id','description','debt_amount','vendor_id','due_date','is_paid')->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
+        $debts = Debt::select('id','description','debt_amount','vendor_id','due_date','is_paid')->where('year_id', $activeYearId)
                                     ->orderBy("updated_at", "DESC")
                                     ->where('attribute_id',$id)
                                     ->get();
