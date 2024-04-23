@@ -116,14 +116,6 @@ Route::prefix('transaction')->group(function () {
 
 Route::prefix('income')->group(function () {
 
-    Route::prefix('enrollment')->group(function () {
-        Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index'])->name('enrollment');
-        Route::get('/detail/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'detail'])->name('detailenrollment');
-        Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
-        Route::post('/process-multiple-payments', [App\Http\Controllers\EnrollmentController::class, 'processMultiplePayments'])->name('processMultiplePayments');
-        Route::post('/process-invoice-number', [App\Http\Controllers\EnrollmentController::class, 'invoiceNumber'])->name('invoiceNumber');
-    });
-
     Route::prefix('payment')->group(function () {
         Route::get('/all', [App\Http\Controllers\PaymentController::class, 'allData'])->name('allData');
         Route::get('/confirm/{uuid}', [App\Http\Controllers\PaymentController::class, 'confirmXendit'])->name('paymentXendit');
@@ -289,9 +281,21 @@ Route::prefix('payment')->group(function () {
     Route::get('/cancel/{uuid}', [App\Http\Controllers\PaymentController::class, 'cancelPayment']);
 });
 
+Route::prefix('enrollment')->group(function () {
+    // Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index'])->name('enrollment');]
+    Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index']);
+    Route::get('/detail/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'detail'])->name('detailenrollment');
+    Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
+    Route::post('/process-multiple-payments', [App\Http\Controllers\EnrollmentController::class, 'processMultiplePayments'])->name('processMultiplePayments');
+    Route::post('/process-invoice-number', [App\Http\Controllers\EnrollmentController::class, 'invoiceNumber'])->name('invoiceNumber');
+    
+    Route::post('/update/{id}', [App\Http\Controllers\EnrollmentController::class, 'editData']);
+    Route::delete('/delete/{id}', [App\Http\Controllers\EnrollmentController::class, 'destroy'])->name('deletePayment');
+});
+
 Route::prefix('payment-done')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPaymentDone']);
-    Route::get('/detail/{invoice_number}', [App\Http\Controllers\PaymentController::class, 'detailPaymentDone']);
+    Route::get('/detail/{id}', [App\Http\Controllers\PaymentController::class, 'detailPaymentDone']);
 });
 
 Route::prefix('petugas')->group(function () {

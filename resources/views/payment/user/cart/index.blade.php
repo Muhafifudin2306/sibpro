@@ -300,6 +300,8 @@
                             return;
                         }
 
+                        Notiflix.Loading.standard('Please wait...');
+
                         fetch('/cart/offline', {
                                 method: 'POST',
                                 headers: {

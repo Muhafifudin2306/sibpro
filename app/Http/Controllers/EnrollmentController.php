@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Notification;
 use App\Models\StudentClass;
 use App\Models\Payment;
+use App\Models\Year;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EnrollmentController extends Controller
@@ -16,12 +18,28 @@ class EnrollmentController extends Controller
     {
         $this->middleware('auth');
     }
+    // public function index()
+    // {
+    //     $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+    //     $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+
+    //     return view('enrollment.index', compact('notifications', 'studentClasses'));
+    // }
+
     public function index()
     {
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+
+        $credit = Payment::orderBy("user_id", "DESC")
+                    ->where('year_id', $activeYearId)
+                    ->where('status', 'Unpaid')
+                    ->get();
+        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
-        return view('enrollment.index', compact('notifications', 'studentClasses'));
+        return view('enrollment.index', compact('students', 'notifications', 'studentClasses','credit','years'));
     }
 
     public function detail($uuid)
@@ -159,6 +177,41 @@ class EnrollmentController extends Controller
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 
         return view('enrollment.payment', compact('transactions', 'snapToken', 'notifications'));
+    }
+
+    public function destroy($id)
+    {
+        $payment = Payment::find($id);
+
+        if (!$payment) {
+            return response()->json(['message' => 'Data Pembayran tidak ditemukan.'], 404);
+        }
+
+        $payment->delete();
+
+        return response()->json(['message' => 'Data pembayaran berhasil dihapus!']);
+    }
+
+    public function editData(Request $request, $id)
+    {
+        $payment = Payment::find($id);
+
+        $payment->update([
+            'price' => $request->input('price'),
+            'status' => $request->input('status')
+        ]);
+        $inputStatus = $request->input('status');
+
+        if($inputStatus == 'Paid'){
+            $payment->update([
+                'payment_type' => 'Khusus'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Data updated successfully',
+            'data' => $payment,
+        ], 201);
     }
 
 }

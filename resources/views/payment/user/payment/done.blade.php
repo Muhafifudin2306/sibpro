@@ -85,7 +85,7 @@
                                             @elseif($item->credit != null)
                                                 <td>{{ $item->credit->credit_name }}</td>
                                             @endif
-                                            <td>{{ $item->type }}</td>
+                                            <td>{{ $item->payment_type }}</td>
                                             <td>
                                                 Rp{{ number_format($item->price, 0, ',', '.') }}
                                             </td>
@@ -103,7 +103,7 @@
                                             @endif
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
                                             <td>
-                                                <a href="{{ url('/payment-done/detail/' . $item->invoice_number) }}">
+                                                <a href="{{ url('/payment-done/detail/' . $item->id) }}">
                                                     <i class="fas fa-file text-primary" title="Detail"></i>
                                                 </a>
                                             </td>

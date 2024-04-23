@@ -26,15 +26,15 @@ class CreditController extends Controller
 
     public function index()
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
 
         $credit = Payment::orderBy("user_id", "DESC")
-                    ->where('status','!=', 'Paid')
+                    ->where('status','Pending')
                     ->where('year_id', $activeYearId)
                     ->get();
 
         $petugas = Petugas::orderBy("updated_at", "DESC")->get();
-        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
+        $years = Year::orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();

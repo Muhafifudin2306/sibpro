@@ -51,6 +51,7 @@
                                         <th>{{ __('Verifikator') }}</th>
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Tanggal') }}</th>
+                                        <th>{{ __('Aksi') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -84,6 +85,11 @@
                                                 </td>
                                             @endif
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
+                                            <td>
+                                                <a href="{{ url('/payment-done/detail/' . $item->id) }}">
+                                                    <i class="fas fa-file text-primary" title="Detail"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

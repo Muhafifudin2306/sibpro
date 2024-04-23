@@ -54,15 +54,10 @@
                             {{ __('Pilih item dan lakukan pembayaran') }}
                         </p>
                     </div>
-                    @can('access-generatePayment')
-                        <div class="action-content">
-                            <button class="btn btn-primary generate">{{ __('+ Buat Data Tagihan') }}</button>
-                        </div>
-                    @endcan
                 </div>
 
                 <div class="row flex-row-reverse">
-                    <div class="col-lg-5">
+                    <div class="col-lg-4">
                         <div class="card">
                             <div class="card-header bg-warning">
                                 <h4>{{ __('Petunjuk Verifikasi Tagihan Siswa') }}</h4>
@@ -73,16 +68,9 @@
                                 <p>2. Untuk siswa yang telah melakukan pemesanan, maka item tagihan akan memiliki status
                                     <span class="font-weight-bold">"Pending"</span>
                                 </p>
-                                <p>2. Untuk siswa yang belum melakukan pemesanan, maka item tagihan akan memiliki status
-                                    <span class="font-weight-bold">"Belum Lunas"</span>
-                                </p>
-                                <p>2. Tabel <span class="font-weight-bold">"Estimasi Pembayaran"</span> akan menghitung
+                                <p>3. Tabel <span class="font-weight-bold">"Estimasi Pembayaran"</span> akan menghitung
                                     total
                                     tagihan </p>
-                                <p>3. Keduanya dapat dilanjutkan proses pembayarannya dan tekan tombol <span
-                                        class="font-weight-bold">"Konfirmasi Pembayaran"</span> ketika telah menerima uang
-                                    tunai dari siswa
-                                    maka </p>
                                 <p>4. Tidak lupa memasukkan data <span class="font-weight-bold">"Petugas"</span> penerima
                                     transaksi saat itu</p>
                             </div>
@@ -126,7 +114,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-7">
+                    <div class="col-lg-8">
                         <div class="card">
                             <div class="card-header">
                                 <h4>{{ __('Daftar Item Tagihan') }}</h4>
@@ -145,8 +133,9 @@
                                                             class="custom-control-label">&nbsp;</label>
                                                     </div>
                                                 </th>
+                                                <th>{{ __('No.Kwitansi') }}</th>
                                                 <th>{{ __('Pembayaran') }}</th>
-                                                <th>{{ __('Tipe') }}</th>
+                                                <th>{{ __('NIS') }}</th>
                                                 <th>{{ __('Nama Siswa') }}</th>
                                                 <th>{{ __('Nominal') }}</th>
                                                 <th>{{ __('Status') }}</th>
@@ -159,7 +148,7 @@
                                                         <div class="custom-checkbox custom-control">
                                                             <input type="checkbox" data-checkboxes="mygroup"
                                                                 class="custom-control-input"
-                                                                id="checkbox-{{ $item->uuid }}"
+                                                                id="checkbox-{{ $item->id }}"
                                                                 data-price="{{ $item->price }}"
                                                                 data-type="{{ $item->type }}"
                                                                 @if ($item->credit == null) data-label="{{ $item->attribute->attribute_name }}"
@@ -167,16 +156,17 @@
                                                             data-label="{{ $item->credit->credit_name }}" @endif
                                                                 onchange="updateTotalPrice()"
                                                                 data-id="{{ $item->id }}">
-                                                            <label for="checkbox-{{ $item->uuid }}"
+                                                            <label for="checkbox-{{ $item->id }}"
                                                                 class="custom-control-label">&nbsp;</label>
                                                         </div>
                                                     </td>
+                                                    <td>{{ $item->invoice_number }}</td>
                                                     @if ($item->credit == null)
                                                         <td>{{ $item->attribute->attribute_name }}</td>
                                                     @elseif($item->credit != null)
                                                         <td>{{ $item->credit->credit_name }}</td>
                                                     @endif
-                                                    <td>{{ $item->type }}</td>
+                                                    <td>{{ $item->user->nis }}</td>
                                                     <td>{{ $item->user->name }}</td>
                                                     <td>
                                                         Rp{{ number_format($item->price, 0, ',', '.') }}
@@ -422,46 +412,6 @@
                 checkbox.addEventListener('change', function() {
                     updateTotalPrice();
                     updateCheckboxStatus(checkbox);
-                });
-            });
-        </script>
-
-        <script>
-            const generateButton = document.querySelectorAll('.generate');
-
-            generateButton.forEach(button => {
-                button.addEventListener('click', function() {
-                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin Melanjutkan Proses ini?', 'Ya',
-                        'Batal',
-                        function() {
-                            // Show loading animation only if user clicks "Ya"
-                            Notiflix.Loading.standard('Proses sedang berlangsung, harap tunggu...');
-
-                            fetch(`/credit/generate/`, {
-                                    method: 'GET',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    Notiflix.Notify.success("Data atribut SPP berhasil dibuat!", {
-                                        timeout: 3000
-                                    });
-
-                                    // Remove loading animation after the process is complete
-                                    Notiflix.Loading.remove();
-
-                                    // Reload the page
-                                    location.reload();
-                                })
-                                .catch(error => {
-                                    Notiflix.Notify.failure('Error:', error);
-
-                                    // Remove loading animation in case of error
-                                    Notiflix.Loading.remove();
-                                });
-                        });
                 });
             });
         </script>

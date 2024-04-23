@@ -71,9 +71,10 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">{{ __('No') }}</th>
-                                        <th>{{ __('ID Transaksi') }}</th>
+                                        <th>{{ __('No.Kwitansi') }}</th>
                                         <th>{{ __('Pembayaran') }}</th>
                                         <th>{{ __('Tipe Pembayaran') }}</th>
+                                        <th>{{ __('NIS') }}</th>
                                         <th>{{ __('Nama Siswa') }}</th>
                                         <th>{{ __('Nominal Pembayaran') }}</th>
                                         <th>{{ __('Verifikator') }}</th>
@@ -96,8 +97,9 @@
                                             @elseif($item->credit != null)
                                                 <td>{{ $item->credit->credit_name }}</td>
                                             @endif
-                                            <td>{{ $item->type }}</td>
-                                            <td class="font-weight-600">{{ $item->user->name }}</td>
+                                            <td>{{ $item->payment_type }}</td>
+                                            <td>{{ $item->user->nis }}</td>
+                                            <td>{{ $item->user->name }}</td>
                                             <td>
                                                 Rp{{ number_format($item->price, 0, ',', '.') }}
                                             </td>
