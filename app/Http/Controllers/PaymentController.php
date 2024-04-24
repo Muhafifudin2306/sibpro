@@ -31,7 +31,8 @@ class PaymentController extends Controller
                     ->where('year_id', $activeYearId)
                     ->where('status', 'Unpaid')
                     ->get();
-        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
+        $years = Year::orderBy("updated_at", "DESC")->get();
+
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
@@ -52,7 +53,7 @@ class PaymentController extends Controller
         ->get();
         
                     
-        $years = Year::select('year_name','year_semester')->orderBy("updated_at", "DESC")->get();
+        $years = Year::orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();

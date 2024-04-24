@@ -21,7 +21,7 @@
                         <div class="current__year d-flex py-lg-0 pt-3 pb-1">
                             <div class="semester__active mr-2">
                                 <select class="form-control" name="year_semester">
-                                    @foreach ($years as $item)
+                                    @foreach ($years->unique('year_semester') as $item)
                                         <option value="{{ $item->year_semester }}"
                                             {{ $item->year_current == 'selected' ? 'selected' : '' }}>
                                             Semester: {{ $item->year_semester }}

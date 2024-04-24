@@ -17,8 +17,8 @@
                         <h1>{{ __('Loket Pemesanan') }}</h1>
                     </div>
                     @can('access-currentYear')
-                        <div class="current__year d-md-flex d-block py-lg-0 pt-3 pb-1">
-                            <div class="semester__active mr-2 mb-3">
+                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                            <div class="semester__active mr-2">
                                 <select class="form-control" name="year_semester" disabled>
                                     @foreach ($years as $item)
                                         <option value="{{ $item->year_semester }}"
@@ -28,7 +28,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="year__active mr-2 mb-3">
+                            <div class="year__active mr-2">
                                 <select class="form-control" name="year_name" disabled>
                                     @foreach ($years as $item)
                                         <option value="{{ $item->year_name }}"
