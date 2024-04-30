@@ -23,16 +23,6 @@
                         <form id="updateYearForm">
                             @csrf
                             <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                                <div class="semester__active mr-2">
-                                    <select class="form-control" name="year_semester">
-                                        @foreach ($years->unique('year_semester') as $item)
-                                            <option value="{{ $item->year_semester }}"
-                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                                Semester: {{ $item->year_semester }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="year__active mr-2">
                                     <select class="form-control" name="year_name">
                                         @foreach ($years as $item)
@@ -54,7 +44,7 @@
                     <div class="title-content">
                         <h2 class="section-title">{{ __('Data Tagihan Siswa') }}</h2>
                         <p class="section-lead">
-                            {{ __('Lihat kumpulan pembayaran SPP dan Daftar Ulang di semester ini') }}
+                            {{ __('Lihat kumpulan pembayaran SPP dan Daftar Ulang di tahun ajaran ini') }}
                         </p>
                     </div>
                 </div>

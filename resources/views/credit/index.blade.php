@@ -20,16 +20,6 @@
                         <form id="updateYearForm">
                             @csrf
                             <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                                <div class="semester__active mr-2">
-                                    <select class="form-control" name="year_semester">
-                                        @foreach ($years->unique('year_semester') as $item)
-                                            <option value="{{ $item->year_semester }}"
-                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                                Semester: {{ $item->year_semester }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="year__active mr-2">
                                     <select class="form-control" name="year_name">
                                         @foreach ($years as $item)
@@ -139,6 +129,7 @@
                                                 <th>{{ __('Nama Siswa') }}</th>
                                                 <th>{{ __('Nominal') }}</th>
                                                 <th>{{ __('Status') }}</th>
+                                                <th>{{ __('Aksi') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -187,6 +178,11 @@
                                                             </div>
                                                         </td>
                                                     @endif
+                                                    <td>
+                                                        <a href="#" onclick="rejectPayment({{ $item->id }})">
+                                                            <i class="fas fa-trash text-danger"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -250,6 +246,34 @@
     </div>
 
     @push('scripts')
+        <script>
+            function rejectPayment(paymentId) {
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus pembayaran?', 'Ya', 'Tidak',
+                    function() {
+                        fetch('/payment/reject/' + paymentId, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                }
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal menghapus pembayaran');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                Notiflix.Notify.success(data.message);
+                                window.location.href = '/credit';
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure(error.message);
+                            });
+                    });
+            }
+        </script>
+
         <script>
             function updateYear() {
                 const form = document.getElementById('updateYearForm');

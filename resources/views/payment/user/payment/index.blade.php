@@ -18,16 +18,6 @@
                     </div>
                     @can('access-currentYear')
                         <div class="current__year d-md-flex d-block py-lg-0 pt-3 pb-1">
-                            <div class="semester__active mr-2 mb-3">
-                                <select class="form-control" name="year_semester" disabled>
-                                    @foreach ($years as $item)
-                                        <option value="{{ $item->year_semester }}"
-                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
-                                            Semester: {{ $item->year_semester }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
                             <div class="year__active mr-2 mb-3">
                                 <select class="form-control" name="year_name" disabled>
                                     @foreach ($years as $item)

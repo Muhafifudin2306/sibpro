@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserHasCredit;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -24,7 +23,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required','unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'nis' => ['required'],
             'class_id' => ['required'],
@@ -45,17 +44,6 @@ class RegisterController extends Controller
         ]);
         $studentRole = Role::where('name', 'Student')->first();
         $user->assignRole($studentRole);
-
-        $selectedCredits = $user->categories->credits->pluck('id')->toArray();
-
-        foreach ($selectedCredits as $creditId) {
-            UserHasCredit::create([
-                'user_id' => $user->id,
-                'credit_id' => $creditId,
-                'status' => 'Unpaid',
-                'credit_price' => 0
-            ]);
-        }
 
         return $user;
     }

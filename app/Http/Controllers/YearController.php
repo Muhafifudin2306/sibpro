@@ -21,7 +21,7 @@ class YearController extends Controller
     public function index()
     {
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        $years = Year::orderByRaw('year_status = "active" desc, updated_at desc')->select('year_name','year_semester','year_status','id')->get();
+        $years = Year::orderByRaw('year_status = "active" desc, updated_at desc')->select('year_name','year_status','id')->get();
         $studentSide = StudentClass::orderBy("class_name", 'ASC')->get();
         return view('setting.year.index', compact('years', 'notifications', 'studentSide'));
     }
@@ -30,16 +30,20 @@ class YearController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'year_name' => 'required',
-            'year_semester' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
 
+        $newYearName = $request->input('year_name');
+
+        if ($this->isDataExist($newYearName)) {
+            return response()->json(['error' => 'Data tidak ditemukan di tabel'], 422);
+        }
+
         $year = Year::create([
             'year_name' => $request->input('year_name'),
-            'year_semester' => $request->input('year_semester'),
             'year_status' => "nonActive"
         ]);
 
@@ -93,31 +97,30 @@ class YearController extends Controller
 
     public function currentYear(Request $request)
     {
-        $newSemester = $request->input('year_semester');
         $newYearName = $request->input('year_name');
 
-        if (!$this->isValidData($newSemester, $newYearName)) {
+        if (!$this->isValidData($newYearName)) {
             return response()->json(['error' => 'Data yang diberikan tidak valid'], 422);
         }
 
-        if (!$this->isDataExist($newSemester, $newYearName)) {
+        if (!$this->isDataExist($newYearName)) {
             return response()->json(['error' => 'Data tidak ditemukan di tabel'], 422);
         }
 
         Year::where('year_current', 'selected')->update(['year_current' => 'unSelected']);
-        Year::where(['year_semester' => $newSemester, 'year_name' => $newYearName])->update(['year_current' => 'selected']);
+        Year::where(['year_name' => $newYearName])->update(['year_current' => 'selected']);
 
         return response()->json(['message' => 'Data tahun ajaran berhasil diperbarui'], 200);
     }
 
-    private function isValidData($semester, $yearName)
+    private function isValidData($yearName)
     {
-        return !empty($semester) && !empty($yearName);
+        return !empty($yearName);
     }
 
-    private function isDataExist($semester, $yearName)
+    private function isDataExist($yearName)
     {
-        return Year::where(['year_semester' => $semester, 'year_name' => $yearName])->exists();
+        return Year::where(['year_name' => $yearName])->exists();
     }
 }
 

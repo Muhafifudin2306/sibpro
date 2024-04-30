@@ -87,10 +87,9 @@
                                             value="{{ $credit->updated_at->format('d F Y') }}" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label class="font-weight-bold"
-                                            for="attribute_price">{{ __('Semester/Tahun Pelajaran') }} </label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $credit->year->year_semester . ',' . ' ' . $credit->year->year_name }}"
+                                        <label class="font-weight-bold" for="attribute_price">{{ __('Tahun Pelajaran') }}
+                                        </label>
+                                        <input type="text" class="form-control" value="{{ $credit->year->year_name }}"
                                             disabled>
                                     </div>
                                 </div>

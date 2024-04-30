@@ -26,11 +26,12 @@
                             <a href="{{ url('/account/users') }}"> {{ __('Close') }} </a>
                         </div>
                         <div class="card-body pb-5">
-                            <form class="update-form" data-action="{{ url('account/users/update/'. $user->uuid) }}"
+                            <form class="update-form" data-action="{{ url('account/users/update/' . $user->uuid) }}"
                                 method="POST">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="name">{{ __('Nama Lengkap') }} <span class="text-danger">*</span></label>
+                                    <label for="name">{{ __('Nama Lengkap') }} <span
+                                            class="text-danger">*</span></label>
                                     <input id="name" type="text"
                                         class="form-control @error('name') is-invalid @enderror" name="name"
                                         value="{{ $user->name }}" required>
@@ -119,11 +120,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">{{ __('Email') }} <span class="text-danger">*</span></label>
-                                    <input id="email" type="email"
+                                    <label for="email">{{ __('NISN') }} <span class="text-danger">*</span></label>
+                                    <input id="email" type="text"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
-                                        value="{{ $user->email }}" placeholder="email@email.com" required
-                                        autocomplete="email">
+                                        value="{{ $user->email }}" placeholder="111222333" required autocomplete="email">
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -131,8 +131,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label for="nis">{{ __('Role') }} <span
-                                        class="text-danger">*</span></label>
+                                    <label for="nis">{{ __('Role') }} <span class="text-danger">*</span></label>
                                     <select class="form-control" required name="role_id">
                                         <option value="">{{ __('-- Pilih Role --') }}</option>
                                         @foreach ($roles as $item)

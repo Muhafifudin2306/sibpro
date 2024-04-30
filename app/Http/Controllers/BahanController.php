@@ -18,13 +18,13 @@ class BahanController extends Controller
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
         $bahans = Bahan::orderBy("updated_at", "DESC")->where('year_id', $activeYearId)->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
-        $years = Year::select('year_name','year_semester', 'year_current')->orderBy("updated_at", "DESC")->get();
+        $years = Year::select('year_name', 'year_current')->orderBy("updated_at", "DESC")->get();
         return view('spending.bahan.index', compact("students","notifications", "bahans", 'years'));
     }
 
     public function store(Request $request)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
 
         
         // Ambil invoice number terakhir

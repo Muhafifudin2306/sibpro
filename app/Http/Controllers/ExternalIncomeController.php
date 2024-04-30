@@ -31,7 +31,7 @@ class ExternalIncomeController extends Controller
 
     public function storeExternal(Request $request)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
 
         $validator = Validator::make($request->all(), [
             'pos_id' => 'required|exists:point_of_sales,id',
@@ -43,7 +43,7 @@ class ExternalIncomeController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
-        $incomePeriod = $request->input('income_period') . '-01';
+        $incomePeriod = $request->input('income_period');
 
         ExternalIncome::create([
             'pos_id' => $request->input('pos_id'),
@@ -96,11 +96,11 @@ class ExternalIncomeController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
     
         $externalIncome = ExternalIncome::findOrFail($id);
 
-        $incomePeriod = $request->input('income_period') . '-01';
+        $incomePeriod = $request->input('income_period');
     
         $externalIncome->update([
             'pos_id' => $request->input('pos_id'),

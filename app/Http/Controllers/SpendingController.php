@@ -62,7 +62,7 @@ class SpendingController extends Controller
     }
     public function storeSpending(Request $request)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
         $years = Year::find($activeYearId);
 
         $spendingDate = $request->input('spending_date');
@@ -103,7 +103,7 @@ class SpendingController extends Controller
         }
 
         $spending->delete();
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
         $years = Year::find($activeYearId);
 
         Notification::create([
@@ -116,7 +116,7 @@ class SpendingController extends Controller
 
     public function updateSpending(Request $request, $id)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
         $years = Year::find($activeYearId);
 
         $spendingDate = $request->input('spending_date');
@@ -153,7 +153,7 @@ class SpendingController extends Controller
 
     public function storeDebt(Request $request)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
         $years = Year::find($activeYearId);
 
         $dueDate = $request->input('due_date');
@@ -207,7 +207,7 @@ class SpendingController extends Controller
 
     public function updateDebt(Request $request,$id)
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
         $years = Year::find($activeYearId);
 
         $dueDate = $request->input('due_date');

@@ -22,16 +22,6 @@
 
                     @can('access-currentYear')
                         <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                            <div class="semester__active mr-2">
-                                <select class="form-control" name="year_semester" disabled>
-                                    @foreach ($years as $item)
-                                        <option value="{{ $item->year_semester }}"
-                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
-                                            Semester: {{ $item->year_semester }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
                             <div class="year__active mr-2">
                                 <select class="form-control" name="year_name" disabled>
                                     @foreach ($years as $item)
@@ -49,16 +39,6 @@
                         <form id="updateYearForm">
                             @csrf
                             <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                                <div class="semester__active mr-2">
-                                    <select class="form-control" name="year_semester">
-                                        @foreach ($years->unique('year_semester') as $item)
-                                            <option value="{{ $item->year_semester }}"
-                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                                Semester: {{ $item->year_semester }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="year__active mr-2">
                                     <select class="form-control" name="year_name">
                                         @foreach ($years as $item)
@@ -272,7 +252,7 @@
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
-                                            Rp{{ number_format($sumDebit - $sumSpending + $externalCount, 0, ',', '.') }}
+                                            Rp{{ number_format($sumDebit - $totalBahan - $sumSpending + $externalCount, 0, ',', '.') }}
                                         </h5>
                                     </div>
                                     <div class="py-2"></div>

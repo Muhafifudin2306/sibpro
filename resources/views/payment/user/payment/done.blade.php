@@ -19,16 +19,6 @@
                     </div>
                     @can('access-currentYear')
                         <div class="current__year d-md-flex d-block py-lg-0 pt-3 pb-1">
-                            <div class="semester__active mr-2 mb-3">
-                                <select class="form-control" name="year_semester" disabled>
-                                    @foreach ($years as $item)
-                                        <option value="{{ $item->year_semester }}"
-                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
-                                            Semester: {{ $item->year_semester }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
                             <div class="year__active mr-2 mb-3">
                                 <select class="form-control" name="year_name" disabled>
                                     @foreach ($years as $item)
@@ -65,7 +55,6 @@
                                         <th>{{ __('Tipe') }}</th>
                                         <th>{{ __('Nominal') }}</th>
                                         <th>{{ __('Verifikator') }}</th>
-                                        <th>{{ __('Semester') }}</th>
                                         <th>{{ __('Tahun') }}</th>
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Tanggal') }}</th>
@@ -90,7 +79,6 @@
                                                 Rp{{ number_format($item->price, 0, ',', '.') }}
                                             </td>
                                             <td>{{ $item->petugas->name }}</td>
-                                            <td>{{ $item->year->year_semester }}</td>
                                             <td>{{ $item->year->year_name }}</td>
                                             @if ($item->status == 'Paid')
                                                 <td>

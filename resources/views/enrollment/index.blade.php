@@ -20,16 +20,6 @@
                         <form id="updateYearForm">
                             @csrf
                             <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                                <div class="semester__active mr-2">
-                                    <select class="form-control" name="year_semester">
-                                        @foreach ($years->unique('year_semester') as $item)
-                                            <option value="{{ $item->year_semester }}"
-                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                                Semester: {{ $item->year_semester }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="year__active mr-2">
                                     <select class="form-control" name="year_name">
                                         @foreach ($years as $item)
@@ -76,7 +66,6 @@
                                                 <th>Nama</th>
                                                 <th>Pembayaran</th>
                                                 <th>Tipe</th>
-                                                <th>Semester</th>
                                                 <th>Tahun</th>
                                                 <th>Nominal</th>
                                             </tr>
@@ -84,7 +73,7 @@
                                         <tbody id="selectedItems"></tbody>
                                         <tbody>
                                             <tr>
-                                                <td colspan="6" class="text-center font-weight-bold">Total</td>
+                                                <td colspan="5" class="text-center font-weight-bold">Total</td>
                                                 <td><span id="totalPrice">Rp0</span></td>
                                             </tr>
                                         </tbody>
@@ -123,7 +112,6 @@
                                                 <th>{{ __('Pembayaran') }}</th>
                                                 <th>{{ __('Tipe') }}</th>
                                                 <th>{{ __('Nominal') }}</th>
-                                                <th>{{ __('Semester') }}</th>
                                                 <th>{{ __('Tahun') }}</th>
                                                 <th>{{ __('Status') }}</th>
                                                 <th>{{ __('Aksi') }}</th>
@@ -140,7 +128,6 @@
                                                                 data-price="{{ $item->price }}"
                                                                 data-name="{{ $item->user->name }}"
                                                                 data-year="{{ $item->year->year_name }}"
-                                                                data-semester="{{ $item->year->year_semester }}"
                                                                 data-nis="{{ $item->user->nis }}"
                                                                 data-type="{{ $item->type }}"
                                                                 @if ($item->credit == null) data-label="{{ $item->attribute->attribute_name }}"
@@ -171,7 +158,6 @@
                                                     <td>
                                                         Rp{{ number_format($item->price, 0, ',', '.') }}
                                                     </td>
-                                                    <td>{{ $item->year->year_semester }}</td>
                                                     <td>{{ $item->year->year_name }}</td>
                                                     @if ($item->status == 'Paid')
                                                         <td>
@@ -261,13 +247,6 @@
                                     <div class="form-group">
                                         <label>{{ __('Tipe Pembayaran') }}</label>
                                         <input type="text" class="form-control" value="{{ $item->type }}" disabled>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>{{ __('Semester') }}</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $item->year->year_semester }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -440,12 +419,11 @@
                     var nis = checkbox.getAttribute('data-nis');
                     var type = checkbox.getAttribute('data-type');
                     var year = checkbox.getAttribute('data-year');
-                    var semester = checkbox.getAttribute('data-semester');
                     var priceItem = parseFloat(checkbox.getAttribute('data-price'));
                     totalPrice += price;
 
                     labelItem += '<tr>' + '<td>' + nis + '</td>' + '<td>' + name + '</td>' + '<td>' + type + '</td>' +
-                        '<td>' + label + '</td>' + '<td>' + semester + '</td>' + '<td>' + year + '</td>' +
+                        '<td>' + label + '</td>' + '<td>' + year + '</td>' +
                         '<td>' + 'Rp' + priceItem + '</td>' + '</tr>';
                 });
 

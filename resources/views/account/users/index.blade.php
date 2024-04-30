@@ -58,7 +58,7 @@
                                         <th>{{ __('Gender') }}</th>
                                         <th>{{ __('Kategori') }}</th>
                                         <th>{{ __('Kelas') }}</th>
-                                        <th>{{ __('Email') }}</th>
+                                        <th>{{ __('NISN') }}</th>
                                         <th>{{ __('Role') }}</th>
                                         <th>{{ __('Aksi') }}</th>
                                     </tr>
@@ -199,10 +199,10 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="email">{{ __('Email') }} <span class="text-danger">*</span></label>
-                                <input id="email" type="email"
+                                <label for="email">{{ __('NISN') }} <span class="text-danger">*</span></label>
+                                <input id="email" type="text"
                                     class="form-control @error('email') is-invalid @enderror" name="email"
-                                    value="{{ old('email') }}" placeholder="email@email.com" required autocomplete="email">
+                                    value="{{ old('email') }}" placeholder="112233445566" required autocomplete="email">
                             </div>
                             <div class="row">
                                 <div class="form-group col-6">

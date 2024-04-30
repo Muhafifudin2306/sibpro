@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-6 col-12">
-                                                <label>{{ __('Email') }}</label>
+                                                <label>{{ __('NISN') }}</label>
                                                 <input type="email" class="form-control" value="{{ $user->email }}"
                                                     disabled>
                                             </div>

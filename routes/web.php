@@ -279,6 +279,7 @@ Route::prefix('payment')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPayment']);
     Route::post('/confirm', [App\Http\Controllers\PaymentController::class, 'confirmPayment']);
     Route::get('/cancel/{uuid}', [App\Http\Controllers\PaymentController::class, 'cancelPayment']);
+    Route::get('/reject/{id}', [App\Http\Controllers\PaymentController::class, 'rejectPayment']);
 });
 
 Route::prefix('enrollment')->group(function () {

@@ -42,7 +42,6 @@
                                         <h4>{{ 'Tahun Aktif' }}</h4>
                                     </div>
                                     <div class="card-body">
-                                        <p>Semester {{ $year->year_semester }}</p>
                                         <p>Tahun Pelajaran {{ $year->year_name }}</p>
                                     </div>
                                 </div>
@@ -58,7 +57,6 @@
                                         @endcan
                                     </div>
                                     <div class="card-body cursor-pointer card-body-off" data-card-id="{{ $year->id }}">
-                                        <p>Semester {{ $year->year_semester }}</p>
                                         <p>Tahun Pelajaran {{ $year->year_name }}</p>
                                     </div>
                                 </div>
@@ -87,21 +85,11 @@
                     <form id="yearForm">
                         <div class="modal-body">
                             <div class="row pt-3 pb-1">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="year_name">Nama Tahun Pelajaran</label>
                                         <input type="text" id="year_name" class="form-control" name="year_name"
                                             placeholder="2022/2023" required autofocus>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="year_semester">Nama Semester</label>
-                                        <select name="year_semester" id="year_semester" class="form-control">
-                                            <option selected disabled> -- Pilih Semester -- </option>
-                                            <option value="Genap">Genap</option>
-                                            <option value="Ganjil">Ganjil</option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -147,8 +135,9 @@
                                         timeout: 3000
                                     });
                             } else {
-                                Notiflix.Notify.failure('Error:',
-                                    'Terjadi kesalahan saat memproses permintaan.');
+                                Notiflix.Notify.failure(
+                                    'Error: Nama Tahun tidak boleh kosong atau nama sejenis telah digunakan'
+                                    );
                             }
                         } else {
                             const responseData = await response.json();

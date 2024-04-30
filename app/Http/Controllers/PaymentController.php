@@ -217,6 +217,22 @@ class PaymentController extends Controller
     
         return redirect('payment');
     }
+
+    public function rejectPayment($id)
+    {
+        $payment = Payment::find($id)->update([
+            'status' => 'Unpaid',
+            'uuid' => NULL,
+            'increment' => NULL,
+            'invoice_number' => NULL,
+            'payment_type' => NULL,
+            'checkout_link' => NULL, 
+            'external_id' => NULL,
+            'petugas_id' => NULL
+        ]);
+    
+        return response()->json(['message' => 'Pengajuan Pembayaran berhasil dihapus'], 200);
+    }
     
     public function allData()
     {

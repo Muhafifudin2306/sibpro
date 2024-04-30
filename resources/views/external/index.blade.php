@@ -19,16 +19,6 @@
                         <form id="updateYearForm">
                             @csrf
                             <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                                <div class="semester__active mr-2">
-                                    <select class="form-control" name="year_semester">
-                                        @foreach ($years->unique('year_semester') as $item)
-                                            <option value="{{ $item->year_semester }}"
-                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                                Semester: {{ $item->year_semester }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="year__active mr-2">
                                     <select class="form-control" name="year_name">
                                         @foreach ($years as $item)
@@ -73,7 +63,7 @@
                                             {{ __('No') }}
                                         </th>
                                         <th>{{ __('ID POS') }}</th>
-                                        <th>{{ __('Periode') }}</th>
+                                        <th>{{ __('Tanggal') }}</th>
                                         <th>{{ __('Nominal') }}</th>
                                         <th>{{ __('Keterangan') }}</th>
                                         <th>{{ __('Terakhir Diubah') }}</th>
@@ -93,8 +83,9 @@
                                                 {{ $item->pos->point_code . '-' . $item->pos->point_source . '-' . $item->pos->point_name }}
                                             </td>
                                             <td>
-                                                {{ \Carbon\Carbon::parse($item->income_period)->format('F, Y') }}
+                                                {{ \Carbon\Carbon::parse($item->income_period)->isoFormat('D MMMM YYYY') }}
                                             </td>
+
                                             <td>
                                                 Rp{{ number_format($item->income_price, 0, ',', '.') }}
                                             </td>
@@ -158,8 +149,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="point_source">Periode Dana</label>
-                            <input type="month" class="form-control" name="income_period" id="income_period" required>
+                            <label for="point_source">Tanggal</label>
+                            <input type="date" class="form-control" name="income_period" id="income_period" required>
                         </div>
                         <div class="form-group">
                             <label for="point_name">Nominal Dana</label>
@@ -210,15 +201,16 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="income_period">Periode Dana</label>
-                                    <input type="month" class="form-control" name="income_period" id="income_period"
-                                        placeholder="Masukkan periode dana eksternal"
-                                        value="{{ date('Y-m', strtotime($item->income_period)) }}" required>
+                                    <label for="income_period">Tanggal</label>
+                                    <input type="date" class="form-control" name="income_period" id="income_period"
+                                        placeholder="Masukkan periode dana eksternal" value="{{ $item->income_period }}"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="income_price">Nominal Dana</label>
                                     <input type="number" class="form-control" name="income_price"
-                                        placeholder="Masukkan nominal dana" value="{{ $item->income_price }}" required>
+                                        placeholder="Masukkan nominal dana" value="{{ round($item->income_price) }}"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="income_desc">Keterangan</label>
