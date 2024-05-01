@@ -67,10 +67,10 @@
                                 href="{{ url('spending/attribute') }}">Realisasi Atribut Siswa</a></li>
                         <li class="{{ Request::segment(2) === 'bahan' ? 'active' : '' }}"><a class="nav-link"
                                 href="{{ url('spending/bahan') }}">Belanja Bahan dan Alat</a></li>
-                        <li class="{{ Request::segment(2) === 'attribute' ? 'active' : '' }}"><a class="nav-link"
-                                href="{{ url('spending/attribute') }}">Pengeluaran Operasional</a></li>
-                        <li class="{{ Request::segment(2) === 'bahan' ? 'active' : '' }}"><a class="nav-link"
-                                href="{{ url('spending/bahan') }}">Non-Operasional</a></li>
+                        <li class="{{ Request::segment(2) === 'operasional' ? 'active' : '' }}"><a class="nav-link"
+                                href="{{ url('spending/operasional') }}">Operasional</a></li>
+                        <li class="{{ Request::segment(2) === 'non-operasional' ? 'active' : '' }}"><a class="nav-link"
+                                href="{{ url('spending/non-operasional') }}">Non-Operasional</a></li>
                     </ul>
                 </li>
             @endcan

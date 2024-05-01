@@ -97,6 +97,18 @@ Route::prefix('spending')->group(function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\BahanController::class, 'destroy'])->name('deleteBahan');
         Route::post('/update/{id}', [App\Http\Controllers\BahanController::class, 'update'])->name('updateBahan');
     });
+
+    Route::prefix('operasional')->group(function () {
+        Route::get('/', [App\Http\Controllers\ExternalSpendingController::class, 'indexOperasional'])->name('indexOperasionl');
+        Route::post('/store', [App\Http\Controllers\ExternalSpendingController::class, 'storeOperasional'])->name('storeOperasional');
+        Route::delete('/delete/{id}', [App\Http\Controllers\ExternalSpendingController::class, 'destroy'])->name('deleteOperasional');
+        Route::post('/update/{id}', [App\Http\Controllers\ExternalSpendingController::class, 'updateOperasional'])->name('updateOperasional');
+    });
+
+    Route::prefix('non-operasional')->group(function () {
+        Route::get('/', [App\Http\Controllers\ExternalSpendingController::class, 'indexNonOperasional'])->name('indexNonOperasional');
+
+    });
 });
 
 Route::prefix('credit')->group(function () {
