@@ -107,7 +107,9 @@ Route::prefix('spending')->group(function () {
 
     Route::prefix('non-operasional')->group(function () {
         Route::get('/', [App\Http\Controllers\ExternalSpendingController::class, 'indexNonOperasional'])->name('indexNonOperasional');
-
+        Route::post('/store', [App\Http\Controllers\ExternalSpendingController::class, 'storeNonOperasional'])->name('storeNonOperasional');
+        Route::delete('/delete/{id}', [App\Http\Controllers\ExternalSpendingController::class, 'destroy'])->name('deleteNonOperasional');
+        Route::post('/update/{id}', [App\Http\Controllers\ExternalSpendingController::class, 'updateNonOperasional'])->name('updateNonOperasional');
     });
 });
 
@@ -309,6 +311,7 @@ Route::prefix('enrollment')->group(function () {
 Route::prefix('payment-done')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPaymentDone']);
     Route::get('/detail/{id}', [App\Http\Controllers\PaymentController::class, 'detailPaymentDone']);
+    Route::get('/print/{id}', [App\Http\Controllers\PaymentController::class, 'printPaymentDone']);
 });
 
 Route::prefix('petugas')->group(function () {

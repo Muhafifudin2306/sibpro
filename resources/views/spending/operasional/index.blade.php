@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title_page', 'External Income')
+@section('title_page', 'External Spending')
 
 @section('content')
     @push('styles')

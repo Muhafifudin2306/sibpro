@@ -18,7 +18,13 @@
                         <h1>{{ __('Detail Pembayaran Berhasil') }}</h1>
                     </div>
                 </div>
-
+                <div class="button-action mb-3 d-flex justify-content-end">
+                    <a href="{{ url('payment-done/print/' . $credit->id) }}">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-file mx-2"></i> Download Berkas
+                        </button>
+                    </a>
+                </div>
                 <div class="card">
                     <div class="invoice-header">
                         <div class="p-4">

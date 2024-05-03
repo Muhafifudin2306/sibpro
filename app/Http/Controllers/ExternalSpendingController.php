@@ -28,9 +28,12 @@ class ExternalSpendingController extends Controller
 
     public function indexNonOperasional()
     {
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+        $externals = ExternalSpending::where('is_operational', 0)->where('year_id', $activeYearId)->get();
+        $years = Year::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('spending.non-operasional.index', compact('students','notifications'));
+        return view('spending.non-operasional.index', compact('students','notifications', 'years', 'externals'));
     }
 
     public function storeOperasional(Request $request)
@@ -60,6 +63,39 @@ class ExternalSpendingController extends Controller
 
         Notification::create([
             'notification_content' => Auth::user()->name . " " . "membuat data pengeluaran operasional dengan deskripsi" . " " . $request->spending_desc . " " . "pada tahun ajaran" . " " . $years->year_name,
+            'notification_status' => 0
+        ]);
+
+
+        return response()->json(['message' => 'Data inserted successfully'], 201);
+    }
+
+    public function storeNonOperasional(Request $request)
+    {
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+
+        $validator = Validator::make($request->all(), [
+            'spending_price' => 'required|numeric',
+            'spending_desc' => 'required|max:255',
+            'spending_date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->toArray()], 422);
+        }
+        ExternalSpending::create([
+            'spending_price' => $request->input('spending_price'),
+            'spending_desc' => $request->input('spending_desc'),           
+            'spending_date' => $request->input('spending_date'),
+            'spending_type' => 'Biaya Non-Operasional',
+            'is_operational' => 0,
+            'year_id' => $activeYearId
+        ]);
+
+        $years = Year::find($activeYearId);
+
+        Notification::create([
+            'notification_content' => Auth::user()->name . " " . "membuat data pengeluaran non-operasional dengan deskripsi" . " " . $request->spending_desc . " " . "pada tahun ajaran" . " " . $years->year_name,
             'notification_status' => 0
         ]);
 
@@ -112,4 +148,31 @@ class ExternalSpendingController extends Controller
     
         return response()->json(['message' => 'Data updated successfully'], 200);
     }
+
+    public function updateNonOperasional(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'spending_price' => 'required|numeric',
+            'spending_desc' => 'required|max:255',
+            'spending_date' => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->toArray()], 422);
+        }
+    
+        $externalSpending = ExternalSpending::findOrFail($id);
+    
+        $externalSpending->update([
+            'spending_price' => $request->input('spending_price'),
+            'spending_desc' => $request->input('spending_desc'),           
+            'spending_date' => $request->input('spending_date')
+        ]);
+
+        return response()->json(['message' => 'Data updated successfully'], 200);
+    }
 }
+
+
+
+

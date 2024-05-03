@@ -10,6 +10,7 @@ use App\Models\Year;
 
 use Illuminate\Support\Str;
 use App\Models\StudentClass;
+use Dompdf\Dompdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -145,6 +146,35 @@ class PaymentController extends Controller
         
 
         return view('payment.user.payment.detail', compact('totalPriceCredits','students', 'credits', 'notifications', 'studentClasses','credit','years'));
+    }
+
+    public function printPaymentDone($id)
+    {
+        $credit = Payment::orderBy("updated_at", "DESC")
+                    ->where('id', $id)
+                    ->first();
+
+        $credits = Payment::orderBy("updated_at", "DESC")
+                    ->where('id', $id)
+                    ->get();
+
+        $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
+                    ->where('id', $id)
+                    ->sum('price');
+
+        $data = [
+            'credit' => $credit,
+            'credits' => $credits,
+            'totalPriceCredits' => $totalPriceCredits,
+        ];
+
+        $pdf = new Dompdf();
+        $pdf->loadHtml(view('payment.user.payment.print', $data));
+
+        $pdf->setPaper('A4', 'landscape');
+
+        $pdf->render();
+        return $pdf->stream('Kwitansi_Pembayaran' . '_' . $credit->invoice_number . '.pdf');
     }
 
     public function confirmPayment(Request $request)
