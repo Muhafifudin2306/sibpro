@@ -133,7 +133,6 @@ class HomeController extends Controller
     
     public function exportRealisasi(Request $request)
     {
-        // Periksa dan atur nama tahun untuk menghindari karakter yang tidak valid
         $namaTahun = str_replace(['/', '\\'], '-', $request->nama_tahun);
 
         $filterData = [
@@ -142,7 +141,6 @@ class HomeController extends Controller
             'finish_date' => $request->finish_date,
         ];
 
-        // Buat nama file dengan menggunakan nama tahun yang telah disesuaikan
         $fileName = 'Rekap-Pemasukan-Dana-TP-' . $namaTahun . '.xlsx';
 
         return Excel::download(new RealisasiPemasukanPengeluaranExport($filterData), $fileName);

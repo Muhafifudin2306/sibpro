@@ -36,27 +36,32 @@
                     @endcan
 
                     @can('access-changeYear')
-                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#exportModal">Export
-                                Realisasi</button>
+                        <div class="d-flex">
+                            @can('access-downloadRealisasi')
+                                <button class="btn btn-success mx-2" data-toggle="modal" data-target="#exportModal"><i
+                                        class="fas fa-file mx-1"></i> Export
+                                    Realisasi</button>
+                            @endcan
                             <form id="updateYearForm">
                                 @csrf
-                                <div class="year__active mr-2">
-                                    <select class="form-control" name="year_name">
-                                        @foreach ($years as $item)
-                                            <option value="{{ $item->year_name }}"
-                                                {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                                Tahun Ajaran: {{ $item->year_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="button-submit">
-                                    <button type="button" onclick="updateYear()" class="btn btn-primary h-100">Simpan</button>
+                                <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                                    <div class="year__active mr-2">
+                                        <select class="form-control" name="year_name">
+                                            @foreach ($years as $item)
+                                                <option value="{{ $item->year_name }}"
+                                                    {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                    Tahun Ajaran: {{ $item->year_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="button-submit">
+                                        <button type="button" onclick="updateYear()"
+                                            class="btn btn-primary h-100">Simpan</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
-
                     @endcan
                 </div>
                 <div class="row">
