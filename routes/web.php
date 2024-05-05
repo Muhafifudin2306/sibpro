@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/export-realisasi', [App\Http\Controllers\HomeController::class, 'exportRealisasi'])->name('exportRealisasi');
 Route::get('/get-admin-count', [App\Http\Controllers\HomeController::class, 'getAdminCount'])->name('adminCount');
 
 Auth::routes();

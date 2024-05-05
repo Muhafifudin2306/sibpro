@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RealisasiPemasukanPengeluaranExport;
 use App\Models\Bahan;
 use App\Models\Debt;
 use App\Models\ExternalIncome;
+use App\Models\ExternalSpending;
 use App\Models\Spending;
 use App\Models\User;
 use App\Models\Payment;
 use App\Models\Notification;
-use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Role;
 use App\Models\StudentClass;
 use App\Models\Year;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -58,8 +61,13 @@ class HomeController extends Controller
                                     ->where('status', 'Paid')
                                     ->sum('price');
 
-        $totalBahan = Bahan::where('year_id', $activeYearId)
+        $totalBelanjaSpending = Bahan::where('year_id', $activeYearId)
                                     ->sum('spending_price');
+
+        $totalExternalSpending = ExternalSpending::where('year_id', $activeYearId)
+                                    ->sum('spending_price');
+
+        $totalBahan = $totalBelanjaSpending + $totalExternalSpending;
 
         // Menghitung total yang dibayarkan oleh pengguna saat ini
         $activeYear = Year::where('year_status', 'active')->value('id');
@@ -82,10 +90,13 @@ class HomeController extends Controller
                             ->sum('price');
 
         $sumSpending = Spending::where('year_id', $activeYearId)
-                                ->where('spending_type', 1)
                                 ->sum('spending_price');
 
         $sumDebt = Debt::where('is_paid', 0)
+                        ->where('year_id', $activeYearId)
+                        ->sum('debt_amount');
+
+        $sumDebtPay = Debt::where('is_paid', 0)
                         ->where('year_id', $activeYearId)
                         ->sum('debt_amount');
 
@@ -99,7 +110,7 @@ class HomeController extends Controller
                                         ->where('year_id', $activeYear)
                                         ->get();
 
-        return view('home', compact('totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
+        return view('home', compact('sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
     }
 
     public function getAdminCount()
@@ -119,5 +130,21 @@ class HomeController extends Controller
 
         return response()->json(['externalCount' => $externalCount]);
     }
+    
+    public function exportRealisasi(Request $request)
+    {
+        // Periksa dan atur nama tahun untuk menghindari karakter yang tidak valid
+        $namaTahun = str_replace(['/', '\\'], '-', $request->nama_tahun);
 
+        $filterData = [
+            'nama_tahun' => $request->nama_tahun,
+            'start_date' => $request->start_date,
+            'finish_date' => $request->finish_date,
+        ];
+
+        // Buat nama file dengan menggunakan nama tahun yang telah disesuaikan
+        $fileName = 'Rekap-Pemasukan-Dana-TP-' . $namaTahun . '.xlsx';
+
+        return Excel::download(new RealisasiPemasukanPengeluaranExport($filterData), $fileName);
+    }
 }

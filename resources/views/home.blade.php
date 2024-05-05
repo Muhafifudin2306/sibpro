@@ -36,9 +36,11 @@
                     @endcan
 
                     @can('access-changeYear')
-                        <form id="updateYearForm">
-                            @csrf
-                            <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#exportModal">Export
+                                Realisasi</button>
+                            <form id="updateYearForm">
+                                @csrf
                                 <div class="year__active mr-2">
                                     <select class="form-control" name="year_name">
                                         @foreach ($years as $item)
@@ -52,8 +54,9 @@
                                 <div class="button-submit">
                                     <button type="button" onclick="updateYear()" class="btn btn-primary h-100">Simpan</button>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
+
                     @endcan
                 </div>
                 <div class="row">
@@ -65,7 +68,7 @@
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Total Debit</h4>
+                                        <h4>Total Pemasukan</h4>
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
@@ -116,7 +119,7 @@
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Dana Eksternal</h4>
+                                        <h4>Pemasukan Eksternal</h4>
                                     </div>
                                     <div class="card-body py-2">
                                         <div id="external-count">
@@ -252,7 +255,7 @@
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
-                                            Rp{{ number_format($sumDebit - $totalBahan - $sumSpending + $externalCount, 0, ',', '.') }}
+                                            Rp{{ number_format($sumDebit - $totalBahan - $sumSpending + $externalCount - $sumDebtPay, 0, ',', '.') }}
                                         </h5>
                                     </div>
                                     <div class="py-2"></div>
@@ -269,7 +272,7 @@
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Total Belanja Bahan dan Alat</h4>
+                                        <h4>Pengeluaran Sekolah</h4>
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
@@ -311,7 +314,7 @@
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Total Kredit</h4>
+                                        <h4>Pengeluaran SPP & Daftar Ulang</h4>
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
@@ -466,6 +469,51 @@
                 Development by Muhammad Afifudin</a>
             </div>
         </footer>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="exportModal">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export Realisasi Dana</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{{ route('exportRealisasi') }}">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row pt-3 pb-1">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="year_name">Tahun Ajaran</label>
+                                    <select class="form-control" name="nama_tahun" id="" required>
+                                        <option value=""> -- Pilih Tahun Ajaran -- </option>
+                                        @foreach ($years as $item)
+                                            <option value="{{ $item->year_name }}">{{ $item->year_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year_name">Tanggal Mulai</label>
+                                    <input type="date" id="start_date" class="form-control" name="start_date"
+                                        required autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year_name">Tanggal Selesai</label>
+                                    <input type="date" id="finish_date" class="form-control" name="finish_date"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Export Data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <script>
         function updateYear() {
