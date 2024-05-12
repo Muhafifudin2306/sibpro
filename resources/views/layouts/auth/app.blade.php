@@ -24,9 +24,11 @@
     @stack('scripts')
     <script src="{{ asset('assets/modules/bootstrap/js/bootstrap.min.js') }}"></script>
     <script>
+        let deferredPrompt;
+
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Tampilkan prompt untuk menambahkan aplikasi ke layar utama
-            e.prompt();
+            // Simpan referensi event untuk digunakan nanti
+            deferredPrompt = e;
         });
     </script>
 

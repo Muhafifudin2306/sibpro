@@ -409,7 +409,7 @@
                 @can('access-paidList')
                     <div class="card mt-3">
                         <div class="card-header">
-                            <h4>{{ __('Tabel Pembayaran Siswa') }}</h4>
+                            <h4>{{ __('Tabel Pembayaran Siswa Ini') }}</h4>
                         </div>
                         <div class="card-body d-md-none d-inline">
                             <div class="table-responsive">
