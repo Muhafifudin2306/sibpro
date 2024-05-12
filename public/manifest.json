@@ -3,7 +3,7 @@
     "short_name": "Sibpro",
     "icons": [
         {
-            "src": "/public/smk-du-logo.png",
+            "src": "./assets/img/logo/smk-du-logo.png",
             "sizes": "192x192",
             "type": "image/png"
         }

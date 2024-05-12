@@ -41,16 +41,11 @@
     <script src="{{ asset('assets/modules/popper.js') }}"></script>
     <script src="{{ asset('assets/modules/notiflix/src/notiflix.js') }}"></script>
     <script src="{{ asset('assets/modules/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/stisla.js') }}"></script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
-    <script>
-        let deferredPrompt;
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Simpan referensi event untuk digunakan nanti
-            deferredPrompt = e;
-        });
-    </script>
+
 
 </body>
 

@@ -23,14 +23,6 @@
 
     @stack('scripts')
     <script src="{{ asset('assets/modules/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script>
-        let deferredPrompt;
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Simpan referensi event untuk digunakan nanti
-            deferredPrompt = e;
-        });
-    </script>
 
 </body>
 
