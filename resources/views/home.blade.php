@@ -15,7 +15,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <section class="section">
-                <div class="section-header d-flex justify-content-lg-between">
+                <div class="section-header d-flex justify-content-between">
                     <div class="title">
                         <h1>{{ __('Dashboard') }}</h1>
                     </div>
@@ -35,37 +35,40 @@
                         </div>
                     @endcan
 
-                    <div class="right-content d-md-flex d-inline">
-                        @can('access-downloadRealisasi')
-                            <button class="btn btn-success mx-2 my-3 my-md-0" data-toggle="modal" data-target="#exportModal"><i
-                                    class="fas fa-file mx-1"></i> Export
-                                Realisasi</button>
-                        @endcan
-                        @can('access-changeYear')
-                            <div class="d-flex">
-                                <form id="updateYearForm">
-                                    @csrf
-                                    <div class="current__year d-flex py-lg-0">
-                                        <div class="year__active mr-2">
-                                            <select class="form-control" name="year_name">
-                                                @foreach ($years as $item)
-                                                    <option value="{{ $item->year_name }}"
-                                                        {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                                        Tahun Ajaran: {{ $item->year_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                    @can('access-changeYear')
+                        <div class="d-md-flex d-inline">
+                            @can('access-downloadRealisasi')
+                                <button class="btn btn-success mx-2 my-3 my-md-0" data-toggle="modal" data-target="#exportModal"><i
+                                        class="fas fa-file mx-1"></i> Export
+                                    Realisasi</button>
+                            @endcan
+                            <div class="right-content">
+                                <div class="d-flex">
+                                    <form id="updateYearForm">
+                                        @csrf
+                                        <div class="current__year d-flex py-lg-0">
+                                            <div class="year__active mr-2">
+                                                <select class="form-control" name="year_name">
+                                                    @foreach ($years as $item)
+                                                        <option value="{{ $item->year_name }}"
+                                                            {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                            Tahun Ajaran: {{ $item->year_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="button-submit">
+                                                <button type="button" onclick="updateYear()"
+                                                    class="btn btn-primary h-100">Simpan</button>
+                                            </div>
                                         </div>
-                                        <div class="button-submit">
-                                            <button type="button" onclick="updateYear()"
-                                                class="btn btn-primary h-100">Simpan</button>
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
-                        @endcan
-                    </div>
+                        </div>
+                    @endcan
                 </div>
+
                 <div class="row">
                     @can('access-recentDebite')
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
