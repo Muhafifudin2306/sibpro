@@ -608,44 +608,5 @@
                 pageLength: 25
             });
         </script>
-        <script>
-            let deferredPrompt;
-
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-            });
-
-            function showInstallPrompt() {
-                swal({
-                    title: 'Tambahkan Aplikasi ke Layar Utama',
-                    text: 'Anda dapat mengakses aplikasi ini dengan lebih mudah di layar utama perangkat Anda.',
-                    icon: 'info',
-                    showCancelButton: true,
-                    buttons: true,
-                    dangerMode: true,
-                    confirmButtonText: 'Instal Sekarang',
-                    cancelButtonText: 'Nanti Saja',
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        if (deferredPrompt) {
-                            deferredPrompt.prompt();
-                            deferredPrompt.userChoice.then((choiceResult) => {
-                                if (choiceResult.outcome === 'accepted') {
-                                    console.log('User accepted the A2HS prompt');
-                                } else {
-                                    console.log('User dismissed the A2HS prompt');
-                                }
-                                deferredPrompt = null;
-                            });
-                        }
-                    }
-                });
-            }
-
-            if (!(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true)) {
-                showInstallPrompt();
-            }
-        </script>
     @endpush
 @endsection
