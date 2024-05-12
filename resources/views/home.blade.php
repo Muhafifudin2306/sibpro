@@ -426,7 +426,7 @@
                                         @foreach ($credits as $item)
                                             <tr>
                                                 <td>
-                                                    <div class="name-text">
+                                                    <div class="name-text font-weight-bold">
                                                         @if ($item->credit == null)
                                                             {{ $item->attribute->attribute_name }}
                                                         @elseif($item->credit != null)
@@ -435,11 +435,11 @@
                                                     </div>
                                                     <div class="type-text pt-4">
                                                         <span
-                                                            class="font-weight-bold d-md-none">{{ 'Tipe' . ' ' . ':' . ' ' . $item->type }}</span>
+                                                            class="d-md-none">{{ 'Tipe' . ' ' . ':' . ' ' . $item->type }}</span>
                                                     </div>
                                                     <div class="price-text pt-2">
                                                         <span
-                                                            class="font-weight-bold d-md-none">{{ 'Nominal' . ' ' . ':' . ' ' . 'Rp' . number_format($item->price, 0, ',', '.') }}</span>
+                                                            class="d-md-none">{{ 'Nominal' . ' ' . ':' . ' ' . 'Rp' . number_format($item->price, 0, ',', '.') }}</span>
                                                     </div>
                                                     <div class="status-text pt-2 d-md-none">
                                                         @if ($item->status == 'Paid')
