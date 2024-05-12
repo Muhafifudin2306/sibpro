@@ -110,7 +110,7 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="form-group col-6">
+                                            <div class="form-group col-md-6">
                                                 <label for="password" class="d-block">{{ __('Password Baru') }} <span
                                                         class="text-danger">*</span></label>
                                                 <input id="password" type="password"
@@ -122,7 +122,7 @@
                                                     <div class="label"></div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-6">
+                                            <div class="form-group col-md-6">
                                                 <label for="password" class="d-block">{{ __('Konfirmasi Password') }}
                                                     <span class="text-danger">*</span></label>
                                                 <input id="password-confirm" type="password" class="form-control lock"
