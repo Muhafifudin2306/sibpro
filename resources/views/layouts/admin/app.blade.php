@@ -36,7 +36,6 @@
             form.submit();
         });
     </script>
-    @stack('scripts')
     <script src="{{ asset('assets/modules/tooltip.js') }}"></script>
     <script src="{{ asset('assets/modules/popper.js') }}"></script>
     <script src="{{ asset('assets/modules/notiflix/src/notiflix.js') }}"></script>
@@ -44,8 +43,7 @@
     <script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/stisla.js') }}"></script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
-
-
+    @stack('scripts')
 
 </body>
 
