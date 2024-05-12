@@ -35,38 +35,40 @@
                         </div>
                     @endcan
 
-                    @can('access-changeYear')
-                        <div class="d-flex">
-                            @can('access-downloadRealisasi')
-                                <button class="btn btn-success mx-2" data-toggle="modal" data-target="#exportModal"><i
-                                        class="fas fa-file mx-1"></i> Export
-                                    Realisasi</button>
-                            @endcan
-                            <form id="updateYearForm">
-                                @csrf
-                                <div class="current__year d-flex py-lg-0 pt-3 pb-1">
-                                    <div class="year__active mr-2">
-                                        <select class="form-control" name="year_name">
-                                            @foreach ($years as $item)
-                                                <option value="{{ $item->year_name }}"
-                                                    {{ $item->year_current == 'selected' ? 'selected' : '' }}>
-                                                    Tahun Ajaran: {{ $item->year_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                    <div class="right-content d-md-flex d-inline">
+                        @can('access-downloadRealisasi')
+                            <button class="btn btn-success mx-2 my-3 my-md-0" data-toggle="modal" data-target="#exportModal"><i
+                                    class="fas fa-file mx-1"></i> Export
+                                Realisasi</button>
+                        @endcan
+                        @can('access-changeYear')
+                            <div class="d-flex">
+                                <form id="updateYearForm">
+                                    @csrf
+                                    <div class="current__year d-flex py-lg-0">
+                                        <div class="year__active mr-2">
+                                            <select class="form-control" name="year_name">
+                                                @foreach ($years as $item)
+                                                    <option value="{{ $item->year_name }}"
+                                                        {{ $item->year_current == 'selected' ? 'selected' : '' }}>
+                                                        Tahun Ajaran: {{ $item->year_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="button-submit">
+                                            <button type="button" onclick="updateYear()"
+                                                class="btn btn-primary h-100">Simpan</button>
+                                        </div>
                                     </div>
-                                    <div class="button-submit">
-                                        <button type="button" onclick="updateYear()"
-                                            class="btn btn-primary h-100">Simpan</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    @endcan
+                                </form>
+                            </div>
+                        @endcan
+                    </div>
                 </div>
                 <div class="row">
                     @can('access-recentDebite')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-primary">
                                     <div class="py-1"></div>
@@ -87,7 +89,7 @@
                     @endcan
 
                     @can('access-userSum')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-primary">
                                     <div class="py-1"></div>
@@ -117,7 +119,7 @@
                         </script>
                     @endcan
                     @can('access-externalIncomeSum')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-success">
                                     <div class="py-1"></div>
@@ -138,7 +140,7 @@
                     @endcan
 
                     @can('access-incomeSum')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-warning">
                                     <div class="py-1"></div>
@@ -156,28 +158,10 @@
                                 </div>
                             </div>
                         </div>
-                        <script>
-                            function fetchExternalCount() {
-                                fetch('/get-total-kredit')
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        document.getElementById('total-kredit').innerHTML =
-                                            `<h5>Rp ${numberWithCommas(data.externalCount)}</h5>`;
-                                    });
-                            }
-
-                            setInterval(fetchExternalCount, 300000);
-
-                            fetchExternalCount();
-
-                            function numberWithCommas(x) {
-                                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                            }
-                        </script>
                     @endcan
 
                     @can('access-allAttributeSum')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-danger">
                                     <div class="py-1"></div>
@@ -249,7 +233,7 @@
                 </div>
                 <div class="row">
                     @can('access-recentBalance')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-primary">
                                     <div class="py-1"></div>
@@ -270,7 +254,7 @@
                     @endcan
 
                     @can('access-recentBahan')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-success">
                                     <div class="py-1"></div>
@@ -291,7 +275,7 @@
                     @endcan
 
                     @can('access-recentHutang')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-warning">
                                     <div class="py-1"></div>
@@ -312,7 +296,7 @@
                     @endcan
 
                     @can('access-recentKredit')
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-danger">
                                     <div class="py-1"></div>
@@ -485,14 +469,14 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="post" action="{{ route('exportRealisasi') }}">
+                <form id="form-action" method="post" action="{{ route('exportRealisasi') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="row pt-3 pb-1">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="year_name">Tahun Ajaran</label>
-                                    <select class="form-control" name="nama_tahun" id="" required>
+                                    <select class="form-control" name="nama_tahun" id="year_name" required>
                                         <option value=""> -- Pilih Tahun Ajaran -- </option>
                                         @foreach ($years as $item)
                                             <option value="{{ $item->year_name }}">{{ $item->year_name }}</option>
@@ -553,5 +537,18 @@
     @push('scripts')
         <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
+        <script>
+            document.getElementById('form-action').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var startDate = new Date(document.getElementById('start_date').value);
+                var finishDate = new Date(document.getElementById('finish_date').value);
+
+                if (finishDate <= startDate) {
+                    Notiflix.Notify.failure('Tanggal selesai harus lebih dari tanggal mulai');
+                } else {
+                    event.target.submit();
+                }
+            });
+        </script>
     @endpush
 @endsection
