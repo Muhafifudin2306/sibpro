@@ -406,11 +406,55 @@
                 @can('access-paidList')
                     <div class="card mt-3">
                         <div class="card-header">
-                            <h4>{{ __('Tabel Kewajiban Pembayaran Siswa') }}</h4>
+                            <h4>{{ __('Tabel Pembayaran Siswa') }}</h4>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body d-md-none d-inline">
                             <div class="table-responsive">
-                                <table class="table table-striped" id="table-spp">
+                                <table class="table table-striped" id="table-tagihan-mobile">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ __('Pembayaran') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($credits as $item)
+                                            <tr>
+                                                <td>
+                                                    <div class="name-text">
+                                                        @if ($item->credit == null)
+                                                            {{ $item->attribute->attribute_name }}
+                                                        @elseif($item->credit != null)
+                                                            {{ $item->credit->credit_name }}
+                                                        @endif
+                                                    </div>
+                                                    <div class="type-text pt-4">
+                                                        <span
+                                                            class="font-weight-bold d-md-none">{{ 'Tipe' . ' ' . ':' . ' ' . $item->type }}</span>
+                                                    </div>
+                                                    <div class="price-text pt-2">
+                                                        <span
+                                                            class="font-weight-bold d-md-none">{{ 'Nominal' . ' ' . ':' . ' ' . 'Rp' . number_format($item->price, 0, ',', '.') }}</span>
+                                                    </div>
+                                                    <div class="status-text pt-2 d-md-none">
+                                                        @if ($item->status == 'Paid')
+                                                            <div class="badge badge-success">Lunas</div>
+                                                        @else
+                                                            <div class="badge badge-danger">Belum Lunas</div>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-body d-md-inline d-none">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-tagihan-web">
                                     <thead>
                                         <tr>
                                             <th style="width: 10px">{{ __('No') }}</th>
@@ -427,11 +471,15 @@
                                         @foreach ($credits as $item)
                                             <tr>
                                                 <td>{{ $no++ }}</td>
-                                                @if ($item->credit == null)
-                                                    <td>{{ $item->attribute->attribute_name }}</td>
-                                                @elseif($item->credit != null)
-                                                    <td>{{ $item->credit->credit_name }}</td>
-                                                @endif
+                                                <td>
+                                                    <div class="name-text">
+                                                        @if ($item->credit == null)
+                                                            {{ $item->attribute->attribute_name }}
+                                                        @elseif($item->credit != null)
+                                                            {{ $item->credit->credit_name }}
+                                                        @endif
+                                                    </div>
+                                                </td>
                                                 <td>{{ $item->type }}</td>
                                                 <td>
                                                     Rp{{ number_format($item->price, 0, ',', '.') }}
@@ -548,6 +596,13 @@
                 } else {
                     event.target.submit();
                 }
+            });
+        </script>
+
+        <script>
+            $("#table-tagihan-mobile").dataTable();
+            $("#table-tagihan-web").dataTable({
+                pageLength: 25
             });
         </script>
     @endpush
