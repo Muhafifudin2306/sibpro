@@ -15,7 +15,7 @@ class GatewayController extends Controller
     var $apiInstance = NULL;
     public function __construct()
     {
-        Configuration::setXenditKey('xnd_development_1pScqsY0tV43bIulF7jaScjjwcWOSBqIRaAajij5f5fKw6AmSP75fox3z17tdX');
+        Configuration::setXenditKey('xnd_development_vWnMAnpHx5p6KmbLvPLGm6mOf7g3cSPM7GaJ9Xudp3eTykMPPqEfuoxnK4wK01ds');
         $this->apiInstance = new InvoiceApi();
     }
 
