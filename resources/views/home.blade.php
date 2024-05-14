@@ -322,7 +322,7 @@
 
                 <div class="row">
                     @can('access-recentTransaction')
-                        <div class="col-md-8">
+                        <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-header">
                                     <h4>Transaksi Terbaru</h4>
