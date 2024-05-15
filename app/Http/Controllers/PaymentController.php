@@ -323,9 +323,13 @@ class PaymentController extends Controller
         $activeYearId = Year::where('year_current', 'selected')->value('id');
 
         $credit = Payment::where('status','Paid')
-                    ->where('year_id', $activeYearId)
-                    ->orderBy("updated_at", "DESC")
-                    ->get();
+        ->whereHas('year', function ($query) {
+            $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+        })
+        ->groupBy('invoice_number','user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
+        ->select('invoice_number','user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
+        ->orderBy("updated_at", "DESC")
+        ->get();
                     
         $years = Year::orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
@@ -338,7 +342,11 @@ class PaymentController extends Controller
     public function allTransaction()
     {
         $credit = Payment::where('status','!=','Unpaid')
-                    ->whereHas('year', function ($query) {$query->where('id', '=', Year::where('year_current', 'selected')->value('id'));})
+                    ->whereHas('year', function ($query) {
+                        $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+                    })
+                    ->groupBy('invoice_number','user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
+                    ->select('invoice_number','user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
                     ->orderBy("updated_at", "DESC")
                     ->get();
         $years = Year::orderBy("updated_at", "DESC")->get();

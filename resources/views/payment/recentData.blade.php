@@ -72,13 +72,13 @@
                                         <th class="text-center">{{ __('No') }}</th>
                                         <th>{{ __('No.Kwitansi') }}</th>
                                         <th>{{ __('Pembayaran') }}</th>
-                                        <th>{{ __('Tipe Pembayaran') }}</th>
                                         <th>{{ __('NIS') }}</th>
                                         <th>{{ __('Nama Siswa') }}</th>
                                         <th>{{ __('Nominal Pembayaran') }}</th>
                                         <th>{{ __('Verifikator') }}</th>
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Tanggal') }}</th>
+                                        <th>{{ __('Aksi') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -91,16 +91,11 @@
                                                 {{ $no++ }}
                                             </td>
                                             <td>{{ $item->invoice_number ?? '-' }}</td>
-                                            @if ($item->credit == null)
-                                                <td>{{ $item->attribute->attribute_name }}</td>
-                                            @elseif($item->credit != null)
-                                                <td>{{ $item->credit->credit_name }}</td>
-                                            @endif
                                             <td>{{ $item->payment_type }}</td>
                                             <td>{{ $item->user->nis }}</td>
                                             <td>{{ $item->user->name }}</td>
                                             <td>
-                                                Rp{{ number_format($item->price, 0, ',', '.') }}
+                                                Rp{{ number_format($item->total_price, 0, ',', '.') }}
                                             </td>
                                             <td>{{ $item->petugas->name ?? '-' }}</td>
                                             @if ($item->status == 'Paid')
@@ -113,6 +108,11 @@
                                                 </td>
                                             @endif
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
+                                            <td>
+                                                <a href="{{ url('/payment-done/kwitansi/' . $item->invoice_number) }}">
+                                                    <i class="fas fa-file text-primary" title="Detail"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

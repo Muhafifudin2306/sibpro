@@ -18,6 +18,7 @@ use App\Models\Year;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class HomeController extends Controller
 {
@@ -78,8 +79,12 @@ class HomeController extends Controller
 
         $totalUnpaidDU =  Payment::where('user_id', $userId)->where('year_id', $activeYear)->where('type', 'Daftar Ulang')->where('status', '!=','Paid')->sum('price');
         // Mengambil 5 pembayaran terbaru
-        $credit = Payment::where('status', '!=', 'Unpaid')
-                            ->where('year_id', $activeYearId)
+        $credit = Payment::where('status','!=','Unpaid')
+                            ->whereHas('year', function ($query) {
+                                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+                            })
+                            ->groupBy('invoice_number','user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
+                            ->select('invoice_number','user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
                             ->orderBy("updated_at", "DESC")
                             ->limit(5)
                             ->get();
@@ -110,7 +115,31 @@ class HomeController extends Controller
                                         ->where('year_id', $activeYear)
                                         ->get();
 
-        return view('home', compact('sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
+        $currentDate = Carbon::now()->toDateString();
+
+        $sumTodayPrice = Payment::where('status', 'Paid')
+            ->whereHas('year', function ($query) {
+                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+            })
+            ->whereDate('updated_at', $currentDate)
+            ->sum('price');
+        $creditTodayPrice = Payment::where('status', 'Paid')
+            ->where('type', 'SPP')
+            ->whereHas('year', function ($query) {
+                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+            })
+            ->whereDate('updated_at', $currentDate)
+            ->sum('price');
+
+        $attributeTodayPrice = Payment::where('status', 'Paid')
+            ->where('type', 'Daftar Ulang')
+            ->whereHas('year', function ($query) {
+                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+            })
+            ->whereDate('updated_at', $currentDate)
+            ->sum('price');
+
+        return view('home', compact('sumTodayPrice','creditTodayPrice','attributeTodayPrice','sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
     }
 
     public function getAdminCount()

@@ -320,6 +320,65 @@
                     @endcan
                 </div>
 
+                @can('access-todayTransaction')
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-primary">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Total Pemasukan Harian</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($sumTodayPrice, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-info">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Daftar Ulang Harian</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($attributeTodayPrice, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-secondary">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>SPP Harian</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($creditTodayPrice, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endcan
+
                 <div class="row">
                     @can('access-recentTransaction')
                         <div class="col-lg-8">
@@ -350,11 +409,7 @@
                                                 @foreach ($credit as $item)
                                                     <tr>
                                                         <td>{{ $item->invoice_number ?? '-' }}</td>
-                                                        @if ($item->credit == null)
-                                                            <td>{{ $item->attribute->attribute_name }}</td>
-                                                        @elseif($item->credit != null)
-                                                            <td>{{ $item->credit->credit_name }}</td>
-                                                        @endif
+                                                        <td>{{ $item->payment_type }}</td>
                                                         <td>{{ $item->user->name }}</td>
                                                         <td>
                                                             @if ($item->status == 'Paid')

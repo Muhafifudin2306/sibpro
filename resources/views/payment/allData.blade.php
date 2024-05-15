@@ -72,7 +72,6 @@
                                         <th class="text-center">{{ __('No') }}</th>
                                         <th>{{ __('ID Transaksi') }}</th>
                                         <th>{{ __('Pembayaran') }}</th>
-                                        <th>{{ __('Tipe Pembayaran') }}</th>
                                         <th>{{ __('Nama Siswa') }}</th>
                                         <th>{{ __('Nominal Pembayaran') }}</th>
                                         <th>{{ __('Verifikator') }}</th>
@@ -91,15 +90,10 @@
                                                 {{ $no++ }}
                                             </td>
                                             <td>{{ $item->invoice_number }}</td>
-                                            @if ($item->credit == null)
-                                                <td>{{ $item->attribute->attribute_name }}</td>
-                                            @elseif($item->credit != null)
-                                                <td>{{ $item->credit->credit_name }}</td>
-                                            @endif
-                                            <td>{{ $item->type }}</td>
+                                            <td>{{ $item->payment_type }}</td>
                                             <td class="font-weight-600">{{ $item->user->name }}</td>
                                             <td>
-                                                Rp{{ number_format($item->price, 0, ',', '.') }}
+                                                Rp{{ number_format($item->total_price, 0, ',', '.') }}
                                             </td>
                                             <td>{{ $item->petugas->name ?? '-' }}</td>
                                             @if ($item->status == 'Paid')
@@ -113,7 +107,7 @@
                                             @endif
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
                                             <td>
-                                                <a href="{{ url('/payment-done/detail/' . $item->id) }}">
+                                                <a href="{{ url('/payment-done/kwitansi/' . $item->invoice_number) }}">
                                                     <i class="fas fa-file text-primary" title="Detail"></i>
                                                 </a>
                                             </td>
