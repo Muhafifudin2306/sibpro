@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="button-action mb-3 d-flex justify-content-end">
-                    <a href="{{ url('payment-done/print/payment/' . $credit->id) }}">
+                    <a href="{{ url('payment-done/print/kwitansi/' . $credit->invoice_number) }}">
                         <button class="btn btn-primary">
                             <i class="fas fa-file mx-2"></i> Download Berkas
                         </button>

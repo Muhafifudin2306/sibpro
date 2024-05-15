@@ -128,7 +128,9 @@ Route::prefix('credit')->group(function () {
 Route::prefix('transaction')->group(function () {
     Route::get('/recent', [App\Http\Controllers\PaymentController::class, 'allTransaction'])->name('allTransaction');
 });
-
+Route::prefix('today')->group(function () {
+    Route::get('/transaction', [App\Http\Controllers\PaymentController::class, 'todayTransaction'])->name('todayTransaction');
+});
 Route::prefix('income')->group(function () {
 
     Route::prefix('payment')->group(function () {
@@ -312,7 +314,9 @@ Route::prefix('enrollment')->group(function () {
 Route::prefix('payment-done')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPaymentDone']);
     Route::get('/detail/{id}', [App\Http\Controllers\PaymentController::class, 'detailPaymentDone']);
-    Route::get('/print/{id}', [App\Http\Controllers\PaymentController::class, 'printPaymentDone']);
+    Route::get('/kwitansi/{invoice_number}', [App\Http\Controllers\PaymentController::class, 'detailKwitansiDone']);
+    Route::get('/print/payment/{id}', [App\Http\Controllers\PaymentController::class, 'printPaymentDone']);
+    Route::get('/print/kwitansi/{invoice_number}', [App\Http\Controllers\PaymentController::class, 'printKwitansiDone']);
 });
 
 Route::prefix('petugas')->group(function () {

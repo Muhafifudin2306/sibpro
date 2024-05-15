@@ -160,11 +160,11 @@
                     </tbody>
                 </table>
 
-                <div id="total">
+                <div id="total" style="margin-top: 30px">
                     <h4>Total Transaksi</h4>
                     <h1>Rp{{ number_format($totalPriceCredits, 0, ',', '.') }}</h1>
                 </div>
-                <div id="ttd">
+                <div id="ttd" style="margin-top: 30px">
                     <h4>TTD Petugas Verifikator</h4>
                     <img width="150"
                         src="{{ 'data:image/png;base64,' . base64_encode(file_get_contents('storage/petugas/' . $credit->petugas->signature)) }}"

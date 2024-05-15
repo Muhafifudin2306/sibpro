@@ -129,10 +129,20 @@
                 </li>
             @endcan
 
+
+            @can('access-todayTransaction')
+                <li class="{{ Request::is('today*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/today/transaction') }}">
+                        <i class="fas fa-clock"></i>
+                        <span>Transaksi Harian</span>
+                    </a>
+                </li>
+            @endcan
+
             @can('access-recentTransaction')
                 <li class="{{ Request::is('transaction*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('/transaction/recent') }}">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-hourglass"></i>
                         <span>Riwayat Transaksi</span>
                     </a>
                 </li>

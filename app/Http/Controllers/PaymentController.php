@@ -148,6 +148,31 @@ class PaymentController extends Controller
         return view('payment.user.payment.detail', compact('totalPriceCredits','students', 'credits', 'notifications', 'studentClasses','credit','years'));
     }
 
+    public function detailKwitansiDone($invoice_number)
+    {
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $credit = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
+                    ->first();
+
+        $credits = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
+                    ->get();
+
+        $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
+                    ->sum('price');
+
+        $years = Year::orderBy("updated_at", "DESC")->get();
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+        
+
+        return view('payment.user.payment.detailKwitansi', compact('totalPriceCredits','students', 'credits', 'notifications', 'studentClasses','credit','years'));
+    }
+
     public function printPaymentDone($id)
     {
         $credit = Payment::orderBy("updated_at", "DESC")
@@ -160,6 +185,35 @@ class PaymentController extends Controller
 
         $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
                     ->where('id', $id)
+                    ->sum('price');
+
+        $data = [
+            'credit' => $credit,
+            'credits' => $credits,
+            'totalPriceCredits' => $totalPriceCredits,
+        ];
+
+        $pdf = new Dompdf();
+        $pdf->loadHtml(view('payment.user.payment.print', $data));
+
+        $pdf->setPaper('A4', 'landscape');
+
+        $pdf->render();
+        return $pdf->stream('Kwitansi_Pembayaran' . '_' . $credit->invoice_number . '.pdf');
+    }
+
+    public function printKwitansiDone($invoice_number)
+    {
+        $credit = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
+                    ->first();
+
+        $credits = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
+                    ->get();
+
+        $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
+                    ->where('invoice_number', $invoice_number)
                     ->sum('price');
 
         $data = [
@@ -293,6 +347,50 @@ class PaymentController extends Controller
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
         return view('payment.recentData', compact('students', 'notifications', 'studentClasses','credit','years'));
+    }
+
+    public function todayTransaction()
+    {
+        $currentDate = Carbon::now()->toDateString();
+
+        $credit = Payment::where('status', 'Paid')
+            ->whereHas('year', function ($query) {
+                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+            })
+            ->groupBy('invoice_number','user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
+            ->whereDate('updated_at', $currentDate)
+            ->select('invoice_number','user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
+            ->orderBy("updated_at", "DESC")
+            ->get();
+
+        $sumPrice = Payment::where('status', 'Paid')
+            ->whereHas('year', function ($query) {
+                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+            })
+            ->whereDate('updated_at', $currentDate)
+            ->sum('price');
+        $creditPrice = Payment::where('status', 'Paid')
+            ->where('type', 'SPP')
+            ->whereHas('year', function ($query) {
+                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+            })
+            ->whereDate('updated_at', $currentDate)
+            ->sum('price');
+
+            $attributePrice = Payment::where('status', 'Paid')
+            ->where('type', 'Daftar Ulang')
+            ->whereHas('year', function ($query) {
+                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+            })
+            ->whereDate('updated_at', $currentDate)
+            ->sum('price');
+
+        $years = Year::orderBy("updated_at", "DESC")->get();
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+
+        return view('payment.todayData', compact('students', 'notifications', 'studentClasses','credit','years','sumPrice', 'creditPrice', 'attributePrice'));
     }
 
     public function detail($id)
