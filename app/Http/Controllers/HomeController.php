@@ -139,7 +139,16 @@ class HomeController extends Controller
             ->whereDate('updated_at', $currentDate)
             ->sum('price');
 
-        return view('home', compact('sumTodayPrice','creditTodayPrice','attributeTodayPrice','sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
+        $currentMonth = Carbon::now()->month;
+
+        $sumMonthPrice = Payment::where('status', 'Paid')
+                ->whereHas('year', function ($query) {
+                    $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+                })
+                ->whereMonth('updated_at', $currentMonth)
+                ->sum('price');
+
+        return view('home', compact('sumMonthPrice','sumTodayPrice','creditTodayPrice','attributeTodayPrice','sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
     }
 
     public function getAdminCount()

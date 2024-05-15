@@ -329,6 +329,24 @@
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
+                                        <h4>Pemasukan Bulan Ini</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($sumMonthPrice, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-success">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
                                         <h4>Total Pemasukan Harian</h4>
                                     </div>
                                     <div class="card-body py-2">
@@ -342,7 +360,7 @@
                         </div>
                         <div class="col-lg-3 col-md-6 col-12">
                             <div class="card card-statistic-1">
-                                <div class="bg-info">
+                                <div class="bg-warning">
                                     <div class="py-1"></div>
                                 </div>
                                 <div class="card-wrap">
@@ -360,7 +378,7 @@
                         </div>
                         <div class="col-lg-3 col-md-6 col-12">
                             <div class="card card-statistic-1">
-                                <div class="bg-secondary">
+                                <div class="bg-danger">
                                     <div class="py-1"></div>
                                 </div>
                                 <div class="card-wrap">
