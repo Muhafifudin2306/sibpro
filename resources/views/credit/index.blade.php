@@ -36,6 +36,20 @@
                             </div>
                         </form>
                     @endcan
+                    @can('access-currentYear')
+                        <div class="current__year d-flex py-lg-0 pt-3 pb-1">
+                            <div class="year__active mr-2">
+                                <select class="form-control" name="year_name" disabled>
+                                    @foreach ($years as $item)
+                                        <option value="{{ $item->year_name }}"
+                                            {{ $item->year_status == 'active' ? 'selected' : '' }}>
+                                            Tahun Ajaran: {{ $item->year_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endcan
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
