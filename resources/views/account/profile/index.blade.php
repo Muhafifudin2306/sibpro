@@ -93,6 +93,18 @@
                                                 <input type="email" class="form-control"
                                                     value="{{ $student->categories->category_name }}" disabled>
                                             </div>
+                                            <div class="form-group col-md-6 col-12">
+                                                <label>{{ __('Email') }}</label>
+                                                <input type="email" class="form-control"
+                                                    value="{{ $user->user_email ? $user->user_email : 'Tidak ada data email' }}"
+                                                    disabled>
+                                            </div>
+                                            <div class="form-group col-md-6 col-12">
+                                                <label>{{ __('No Telp Siswa') }}</label>
+                                                <input type="text" class="form-control"
+                                                    value="{{ $user->number ? $user->number : 'Tidak ada data telpon siswa' }}"
+                                                    disabled>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -106,47 +118,64 @@
                                     method="POST">
                                     @csrf
                                     <div class="card-header">
-                                        <h4>{{ __('Ubah Password Akun Saya') }}</h4>
+                                        <h4>{{ __('Ubah Informasi Akun Saya') }}</h4>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="form-group col-md-6">
-                                                <label for="password" class="d-block">{{ __('Password Baru') }} <span
-                                                        class="text-danger">*</span></label>
+                                                <label for="emailUser" class="d-block">{{ __('Email Baru') }}</label>
+                                                <input id="emailUser" type="email" class="form-control lock"
+                                                    name="emailUser"
+                                                    placeholder="{{ $user->user_email ? $user->user_email : 'Input email anda' }}">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="noTelpUser" class="d-block">{{ __('No Telpon Baru') }}</label>
+                                                <input id="noTelpUser" type="tel" class="form-control lock"
+                                                    name="noTelpUser"
+                                                    placeholder="{{ $user->number ? $user->number : 'Input no telp anda' }}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="password" class="d-block">{{ __('Password Baru') }}</label>
                                                 <input id="password" type="password"
                                                     class="form-control @error('password') is-invalid @enderror pwstrength lock"
                                                     name="password" placeholder="*********" data-indicator="pwindicator"
-                                                    required autocomplete="new-password">
+                                                    autocomplete="new-password">
                                                 <div id="pwindicator" class="pwindicator">
                                                     <div class="bar"></div>
                                                     <div class="label"></div>
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label for="password" class="d-block">{{ __('Konfirmasi Password') }}
-                                                    <span class="text-danger">*</span></label>
+                                                <label for="password-confirm"
+                                                    class="d-block">{{ __('Konfirmasi Password') }}</label>
                                                 <input id="password-confirm" type="password" class="form-control lock"
-                                                    name="password_confirmation" placeholder="*********" required
+                                                    name="password_confirmation" placeholder="*********"
                                                     autocomplete="new-password">
                                             </div>
                                         </div>
-                                        <div class="button-submit">
-                                            <button class="btn btn-primary"> Simpan Data </button>
-                                        </div>
                                     </div>
-                                </form>
+
+
+                            </div>
+                            <div class="button-submit">
+                                <button class="btn btn-primary"> Simpan Data </button>
                             </div>
                         </div>
+                        </form>
                     </div>
                 </div>
-            </section>
         </div>
+    </div>
+    </section>
+    </div>
 
-        <footer class="main-footer">
-            <div class="footer-left">
-                {{ __('Development by Muhammad Afifudin') }}</a>
-            </div>
-        </footer>
+    <footer class="main-footer">
+        <div class="footer-left">
+            {{ __('Development by Muhammad Afifudin') }}</a>
+        </div>
+    </footer>
     </div>
 @endsection
 
@@ -154,33 +183,75 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const updateForms = document.querySelectorAll('.update-form');
+            const phonePattern = /^[0-9]{10,15}$/;
+            const PASSWORD_MISMATCH_MESSAGE = "Password baru dan konfirmasi password baru tidak sama";
+            const CONFIRM_PASSWORD_MESSAGE = "Isi konfirmasi password";
+            const INVALID_PHONE_MESSAGE = "Please enter a valid phone number.";
+            const SUCCESS_MESSAGE = "Data berhasil diperbarui!";
+            const CSRF_TOKEN = '{{ csrf_token() }}';
 
             updateForms.forEach(form => {
                 form.addEventListener('submit', function(event) {
                     event.preventDefault();
 
-                    const formData = new FormData(form);
+                    const password = form.querySelector('#password');
+                    const passwordConfirm = form.querySelector('#password-confirm');
+                    const noTelpUser = form.querySelector('#noTelpUser');
 
-                    fetch(form.getAttribute('data-action'), {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            Notiflix.Notify.success("Data berhasil diperbarui!", {
-                                timeout: 3000
-                            });
+                    if (!validateForm(noTelpUser, password, passwordConfirm)) {
+                        return;
+                    }
 
-                            location.reload();
-                        })
-                        .catch(error => {
-                            Notiflix.Notify.failure('Error:', error);
-                        });
+                    submitForm(form);
                 });
             });
+
+            function validateForm(noTelpUser, password, passwordConfirm) {
+                if (noTelpUser.value && !phonePattern.test(noTelpUser.value)) {
+                    Notiflix.Notify.warning(INVALID_PHONE_MESSAGE, { timeout: 3000 });
+                    noTelpUser.focus();
+                    return false;
+                }
+
+                if (password.value && !passwordConfirm.value) {
+                    Notiflix.Notify.warning(CONFIRM_PASSWORD_MESSAGE, { timeout: 3000 });
+                    passwordConfirm.focus();
+                    return false;
+                } else if (password.value !== passwordConfirm.value) {
+                    Notiflix.Notify.warning(PASSWORD_MISMATCH_MESSAGE, { timeout: 3000 });
+                    passwordConfirm.focus();
+                    return false;
+                }
+
+                return true;
+            }
+
+            function submitForm(form) {
+                const formData = new FormData(form);
+                const actionUrl = form.getAttribute('data-action');
+
+                fetch(actionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': CSRF_TOKEN
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    Notiflix.Notify.success(SUCCESS_MESSAGE, { timeout: 3000 });
+                    location.reload();
+                })
+                .catch(error => {
+                    Notiflix.Notify.failure('Error: ' + error.message);
+                });
+            }
         });
     </script>
 @endpush
+

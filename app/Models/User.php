@@ -24,6 +24,8 @@ class User extends Authenticatable
         'uuid',
         'name',
         'email',
+        'user_email',
+        'number',
         'password',
         'nis',
         'class_id',
