@@ -202,8 +202,24 @@
                                             <p> Tanggal Transaksi : </p>
                                         </div>
                                         <div class="right-label">
-                                            <h6 class="font-weight-light">{{ $item->updated_at->format('Y-m-d') }}</h6>
+                                            <h6 class="font-weight-light">{{ $item->updated_at->format('d M Y H:i') }} WIB
+                                            </h6>
                                         </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="left-label">
+                                            <p> Tanggal Tenggat Pembayaran : </p>
+                                        </div>
+                                        @if ($item->payment_type == 'Online')
+                                            <div class="right-label">
+                                                <h6 class="font-weight-light">
+                                                    {{ $item->updated_at->addDay()->format('d M Y H:i') }} WIB</h6>
+                                            </div>
+                                        @elseif($item->payment_type == 'Offline')
+                                            <div class="right-label">
+                                                <h6 class="font-weight-light">-</h6>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <div class="left-label">
@@ -217,9 +233,19 @@
                                         <div class="left-label">
                                             <p> Status Pembayaran : </p>
                                         </div>
-                                        <div class="right-label">
-                                            <h6 class="font-weight-light">{{ $item->status }}</h6>
-                                        </div>
+                                        @if (!$time_now->greaterThan($item->updated_at->addDay()))
+                                            <div class="right-label">
+                                                <h6 class="font-weight-light">{{ $item->status }}</h6>
+                                            </div>
+                                        @elseif ($item->payment_type == 'Offline')
+                                            <div class="right-label">
+                                                <h6 class="font-weight-light">{{ $item->status }}</h6>
+                                            </div>
+                                        @else
+                                            <div class="right-label">
+                                                <h6 class="font-weight-light">Expired</h6>
+                                            </div>
+                                        @endif
                                     </div>
                                     <h6 class="py-2">Penghitungan Biaya</h6>
                                     <div class="d-flex justify-content-between">
@@ -257,24 +283,34 @@
                                     </div>
                                 </div>
                                 <div class="card-footer bg-whitesmoke br">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            @if ($item->payment_type == 'Online')
-                                                <a href="{{ $item->checkout_link }}">
-                                                    <button class="btn btn-primary w-100">Bayar Sekarang</button>
+                                    {{-- @if (!$time_now->greaterThan($item->updated_at->addDay())) --}}
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                @if ($item->payment_type == 'Online' && !$time_now->greaterThan($item->updated_at->addDay()))
+                                                    <a href="{{ $item->checkout_link }}">
+                                                        <button class="btn btn-primary w-100">Bayar Sekarang</button>
+                                                    </a>
+                                                @elseif($item->payment_type == 'Offline')
+                                                    <button class="btn btn-primary w-100" data-toggle="modal"
+                                                        data-target="#offlineModal{{ $item->invoice_number }}">Bayar
+                                                        Sekarang</button>
+                                                @endif
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <a href="{{ url('payment/cancel/' . $item->uuid) }}">
+                                                    <button class="btn btn-danger w-100">Batalkan Transaksi</button>
                                                 </a>
-                                            @elseif($item->payment_type == 'Offline')
-                                                <button class="btn btn-primary w-100" data-toggle="modal"
-                                                    data-target="#offlineModal{{ $item->invoice_number }}">Bayar
-                                                    Sekarang</button>
-                                            @endif
+                                            </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
-                                            <a href="{{ url('payment/cancel/' . $item->uuid) }}">
-                                                <button class="btn btn-danger w-100">Batalkan Transaksi</button>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    {{-- @else --}}
+                                        {{-- <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <a href="{{ url('payment/cancel/' . $item->uuid) }}">
+                                                    <button class="btn btn-danger w-100">Batalkan Transaksi</button>
+                                                </a>
+                                            </div>
+                                        </div> --}}
+                                    {{-- @endif --}}
                                 </div>
                             </div>
                         </div>
@@ -309,7 +345,8 @@
                             <p>1. Pergi menuju ke Ruang TU dan menemui petugas yang sedang bertugas melayani
                                 pembayaran siswa
                             </p>
-                            <p>2. Ajukan pembayaran untuk item tagihan dengan nomor kwitansi <span class="font-weight-bold">
+                            <p>2. Ajukan pembayaran untuk item tagihan dengan nomor kwitansi <span
+                                    class="font-weight-bold">
                                     {{ $item->invoice_number }} </span>
                             </p>
                             <p>3. Lakukan pembayaran dengan nominal pembayaran <span class="font-weight-bold"
