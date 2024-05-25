@@ -27,12 +27,12 @@ class ProfileController extends Controller
 
     public function userList()
     {
-        $users = User::with('roles','categories')->select('uuid','name','email','nis','id','class_id','category_id','gender')->orderBy("updated_at", "DESC")->get();
+        $users = User::with('roles', 'categories')->select('uuid', 'name', 'email', 'nis', 'id', 'class_id', 'category_id', 'gender')->orderBy("updated_at", "DESC")->get();
         $classes = StudentClass::orderBy("class_name", "DESC")->get();
         $categories = Category::orderBy("category_name", "DESC")->get();
         $roles = ModelsRole::orderBy("name", "DESC")->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('account.users.index', compact('notifications', 'users', 'classes', 'categories','roles'));
+        return view('account.users.index', compact('notifications', 'users', 'classes', 'categories', 'roles'));
     }
 
     public function profile()
@@ -40,6 +40,7 @@ class ProfileController extends Controller
         $user = User::with('roles')->find(Auth::user()->id);
         $student = User::where('id', Auth::user()->id)->first();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
+        // return dd($student);
         return view('account.profile.index', compact('notifications', 'user', 'student'));
     }
 
@@ -169,15 +170,30 @@ class ProfileController extends Controller
 
     public function updatePassword(Request $request, $uuid)
     {
+
         $data = User::where('uuid', $uuid)->first();
 
         $id = $data->id;
 
         $user = User::find($id);
 
-        $user->update([
-            'password' => Hash::make($request->password)
-        ]);
+        if (!empty($request->emailUser)) {
+            $user->update([
+                'user_email' => $request->emailUser
+            ]);
+        }
+
+        if (!empty($request->noTelpUser)) {
+            $user->update([
+                'number' => $request->noTelpUser
+            ]);
+        }
+
+        if (!empty($request->password)) {
+            $user->update([
+                'password' => Hash::make($request->password)
+            ]);
+        }
 
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $years = Year::find($activeYearId);
