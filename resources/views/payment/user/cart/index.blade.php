@@ -224,6 +224,7 @@
                             })
                             .then(response => {
                                 if (!response.ok) {
+                                    console.log("Isi response: ", response.json())
                                     throw new Error('Gagal melakukan pembayaran online');
                                 }
                                 return response.json();
