@@ -5,6 +5,37 @@
 @section('content')
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
+        <style>
+            .transaction-item {
+                margin-bottom: 20px;
+            }
+
+            .transaction-header h5 {
+                margin-bottom: 10px;
+            }
+
+            .transaction-details p {
+                margin: 5px 0;
+            }
+
+            .detail-link {
+                color: blue;
+                text-decoration: underline;
+            }
+
+            @media (min-width: 992px) {
+                .d-lg-none {
+                    display: none !important;
+                }
+            }
+
+            @media (max-width: 991px) {
+                .d-lg-block {
+                    display: none !important;
+                }
+
+            }
+        </style>
     @endpush
 
     <div class="main-wrapper main-wrapper-1">
@@ -45,7 +76,7 @@
                         <h4>{{ __('Tabel Data Transaksi') }}</h4>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive d-none d-lg-block">
                             <table class="table table-striped" id="table-spp">
                                 <thead>
                                     <tr>
@@ -75,9 +106,7 @@
                                                 <td>{{ $item->credit->credit_name }}</td>
                                             @endif
                                             <td>{{ $item->payment_type }}</td>
-                                            <td>
-                                                Rp{{ number_format($item->price, 0, ',', '.') }}
-                                            </td>
+                                            <td>Rp{{ number_format($item->price, 0, ',', '.') }}</td>
                                             <td>{{ $item->petugas->name }}</td>
                                             <td>{{ $item->year->year_name }}</td>
                                             @if ($item->status == 'Paid')
@@ -90,26 +119,55 @@
                                                 </td>
                                             @endif
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
-                                            <td>
-                                                <a href="{{ url('/payment-done/detail/' . $item->id) }}">
-                                                    <i class="fas fa-file text-primary" title="Detail"></i>
-                                                </a>
-                                            </td>
+                                            <td><a href="{{ url('/payment-done/detail/' . $item->id) }}"><i
+                                                        class="fas fa-file text-primary" title="Detail"></i></a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+
+                        <div class="d-lg-none">
+                            @foreach ($credit as $item)
+                                <div class="transaction-item">
+                                    <div class="transaction-header">
+                                        <h5>
+                                            @if ($item->credit == null)
+                                                {{ $item->attribute->attribute_name }}
+                                            @elseif($item->credit != null)
+                                                {{ $item->credit->credit_name }}
+                                            @endif - {{ $item->year->year_name }}
+                                        </h5>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <p>No. Kwitansi: {{ $item->invoice_number }}</p>
+                                        <p>Status:
+                                            @if ($item->status == 'Paid')
+                                                <span class="badge badge-success">{{ __('Lunas') }}</span>
+                                            @else
+                                                <span class="badge badge-warning">{{ $item->status }}</span>
+                                            @endif
+                                        </p>
+                                        <p>Nominal Pembayaran: Rp{{ number_format($item->price, 0, ',', '.') }} via
+                                            {{ $item->payment_type }}</p>
+                                        <p>Tanggal Pembayaran: {{ $item->updated_at->format('h:i F d, Y') }}</p>
+                                        <br>
+                                        <p><a href="{{ url('/payment-done/detail/' . $item->id) }}"
+                                                class="btn btn-primary">{{ __('Lihat Detail Pembayaran') }}</a></p>
+                                    </div>
+                                </div>
+                                <hr>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </section>
         </div>
-        <footer class="main-footer">
-            <div class="footer-left">
-                {{ __('Development by Muhammad Afifudin') }}</a>
-            </div>
-        </footer>
+        <div class="main-footer">
+            {{ __('Development by Muhammad Afifudin') }}</a>
+        </div>
     </div>
+
 
     @push('scripts')
         <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>

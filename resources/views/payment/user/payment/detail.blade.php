@@ -5,6 +5,18 @@
 @section('content')
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
+        <style>
+            .price-container {
+                position: relative;
+                display: inline-block;
+            }
+            .lunas-image {
+                /* transform: translate(0%, -60%); */
+                height: auto;
+                opacity: 0.5;
+            }
+
+        </style>
     @endpush
 
     <div class="main-wrapper main-wrapper-1">
@@ -141,24 +153,21 @@
                             <div class="mt-5">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <div class="form-group">
-                                            <label class="font-weight-bold"
-                                                for="attribute_price">{{ __('Total Transaksi') }}
-                                            </label>
-                                            <h3 class="font-weight-bold">
-                                                Rp{{ number_format($totalPriceCredits, 0, ',', '.') }}
-                                            </h3>
+                                        <div class="form-group position-relative">
+                                            <label class="font-weight-bold" for="attribute_price">{{ __('Total Transaksi') }}</label>
+                                            <div class="price-container position-relative">
+                                                <h3 class="font-weight-bold">
+                                                    Rp{{ number_format($totalPriceCredits, 0, ',', '.') }}
+                                                </h3>
+                                                <img class="lunas-image w-50" src="{{ asset('assets/img/lunas-lurus.png') }}" alt="Lunas">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <div class="form-group">
-                                            <label class="font-weight-bold"
-                                                for="attribute_price">{{ __('TTD Petugas Verifikator') }}
-                                            </label>
+                                            <label class="font-weight-bold" for="attribute_price">{{ __('TTD Petugas Verifikator') }}</label>
                                             <div class="mt-1">
-                                                <img class="w-100"
-                                                    src="{{ asset('storage/petugas/' . $credit->petugas->signature) }}"
-                                                    alt="Nama Alternatif Gambar">
+                                                <img class="w-100" src="{{ asset('storage/petugas/' . $credit->petugas->signature) }}" alt="Nama Alternatif Gambar">
                                             </div>
                                             <hr>
                                             <h5 class="text-center">{{ $credit->petugas->name }}</h5>

@@ -146,6 +146,9 @@ class PaymentController extends Controller
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
+        if (is_null($credit) || is_null($activeYearId) || is_null($credits) || is_null($credit->petugas) || is_null($totalPriceCredits)) {
+            return redirect('/payment-done');
+        }
 
         return view('payment.user.payment.detail', compact('totalPriceCredits', 'students', 'credits', 'notifications', 'studentClasses', 'credit', 'years'));
     }
