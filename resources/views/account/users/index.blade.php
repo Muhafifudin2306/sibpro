@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center pb-3">
+                <div class="d-flex justify-content-between align-items-center pb-3 flex-wrap">
                     <div class="title-content">
                         <h2 class="section-title">{{ __('Data Pengguna') }}</h2>
                         <p class="section-lead">
@@ -33,12 +33,28 @@
                         </p>
                     </div>
                     @can('access-userAdd')
-                        <div class="action-content">
+                        <div class="action-content d-flex flex-column flex-md-row">
+                            <button class="btn btn-success mb-2 mb-md-0 mr-md-2" data-toggle="modal"
+                                data-target="#tambahPenggunaBulking"><i class="fas fa-plus mx-1"></i>
+                                {{ __(' Tambah Data Dengan Excel') }}</button>
                             <button class="btn btn-primary" data-toggle="modal" data-target="#PenggunaModal"><i
                                     class="fas fa-plus mx-1"></i> {{ __(' Tambah Data') }}</button>
                         </div>
                     @endcan
                 </div>
+
+                <!-- Flash Message -->
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <div class="card">
                     <div class="p-4">
                         <div class="d-flex justify-content-between align-items-center">
@@ -133,6 +149,7 @@
             </div>
         </footer>
     </div>
+
 
     @can('access-userAdd')
         <div class="modal fade" tabindex="-1" role="dialog" id="PenggunaModal">
@@ -241,6 +258,43 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="tambahPenggunaBulking">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Data Pengguna Dengan Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <form id="uploadExcelForm" action="{{ route('import.users') }}" method="POST"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group">
+                                <label for="excelFile">{{ __('Upload Excel File') }} <span
+                                        class="text-danger">*</span></label>
+                                <input id="excelFile" type="file"
+                                    class="form-control @error('excelFile') is-invalid @enderror" name="excelFile"
+                                    accept=".xls,.xlsx" required>
+                                @error('excelFile')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    {{ __('Upload File') }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     @endcan
 @endsection
 

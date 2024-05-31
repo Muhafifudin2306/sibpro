@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserImportController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +32,11 @@ Route::prefix('pengeluaran')->group(function () {
 
     Route::get('/vendor', [App\Http\Controllers\VendorController::class, 'index'])->name('vendor');
 });
+
+
+Route::get('/import-users', [UserImportController::class, 'showImportForm'])->name('import.users.form');
+Route::post('/import-users', [UserImportController::class, 'import'])->name('import.users');
+
 
 Route::prefix('master')->group(function () {
     Route::prefix('pos')->group(function () {
@@ -122,7 +129,6 @@ Route::prefix('credit')->group(function () {
     Route::get('/detail/{uuid}', [App\Http\Controllers\CreditController::class, 'detail'])->name('detailcredit');
     Route::get('/detail/student/{uuid}', [App\Http\Controllers\CreditController::class, 'billingStudent'])->name('billingStudent');
     Route::get('/payment/{uuid}', [App\Http\Controllers\CreditController::class, 'payment'])->name('paymentCredit');
-    
 });
 
 Route::prefix('transaction')->group(function () {
@@ -192,7 +198,7 @@ Route::prefix('account')->group(function () {
         Route::group(['middleware' => ['can:access-roleAdd']], function () {
             Route::post('/role/store', [App\Http\Controllers\SecurityController::class, 'storeRole'])->name('storeRole');
         });
-        
+
         Route::group(['middleware' => ['can:access-roleDelete']], function () {
             Route::delete('/role/delete/{id}', [App\Http\Controllers\SecurityController::class, 'destroyRole'])->name('deleteRole');
         });
@@ -306,7 +312,7 @@ Route::prefix('enrollment')->group(function () {
     Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
     Route::post('/process-multiple-payments', [App\Http\Controllers\EnrollmentController::class, 'processMultiplePayments'])->name('processMultiplePayments');
     Route::post('/process-invoice-number', [App\Http\Controllers\EnrollmentController::class, 'invoiceNumber'])->name('invoiceNumber');
-    
+
     Route::post('/update/{id}', [App\Http\Controllers\EnrollmentController::class, 'editData']);
     Route::delete('/delete/{id}', [App\Http\Controllers\EnrollmentController::class, 'destroy'])->name('deletePayment');
 });
