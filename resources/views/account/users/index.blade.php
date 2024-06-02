@@ -75,6 +75,8 @@
                                         <th>{{ __('Kategori') }}</th>
                                         <th>{{ __('Kelas') }}</th>
                                         <th>{{ __('NISN') }}</th>
+                                        <th>{{ __('Email') }}</th>
+                                        <th>{{ __('No Telepon') }}</th>
                                         <th>{{ __('Role') }}</th>
                                         <th>{{ __('Aksi') }}</th>
                                     </tr>
@@ -108,6 +110,12 @@
                                             </td>
                                             <td>
                                                 {{ $item->email }}
+                                            </td>
+                                            <td>
+                                                {{ $item->user_email }}
+                                            </td>
+                                            <td>
+                                                {{ $item->number }}
                                             </td>
                                             <td>
                                                 @foreach ($item->roles as $role)
@@ -220,6 +228,21 @@
                                 <input id="email" type="text"
                                     class="form-control @error('email') is-invalid @enderror" name="email"
                                     value="{{ old('email') }}" placeholder="112233445566" required autocomplete="email">
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-6">
+                                    <label for="user_email">{{ __('Email') }} </label>
+                                    <input id="user_email" type="text"
+                                        class="form-control @error('user_email') is-invalid @enderror" name="user_email"
+                                        value="{{ old('user_email') }}" placeholder="example@gmail.com"
+                                        autocomplete="user_email">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="number">{{ __('No Telepon') }} </label>
+                                    <input id="number" type="text"
+                                        class="form-control @error('number') is-invalid @enderror" name="number"
+                                        value="{{ old('number') }}" placeholder="0877xxxxxxxx" autocomplete="number">
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-6">
@@ -339,9 +362,7 @@
 
                         if (!response.ok) {
                             const errorData = await response.json();
-                            const errorMessages = Object.values(errorData.errors).join('\n');
-                            Notiflix.Notify.failure(
-                                'Field tidak boleh kosong atau nama sejenis telah digunakan');
+                            displayErrors(errorData.errors);
                         } else {
                             Notiflix.Notify.success('Data user berhasil dibuat!');
                             location.reload();
@@ -351,6 +372,11 @@
                             'An error occurred while processing the request.');
                     }
                 });
+
+                function displayErrors(errors) {
+                    const errorMessages = Object.values(errors).map(error => error.join('\n')).join('\n');
+                    Notiflix.Notify.failure(errorMessages);
+                }
             });
         </script>
     @endcan
