@@ -64,6 +64,7 @@
                                         <th>{{ __('Tanggal Pembelian') }}</th>
                                         <th>{{ __('Uraian') }}</th>
                                         <th>{{ __('Nominal Pembelian') }}</th>
+                                        <th>{{ __('Bukti') }}</th>
                                         <th>{{ __('Aksi') }}</th>
                                     </tr>
                                 </thead>
@@ -86,6 +87,9 @@
                                             </td>
                                             <td>
                                                 Rp{{ number_format($item->spending_price, 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                <img src="{{ $item->image_url }}" alt="" class="w-100">
                                             </td>
                                             <td>
                                                 <div class="d-flex justify-content-start">
@@ -145,6 +149,11 @@
                                 <input type="number" class="form-control" name="spending_price" id="spending_price"
                                     placeholder="500000" autofocus required>
                             </div>
+                            <div class="form-group">
+                                <label for="image_url">Bukti Belanja</label>
+                                <input type="file" class="form-control" name="image_url" id="image_url"
+                                    placeholder="Masukkan bukti belanja">
+                            </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -191,6 +200,11 @@
                                     <input type="number" class="form-control" name="spending_price" id="spending_price"
                                         value="{{ round($item->spending_price) }}" autofocus required>
                                 </div>
+                                <div class="form-group">
+                                    <label for="image_url">Bukti Belanja</label>
+                                    <input type="file" class="form-control" name="image_url" id="image_url"
+                                        placeholder="Masukkan bukti belanja">
+                                </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -205,7 +219,7 @@
 
     @push('scripts')
         @can('access-classAdd')
-            <script>
+            {{-- <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     const classForm = document.getElementById('classForm');
                     classForm.addEventListener('submit', function(event) {
@@ -219,7 +233,7 @@
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Content-Type': 'application/json'
+                                    // 'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify(classData)
                             })
@@ -232,6 +246,33 @@
                             })
                             .catch(error => {
                                 Notiflix.Notify.failure('Error:', error);
+                            });
+                    });
+                });
+            </script> --}}
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const classForm = document.getElementById('classForm');
+                    classForm.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const formData = new FormData(classForm);
+
+                        fetch(`/spending/bahan/store`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Notiflix.Notify.success("Data Belanja berhasil dibuat!", {
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure('Error:', error.message || error);
                             });
                     });
                 });

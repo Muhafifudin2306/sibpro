@@ -65,6 +65,7 @@
                                         <th>{{ __('Tanggal') }}</th>
                                         <th>{{ __('Keterangan') }}</th>
                                         <th>{{ __('Nominal') }}</th>
+                                        <th>{{ __('Bukti') }}</th>
                                         <th>{{ __('Terakhir Diubah') }}</th>
                                         <th>{{ __('Aksi') }}</th>
                                     </tr>
@@ -86,6 +87,9 @@
                                             </td>
                                             <td>
                                                 Rp{{ number_format($item->spending_price, 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                <img src="{{ $item->image_url }}" alt="" class="w-100">
                                             </td>
                                             <td>
                                                 {{ $item->updated_at->format('d F Y') }}
@@ -146,6 +150,10 @@
                             <textarea type="text" class="form-control" name="spending_desc" id="spending_desc" placeholder="Masukkan keterangan"
                                 cols="3" required></textarea>
                         </div>
+                        <div class="form-group">
+                            <label for="image_url">Bukti</label>
+                            <input type="file" class="form-control" name="image_url" id="image_url">
+                        </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -186,6 +194,10 @@
                                     <label for="point_source">Keterangan</label>
                                     <textarea type="text" class="form-control" name="spending_desc" id="spending_desc"
                                         placeholder="Masukkan keterangan" cols="3" required> {{ $item->spending_desc }} </textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="image_url">Bukti</label>
+                                    <input type="file" class="form-control" name="image_url" id="image_url">
                                 </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">
@@ -235,21 +247,18 @@
                 classForm.addEventListener('submit', function(event) {
                     event.preventDefault();
                     const formData = new FormData(classForm);
-                    const classData = {};
-                    formData.forEach((value, key) => {
-                        classData[key] = value;
-                    });
+
                     fetch(`/spending/non-operasional/store`, {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Content-Type': 'application/json'
+                                // 'Content-Type': 'application/json'  // Jangan gunakan ini untuk FormData
                             },
-                            body: JSON.stringify(classData)
+                            body: formData
                         })
                         .then(response => response.json())
                         .then(data => {
-                            Notiflix.Notify.success("Data Pengeluaran Operasional berhasil dibuat!", {
+                            Notiflix.Notify.success("Data Pengeluaran Non-Operasional berhasil dibuat!", {
                                 timeout: 3000
                             });
                             location.reload();
