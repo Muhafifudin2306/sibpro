@@ -101,7 +101,7 @@ class CreditController extends Controller
 
     public function generateCredit()
     {
-        $activeYearId = Year::where('year_status', 'active')->value('id');
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
 
         $categories = Category::pluck('id');
 
