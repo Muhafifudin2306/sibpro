@@ -66,6 +66,7 @@
                                         <th>{{ __('Tipe Pengeluaran') }}</th>
                                         <th>{{ __('Keterangan') }}</th>
                                         <th>{{ __('Nominal') }}</th>
+                                        <th>{{ __('Bukti') }}</th>
                                         <th>{{ __('Terakhir Diubah') }}</th>
                                         <th>{{ __('Aksi') }}</th>
                                     </tr>
@@ -106,6 +107,9 @@
                                             </td>
                                             <td>
                                                 Rp{{ number_format($item->spending_price, 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                <img src="{{ $item->image_url }}" alt="" class="w-100">
                                             </td>
                                             <td>
                                                 {{ $item->updated_at->format('d F Y') }}
@@ -150,20 +154,20 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="classForm">
+                <form id="classForm" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="point_source">Tanggal</label>
-                            <input type="date" class="form-control" name="spending_date" id="spending_period" required>
+                            <label for="spending_date">Tanggal</label>
+                            <input type="date" class="form-control" name="spending_date" id="spending_date" required>
                         </div>
                         <div class="form-group">
-                            <label for="point_name">Nominal Dana</label>
+                            <label for="spending_price">Nominal Dana</label>
                             <input type="number" class="form-control" name="spending_price" id="spending_price"
                                 placeholder="100000" required>
                         </div>
                         <div class="form-group">
-                            <label for="point_name">Tipe Pengeluaran</label>
-                            <select class="form-control" name="spending_type" id="">
+                            <label for="spending_type">Tipe Pengeluaran</label>
+                            <select class="form-control" name="spending_type" id="spending_type" required>
                                 <option value="" selected> -- Pilih Tipe Pengeluaran -- </option>
                                 <option value="1">Anggaran Pemeliharaan & perbaikan berkala</option>
                                 <option value="2">Anggaran kesiswaan</option>
@@ -176,9 +180,14 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="point_source">Keterangan</label>
-                            <textarea type="text" class="form-control" name="spending_desc" id="spending_desc" placeholder="Masukkan keterangan"
-                                cols="3" required></textarea>
+                            <label for="spending_desc">Keterangan</label>
+                            <textarea class="form-control" name="spending_desc" id="spending_desc" placeholder="Masukkan keterangan" cols="3"
+                                required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="image_url">Bukti</label>
+                            <input type="file" class="form-control" name="image_url" id="image_url"
+                                accept="image/*">
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
@@ -189,6 +198,7 @@
             </div>
         </div>
     </div>
+
 
 
     @can('access-classUpdate')
@@ -202,23 +212,23 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="update-form" data-action="{{ url('/spending/operasional/update/' . $item->id) }} }}"
-                            method="POST">
+                        <form class="update-form" enctype="multipart/form-data"
+                            data-action="{{ url('/spending/operasional/update/' . $item->id) }}" method="POST">
                             @csrf
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="point_source">Tanggal</label>
+                                    <label for="spending_date">Tanggal</label>
                                     <input value="{{ $item->spending_date }}" type="date" class="form-control"
                                         name="spending_date" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="point_name">Nominal Dana</label>
+                                    <label for="spending_price">Nominal Dana</label>
                                     <input value="{{ round($item->spending_price) }}" type="number" class="form-control"
                                         name="spending_price" id="spending_price" placeholder="100000" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="point_name">Tipe Pengeluaran</label>
-                                    <select class="form-control" name="spending_type" id="">
+                                    <label for="spending_type">Tipe Pengeluaran</label>
+                                    <select class="form-control" name="spending_type" id="spending_type" required>
                                         <option value="" selected> -- Pilih Tipe Pengeluaran -- </option>
                                         <option value="1" {{ $item->spending_type == 1 ? 'selected' : '' }}>Anggaran
                                             Pemeliharaan & perbaikan berkala</option>
@@ -239,9 +249,13 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="point_source">Keterangan</label>
+                                    <label for="spending_desc">Keterangan</label>
                                     <textarea type="text" class="form-control" name="spending_desc" id="spending_desc"
-                                        placeholder="Masukkan keterangan" cols="3" required> {{ $item->spending_desc }} </textarea>
+                                        placeholder="Masukkan keterangan" cols="3" required>{{ $item->spending_desc }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="image_url">Bukti</label>
+                                    <input type="file" class="form-control" name="image_url" id="image_url">
                                 </div>
                             </div>
                             <div class="modal-footer bg-whitesmoke br">
@@ -285,7 +299,7 @@
                     });
             }
         </script>
-        <script>
+        {{-- <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const classForm = document.getElementById('classForm');
                 classForm.addEventListener('submit', function(event) {
@@ -315,8 +329,35 @@
                         });
                 });
             });
-        </script>
+        </script> --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const classForm = document.getElementById('classForm');
+                classForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(classForm);
 
+                    fetch(`/spending/operasional/store`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                // 'Content-Type': 'application/json'  // Jangan gunakan ini untuk FormData
+                            },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Notiflix.Notify.success("Data Pengeluaran Operasional berhasil dibuat!", {
+                                timeout: 3000
+                            });
+                            location.reload();
+                        })
+                        .catch(error => {
+                            Notiflix.Notify.failure('Error:', error);
+                        });
+                });
+            });
+        </script>
 
         <script>
             const deleteClass = document.querySelectorAll('.class-delete');

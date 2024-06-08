@@ -9,13 +9,14 @@ class Debt extends Model
     protected $table = "debts";
 
     protected $fillable = [
-      'is_paid',
-      'description',
-      'due_date',
-      'debt_amount',
-      'attribute_id',
-      'year_id',
-      'vendor_id'  
+        'is_paid',
+        'description',
+        'due_date',
+        'debt_amount',
+        'attribute_id',
+        'year_id',
+        'vendor_id',
+        'image_url'
     ];
 
     public function year()

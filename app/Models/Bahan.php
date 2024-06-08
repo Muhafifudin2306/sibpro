@@ -14,6 +14,7 @@ class Bahan extends Model
         'increment',
         'year_id',
         'invoice_number',
-        'spending_price'
+        'spending_price',
+        'image_url'
     ];
 }

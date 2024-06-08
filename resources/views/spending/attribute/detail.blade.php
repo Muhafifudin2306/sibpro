@@ -141,6 +141,7 @@
                                             <th>{{ __('Tipe Kredit') }}</th>
                                             <th>{{ __('Kredit') }}</th>
                                             <th>{{ __('Vendor/Pihak Terkait') }}</th>
+                                            <th>{{ __('Bukti') }}</th>
                                             <th>{{ __('Aksi') }}</th>
                                         </tr>
                                     </thead>
@@ -167,6 +168,9 @@
                                                 </td>
                                                 <td>
                                                     {{ $item->vendor->vendor_name }}
+                                                </td>
+                                                <td>
+                                                    <img src="{{ asset($item->image_url) }}" alt="" class="w-100">
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-start">
@@ -211,6 +215,7 @@
                                             <th>{{ __('Jumlah Hutang') }}</th>
                                             <th>{{ __('Status') }}</th>
                                             <th>{{ __('Vendor/Pihak Terkait') }}</th>
+                                            <th>{{ __('Bukti') }}</th>
                                             <th>{{ __('Aksi') }}</th>
                                         </tr>
                                     </thead>
@@ -241,6 +246,9 @@
                                                 </td>
                                                 <td>
                                                     {{ $item->vendor->vendor_name }}
+                                                </td>
+                                                <td>
+                                                    <img src="{{ asset($item->image_url) }}" alt="" class="w-100">
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-start">
@@ -285,40 +293,45 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="spending_date">{{ __('Tanggal Kredit') }}</label>
-                            <input type="date" class="form-control" name="spending_date" id="spending_date">
+                            <input type="date" class="form-control" name="spending_date" id="spending_date" required>
                         </div>
                         <div class="form-group">
-                            <label for="spending_desc">{{ __('Nama Pengeluaran') }} </label>
+                            <label for="spending_desc">{{ __('Nama Pengeluaran') }}</label>
                             <input type="text" class="form-control" name="spending_desc" id="spending_desc"
-                                placeholder="Masukkan nama pengeluaran">
+                                placeholder="Masukkan nama pengeluaran" required>
                         </div>
                         <div class="form-group">
                             <label>{{ __('Tipe Pengeluaran') }}</label>
-                            <select class="form-control select2" name="spending_type">
-                                <option>{{ __('-- Pilih Tipe --') }}</option>
+                            <select class="form-control select2" name="spending_type" id="spending_type" required>
+                                <option value="">{{ __('-- Pilih Tipe --') }}</option>
                                 <option value="1">{{ __('Pembelian') }}</option>
                                 <option value="0">{{ __('Non-Pembelian') }}</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>{{ __('Nama Atribut') }}</label>
-                            <select class="form-control select2" name="attribute_id">
+                            <select class="form-control select2" name="attribute_id" id="attribute_id" required>
                                 <option value="{{ $attribute->id }}">{{ $attribute->attribute_name }}</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>{{ __('Vendor/Pihak Terkait') }}</label>
-                            <select class="form-control select2" name="vendor_id">
-                                <option>{{ __('-- Pilih Vendor --') }}</option>
+                            <select class="form-control select2" name="vendor_id" id="vendor_id" required>
+                                <option value="">{{ __('-- Pilih Vendor --') }}</option>
                                 @foreach ($vendors as $item)
                                     <option value="{{ $item->id }}">{{ $item->vendor_name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="spending_price">{{ __('Harga Pengeluaran') }} </label>
+                            <label for="spending_price">{{ __('Harga Pengeluaran') }}</label>
                             <input type="number" class="form-control" name="spending_price" id="spending_price"
                                 placeholder="Masukkan besaran pengeluaran" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="image_url">{{ __('Bukti Pengeluaran') }}</label>
+                            <input type="file" class="form-control" name="image_url" id="image_url"
+                                accept="image/jpeg, image/png, image/jpg, image/gif, image/svg">
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
@@ -379,6 +392,11 @@
                             <input type="number" class="form-control" name="debt_amount" id="debt_amount"
                                 placeholder="Masukkan besaran pengeluaran" required>
                         </div>
+                        <div class="form-group">
+                            <label for="image_url">{{ __('Bukti Hutang') }}</label>
+                            <input type="file" class="form-control" name="image_url" id="image_url"
+                                placeholder="Masukkan bukti hutang">
+                        </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
                         <button type="button" class="btn btn-secondary"
@@ -400,8 +418,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form class="update-form" data-action="{{ url('/spending/attribute/update/' . $item->id) }} }}"
-                        method="POST">
+                    <form class="update-form" data-action="{{ url('/spending/attribute/update/' . $item->id) }}"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
                             <div class="form-group">
@@ -444,6 +462,11 @@
                                 <label for="spending_price">{{ __('Harga Pengeluaran') }} </label>
                                 <input type="number" class="form-control" name="spending_price" id="spending_price"
                                     value="{{ round($item->spending_price) }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="image_url">{{ __('Bukti Pengeluaran') }}</label>
+                                <input type="file" class="form-control" name="image_url" id="image_url"
+                                    placeholder="Bukti pengeluaran">
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -511,6 +534,11 @@
                                 <label for="debt_amount">{{ __('Total Hutang') }} </label>
                                 <input type="number" class="form-control" name="debt_amount" id="debt_amount"
                                     value="{{ round($item->debt_amount) }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="image_url">{{ __('Bukti Hutang') }}</label>
+                                <input type="file" class="form-control" name="image_url" id="image_url"
+                                    placeholder="Bukti hutang">
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -655,80 +683,148 @@
                 });
         }
     </script>
-    <script>
+
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const creditForm = document.getElementById('creditForm');
-            creditForm.addEventListener('submit', async function(event) {
+            creditForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const formData = new FormData(creditForm);
-                const creditData = {};
-                formData.forEach((value, key) => {
-                    creditData[key] = value;
-                });
 
-                try {
-                    const response = await fetch(`/spending/attribute/add`, {
+                fetch(`/spending/attribute/add`, {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify(creditData)
-                    });
+                        body: formData
+                    })
+                    .then(response => {
+                        console.log(response.json());
+                        response.json()
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        const errorMessages = Object.values(errorData.errors).join('\n');
-                        Notiflix.Notify.failure(
-                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
-                    } else {
-                        Notiflix.Notify.success('Data kredit berhasil dibuat!');
-                        location.reload();
-                    }
-                } catch (error) {
-                    Notiflix.Notify.failure('Error:',
-                        'An error occurred while processing the request.');
-                }
+                        return false;
+                    })
+                    .then(data => {
+                        Notiflix.Notify.success("Data kredit berhasil dibuat!", {
+                            timeout: 3000
+                        });
+
+                        // location.reload();
+                    })
+                    .catch(error => {
+                            console.log(error);
+                            Notiflix.Notify.failure('Error:', error);
+                            return false;
+                        }
+
+                    );
+
             });
         });
     </script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const creditForm = document.getElementById('debtForm');
-            creditForm.addEventListener('submit', async function(event) {
+                    const creditForm = document.getElementById('debtForm');
+                    creditForm.addEventListener('submit', async function(event) {
+                            event.preventDefault();
+                            const formData = new FormData(creditForm);
+                            // const creditData = {};
+                            // formData.forEach((value, key) => {
+                            //     creditData[key] = value;
+                            // });
+
+                            const response = await fetch(`/spending/debt/add`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    // 'Content-Type': 'application/json'
+                                },
+                                // body: JSON.stringify(creditData)
+                                body: formData
+                            });
+                            .then(response => {
+                                    console.log(response.json());
+                                    response.json()
+
+                                    return false;
+                                })
+                                .then(data => {
+                                    Notiflix.Notify.success("Data Debt berhasil dibuat!", {
+                                        timeout: 3000
+                                    });
+
+                                    // location.reload();
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                    Notiflix.Notify.failure('Error:', error);
+                                    return false;
+                                });
+                        );
+                    });
+    </script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const creditForm = document.getElementById('creditForm');
+            creditForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const formData = new FormData(creditForm);
-                const creditData = {};
-                formData.forEach((value, key) => {
-                    creditData[key] = value;
-                });
+
+                fetch(`/spending/attribute/add`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        Notiflix.Notify.success("Data kredit berhasil dibuat!", {
+                            timeout: 3000
+                        });
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        Notiflix.Notify.failure('Error:', error);
+                    });
+            });
+
+            const debtForm = document.getElementById('debtForm');
+            debtForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(debtForm);
 
                 try {
                     const response = await fetch(`/spending/debt/add`, {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify(creditData)
+                        body: formData
                     });
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        const errorMessages = Object.values(errorData.errors).join('\n');
-                        Notiflix.Notify.failure(
-                            'Field tidak boleh kosong atau nama sejenis telah digunakan');
-                    } else {
-                        Notiflix.Notify.success('Data kredit berhasil dibuat!');
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        Notiflix.Notify.success("Data Debt berhasil dibuat!", {
+                            timeout: 3000
+                        });
                         location.reload();
+                    } else {
+                        throw new Error(data.message || 'Terjadi kesalahan');
                     }
                 } catch (error) {
-                    Notiflix.Notify.failure('Error:',
-                        'An error occurred while processing the request.');
+                    console.log(error);
+                    Notiflix.Notify.failure('Error: ' + error.message);
                 }
             });
         });
     </script>
+
     <script>
         $("#table-student").dataTable();
         $("#table-debt").dataTable();
