@@ -46,15 +46,21 @@ class ExternalSpendingController extends Controller
             'spending_desc' => 'required|max:255',
             'spending_date' => 'required|date',
             'spending_type' => 'required',
-            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
 
-        $image = $request->file('image_url');
-        $imagePath = $image->storeAs('public/operational', $image->hashName());
+        $imagePath = null;
+        if ($request->hasFile('image_url')) {
+            $image = $request->file('image_url');
+            $imagePath = $image->storeAs('public/operational', $image->hashName());
+            $imageUrl = Storage::url($imagePath);
+        } else {
+            $imageUrl = null;
+        }
 
         $operational = ExternalSpending::create([
             'spending_price' => $request->input('spending_price'),
@@ -63,7 +69,7 @@ class ExternalSpendingController extends Controller
             'spending_type' => $request->input('spending_type'),
             'is_operational' => 1,
             'year_id' => $activeYearId,
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imageUrl
         ]);
 
         $years = Year::find($activeYearId);
@@ -87,15 +93,21 @@ class ExternalSpendingController extends Controller
             'spending_price' => 'required|numeric',
             'spending_desc' => 'required|max:255',
             'spending_date' => 'required|date',
-            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
 
-        $image = $request->file('image_url');
-        $imagePath = $image->storeAs('public/non_operational', $image->hashName());
+        $imagePath = null;
+        if ($request->hasFile('image_url')) {
+            $image = $request->file('image_url');
+            $imagePath = $image->storeAs('public/non_oprerational', $image->hashName());
+            $imageUrl = Storage::url($imagePath);
+        } else {
+            $imageUrl = null;
+        }
 
         $nonOperational = ExternalSpending::create([
             'spending_price' => $request->input('spending_price'),
@@ -104,7 +116,7 @@ class ExternalSpendingController extends Controller
             'spending_type' => 'Biaya Non-Operasional',
             'is_operational' => 0,
             'year_id' => $activeYearId,
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imageUrl
         ]);
 
         $years = Year::find($activeYearId);

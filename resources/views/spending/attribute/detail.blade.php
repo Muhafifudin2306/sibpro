@@ -170,7 +170,12 @@
                                                     {{ $item->vendor->vendor_name }}
                                                 </td>
                                                 <td>
-                                                    <img src="{{ asset($item->image_url) }}" alt="" class="w-100">
+                                                    @if ($item->image_url)
+                                                        <img src="{{ asset($item->image_url) }}" alt=""
+                                                            class="w-100">
+                                                    @else
+                                                        <span>No image provided.</span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-start">
@@ -248,7 +253,11 @@
                                                     {{ $item->vendor->vendor_name }}
                                                 </td>
                                                 <td>
-                                                    <img src="{{ asset($item->image_url) }}" alt="" class="w-100">
+                                                    @if (!$item->image_url || $item->image_url == null)
+                                                        <span>No image provided.</span>
+                                                    @else
+                                                        <img src="{{ asset($item->image_url) }}" alt class="w-100">
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-start">

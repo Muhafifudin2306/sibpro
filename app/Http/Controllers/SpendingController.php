@@ -86,6 +86,9 @@ class SpendingController extends Controller
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
             $imagePath = $image->storeAs('public/spending', $image->hashName());
+            $imageUrl = Storage::url($imagePath);
+        } else {
+            $imageUrl = null;
         }
 
         $spending = Spending::create([
@@ -96,7 +99,7 @@ class SpendingController extends Controller
             'year_id' => $activeYearId,
             'attribute_id' => $request->input('attribute_id'),
             'vendor_id' => $request->input('vendor_id'),
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imageUrl
         ]);
 
         Notification::create([
@@ -210,7 +213,11 @@ class SpendingController extends Controller
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
             $imagePath = $image->storeAs('public/debt', $image->hashName());
+            $imageUrl = Storage::url($imagePath);
+        } else {
+            $imageUrl = null;
         }
+
         $debts = Debt::create([
             'due_date' => $dueDate,
             'description' => $description,
@@ -219,7 +226,7 @@ class SpendingController extends Controller
             'year_id' => $activeYearId,
             'attribute_id' => $attributeId,
             'vendor_id' => $vendorId,
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imageUrl
         ]);
 
 
