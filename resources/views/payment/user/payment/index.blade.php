@@ -264,7 +264,7 @@
                                         <div class="right-label">
                                             @if ($item->payment_type == 'Online')
                                                 <h6 class="font-weight-light" id="fee-{{ $item->invoice_number }}">
-                                                    Rp{{ number_format(4500, 0, ',', '.') }}</h6>
+                                                    Rp{{ number_format(5000, 0, ',', '.') }}</h6>
                                             @elseif($item->payment_type == 'Offline')
                                                 <h6 class="font-weight-light" id="fee-{{ $item->invoice_number }}">
                                                     Rp{{ number_format(0, 0, ',', '.') }}</h6>
@@ -284,26 +284,29 @@
                                 </div>
                                 <div class="card-footer bg-whitesmoke br">
                                     {{-- @if (!$time_now->greaterThan($item->updated_at->addDay())) --}}
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                @if ($item->payment_type == 'Online' && !$time_now->greaterThan($item->updated_at->addDay()))
-                                                    <a href="{{ $item->checkout_link }}">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            @if ($item->payment_type == 'Online' && !$time_now->greaterThan($item->updated_at->addDay()))
+                                                {{-- <a href="{{ $item->checkout_link }}">
                                                         <button class="btn btn-primary w-100">Bayar Sekarang</button>
-                                                    </a>
-                                                @elseif($item->payment_type == 'Offline')
-                                                    <button class="btn btn-primary w-100" data-toggle="modal"
-                                                        data-target="#offlineModal{{ $item->invoice_number }}">Bayar
-                                                        Sekarang</button>
-                                                @endif
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <a href="{{ url('payment/cancel/' . $item->uuid) }}">
-                                                    <button class="btn btn-danger w-100">Batalkan Transaksi</button>
+                                                    </a> --}}
+                                                <a href="{{ url('payment/invoice/' . $item->uuid) }}">
+                                                    <button class="btn btn-primary w-100">Bayar Sekarang</button>
                                                 </a>
-                                            </div>
+                                            @elseif($item->payment_type == 'Offline')
+                                                <button class="btn btn-primary w-100" data-toggle="modal"
+                                                    data-target="#offlineModal{{ $item->invoice_number }}">Bayar
+                                                    Sekarang</button>
+                                            @endif
                                         </div>
+                                        <div class="col-md-6 mb-3">
+                                            <a href="{{ url('payment/cancel/' . $item->uuid) }}">
+                                                <button class="btn btn-danger w-100">Batalkan Transaksi</button>
+                                            </a>
+                                        </div>
+                                    </div>
                                     {{-- @else --}}
-                                        {{-- <div class="row">
+                                    {{-- <div class="row">
                                             <div class="col-md-6 mb-3">
                                                 <a href="{{ url('payment/cancel/' . $item->uuid) }}">
                                                     <button class="btn btn-danger w-100">Batalkan Transaksi</button>

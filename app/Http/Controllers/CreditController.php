@@ -293,6 +293,8 @@ class CreditController extends Controller
         
         $order = Payment::find($id);
 
+        dd($order);
+
         $price = DB::table('payments')
                     ->join('credits', 'payments.credit_id', '=', 'credits.id')
                     ->select('credits.credit_price')
@@ -343,6 +345,59 @@ class CreditController extends Controller
         $snapToken = \Midtrans\Snap::getSnapToken($params);
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         return view('credit.payment', compact('order', 'snapToken', 'notifications'));
+    }
+
+    public function InvoicePage($uuid)
+    {
+        $activeYearId = Year::where('year_status', 'active')->value('id');
+
+        $credit = Payment::orderBy("updated_at", "DESC")
+            ->where('uuid', $uuid)
+            ->first();
+
+        $credits = Payment::orderBy("updated_at", "DESC")
+            ->where('uuid', $uuid)
+            ->get();
+
+        $tax = 5000;
+
+        $priceCredits = Payment::orderBy("updated_at", "DESC")
+            ->where('uuid', $uuid)
+            ->sum('price');
+
+        $totalPriceCredits = $tax + $priceCredits;
+
+        $years = Year::orderBy("updated_at", "DESC")->get();
+        $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
+        $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
+        $students = StudentClass::orderBy("class_name", 'ASC')->get();
+
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = true;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => rand(),
+                'gross_amount' => 10000,
+            ),
+            'customer_details' => array(
+                'first_name' => 'budi',
+                'last_name' => 'pratama',
+                'email' => 'budi.pra@example.com',
+                'phone' => '08111222333',
+            ),
+        );
+        
+        try {
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+    
+            return view('payment.midtrans.invoice', compact('snapToken','totalPriceCredits', 'students', 'credits', 'notifications', 'studentClasses', 'credit', 'years'));
+        } catch (\Exception $e) {
+            // Tangani kesalahan dan tampilkan pesan error
+            return back()->withError('Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage());
+        }
     }
 
 }

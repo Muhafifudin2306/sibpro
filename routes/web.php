@@ -303,6 +303,7 @@ Route::prefix('payment')->group(function () {
     Route::post('/confirm', [App\Http\Controllers\PaymentController::class, 'confirmPayment']);
     Route::get('/cancel/{uuid}', [App\Http\Controllers\PaymentController::class, 'cancelPayment']);
     Route::get('/reject/{id}', [App\Http\Controllers\PaymentController::class, 'rejectPayment']);
+    Route::get('/invoice/{invoice_number}', [App\Http\Controllers\CreditController::class, 'InvoicePage']);
 });
 
 Route::prefix('enrollment')->group(function () {
