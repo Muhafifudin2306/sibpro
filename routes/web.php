@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\TagihanController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserImportController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -315,6 +315,8 @@ Route::prefix('enrollment')->group(function () {
 
     Route::post('/update/{id}', [App\Http\Controllers\EnrollmentController::class, 'editData']);
     Route::delete('/delete/{id}', [App\Http\Controllers\EnrollmentController::class, 'destroy'])->name('deletePayment');
+    // Route::get('/tagihan', [App\Http\Controllers\TagihanController::class, 'index'])->name('tagihan.index');
+    Route::post('/tagihan', [App\Http\Controllers\TagihanController::class, 'store'])->name('tagihan.store');
 });
 
 Route::prefix('payment-done')->group(function () {
