@@ -156,6 +156,7 @@ class ExternalSpendingController extends Controller
         }
 
         $activeYearId = Year::where('year_current', 'selected')->value('id');
+        $years = Year::find($activeYearId);
 
         $externalSpending = ExternalSpending::findOrFail($id);
 
@@ -179,7 +180,6 @@ class ExternalSpendingController extends Controller
             'image_url' => $imagePath
         ]);
 
-        $years = Year::find($activeYearId);
 
         Notification::create([
             'notification_content' => Auth::user()->name . " mengupdate data pengeluaran operasional dengan deskripsi " . $request->input('spending_desc') . " pada tahun ajaran " . $years->year_name,
@@ -205,6 +205,9 @@ class ExternalSpendingController extends Controller
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
 
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+        $years = Year::find($activeYearId);
+
         $externalSpending = ExternalSpending::findOrFail($id);
 
         $imagePath = $externalSpending->image_url;
@@ -213,24 +216,27 @@ class ExternalSpendingController extends Controller
                 Storage::delete('public/non_operational/' . basename($externalSpending->image_url));
             }
             $image = $request->file('image_url');
-            $imagePath = $image->storeAs('public/non_operational', $image->hashName());
+            $image->storeAs('public/non_operational', $image->hashName());
+            $imagePath = Storage::url('public/non_operational/' . $image->hashName());
         }
 
         $externalSpending->update([
             'spending_price' => $request->input('spending_price'),
             'spending_desc' => $request->input('spending_desc'),
             'spending_date' => $request->input('spending_date'),
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imagePath
         ]);
 
-        $activeYearId = Year::where('year_current', 'selected')->value('id');
-        $years = Year::find($activeYearId);
+
 
         Notification::create([
             'notification_content' => Auth::user()->name . " memperbarui data pengeluaran non-operasional dengan deskripsi " . $request->input('spending_desc') . " pada tahun ajaran " . $years->year_name,
             'notification_status' => 0
         ]);
 
-        return response()->json(['message' => 'Data updated successfully', 'data' => $externalSpending], 200);
+        return response()->json([
+            'message' => 'Data updated successfully',
+            'data' => $externalSpending
+        ], 200);
     }
 }
