@@ -46,15 +46,21 @@ class ExternalSpendingController extends Controller
             'spending_desc' => 'required|max:255',
             'spending_date' => 'required|date',
             'spending_type' => 'required',
-            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
 
-        $image = $request->file('image_url');
-        $imagePath = $image->storeAs('public/operational', $image->hashName());
+        $imagePath = null;
+        if ($request->hasFile('image_url')) {
+            $image = $request->file('image_url');
+            $imagePath = $image->storeAs('public/operational', $image->hashName());
+            $imageUrl = Storage::url($imagePath);
+        } else {
+            $imageUrl = null;
+        }
 
         $operational = ExternalSpending::create([
             'spending_price' => $request->input('spending_price'),
@@ -63,7 +69,7 @@ class ExternalSpendingController extends Controller
             'spending_type' => $request->input('spending_type'),
             'is_operational' => 1,
             'year_id' => $activeYearId,
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imageUrl
         ]);
 
         $years = Year::find($activeYearId);
@@ -87,15 +93,21 @@ class ExternalSpendingController extends Controller
             'spending_price' => 'required|numeric',
             'spending_desc' => 'required|max:255',
             'spending_date' => 'required|date',
-            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
 
-        $image = $request->file('image_url');
-        $imagePath = $image->storeAs('public/non_operational', $image->hashName());
+        $imagePath = null;
+        if ($request->hasFile('image_url')) {
+            $image = $request->file('image_url');
+            $imagePath = $image->storeAs('public/non_oprerational', $image->hashName());
+            $imageUrl = Storage::url($imagePath);
+        } else {
+            $imageUrl = null;
+        }
 
         $nonOperational = ExternalSpending::create([
             'spending_price' => $request->input('spending_price'),
@@ -104,7 +116,7 @@ class ExternalSpendingController extends Controller
             'spending_type' => 'Biaya Non-Operasional',
             'is_operational' => 0,
             'year_id' => $activeYearId,
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imageUrl
         ]);
 
         $years = Year::find($activeYearId);
@@ -156,6 +168,7 @@ class ExternalSpendingController extends Controller
         }
 
         $activeYearId = Year::where('year_current', 'selected')->value('id');
+        $years = Year::find($activeYearId);
 
         $externalSpending = ExternalSpending::findOrFail($id);
 
@@ -179,7 +192,6 @@ class ExternalSpendingController extends Controller
             'image_url' => $imagePath
         ]);
 
-        $years = Year::find($activeYearId);
 
         Notification::create([
             'notification_content' => Auth::user()->name . " mengupdate data pengeluaran operasional dengan deskripsi " . $request->input('spending_desc') . " pada tahun ajaran " . $years->year_name,
@@ -205,6 +217,9 @@ class ExternalSpendingController extends Controller
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
 
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+        $years = Year::find($activeYearId);
+
         $externalSpending = ExternalSpending::findOrFail($id);
 
         $imagePath = $externalSpending->image_url;
@@ -213,24 +228,27 @@ class ExternalSpendingController extends Controller
                 Storage::delete('public/non_operational/' . basename($externalSpending->image_url));
             }
             $image = $request->file('image_url');
-            $imagePath = $image->storeAs('public/non_operational', $image->hashName());
+            $image->storeAs('public/non_operational', $image->hashName());
+            $imagePath = Storage::url('public/non_operational/' . $image->hashName());
         }
 
         $externalSpending->update([
             'spending_price' => $request->input('spending_price'),
             'spending_desc' => $request->input('spending_desc'),
             'spending_date' => $request->input('spending_date'),
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imagePath
         ]);
 
-        $activeYearId = Year::where('year_current', 'selected')->value('id');
-        $years = Year::find($activeYearId);
+
 
         Notification::create([
             'notification_content' => Auth::user()->name . " memperbarui data pengeluaran non-operasional dengan deskripsi " . $request->input('spending_desc') . " pada tahun ajaran " . $years->year_name,
             'notification_status' => 0
         ]);
 
-        return response()->json(['message' => 'Data updated successfully', 'data' => $externalSpending], 200);
+        return response()->json([
+            'message' => 'Data updated successfully',
+            'data' => $externalSpending
+        ], 200);
     }
 }

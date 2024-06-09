@@ -109,7 +109,11 @@
                                                 Rp{{ number_format($item->spending_price, 0, ',', '.') }}
                                             </td>
                                             <td>
-                                                <img src="{{ $item->image_url }}" alt="" class="w-100">
+                                                @if (!$item->image_url || $item->image_url == null)
+                                                    <span>No image provided.</span>
+                                                @else
+                                                    <img src="{{ asset($item->image_url) }}" alt class="w-100">
+                                                @endif
                                             </td>
                                             <td>
                                                 {{ $item->updated_at->format('d F Y') }}

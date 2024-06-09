@@ -27,14 +27,10 @@ class BahanController extends Controller
     {
         $activeYearId = Year::where('year_current', 'selected')->value('id');
 
-
-        // Ambil invoice number terakhir
         $lastInvoiceNumber = Bahan::whereYear('updated_at', Carbon::now()->year)
             ->whereMonth('updated_at', Carbon::now()->month)
             ->orderBy('updated_at', 'DESC')
             ->value('increment');
-
-        // dd($lastInvoiceNumber);
 
         $increment = 1;
         if ($lastInvoiceNumber != NULL) {
@@ -44,11 +40,16 @@ class BahanController extends Controller
         // Format tanggal hari ini dalam format "ddMMyy"
         $todayDate = Carbon::now()->format('dmy');
 
-        // Buat invoice number baru
         $invoiceNumber = 'BUY' . '-' . $todayDate . '-' . $increment;
 
-        $image = $request->file('image_url');
-        $imagePath = $image->storeAs('public/bahan', $image->hashName());
+        $imagePath = null;
+        if ($request->hasFile('image_url')) {
+            $image = $request->file('image_url');
+            $imagePath = $image->storeAs('public/bahan', $image->hashName());
+            $imageUrl = Storage::url($imagePath);
+        } else {
+            $imageUrl = null;
+        }
 
         $bahan = Bahan::create([
             'spending_date' => $request->input('spending_date'),
@@ -57,7 +58,7 @@ class BahanController extends Controller
             'increment' => $increment,
             'invoice_number' => $invoiceNumber,
             'year_id' => $activeYearId,
-            'image_url' => Storage::url($imagePath)
+            'image_url' => $imageUrl
         ]);
 
         return response()->json([
