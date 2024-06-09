@@ -45,8 +45,10 @@
                         </p>
                     </div>
                     @can('access-generatePayment')
-                        <div class="action-content">
-                            <button class="btn btn-primary generate">{{ __('+ Buat Data Tagihan') }}</button>
+                        <div class="action-content d-flex">
+                            <button class="btn btn-primary mr-2 tagihan" data-toggle="modal"
+                                data-target="#createBillModal">{{ __('Buat Data Tagihan') }}</button>
+                            <button class="btn btn-primary generate mr-2">{{ __('+ Generate Data Tagihan') }}</button>
                         </div>
                     @endcan
                 </div>
@@ -87,6 +89,66 @@
                             </div>
                         </div>
                     </div>
+
+                    {{-- <div class="action-content">
+                        <button class="btn btn-primary generate">{{ __('Tipe Pembayaran') }}</button>
+                    </div>
+
+                    <div class="modal fade" tabindex="-1" role="dialog" id="createBillModal">
+                        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{ __('Buat Data Tagihan') }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="{{ route('tagihan.store') }}" method="POST">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label>{{ __('Pilih Siswa') }}</label>
+                                            <select class="form-control select2" name="student_id" required>
+                                                @foreach ($students as $student)
+                                                    <option value="{{ $student->id }}">{{ $student->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{ __('Tipe Pembayaran') }}</label><br>
+                                            <input type="radio" name="type" value="SPP" id="typeSPP" required> <label for="typeSPP">{{ __('SPP') }}</label>
+                                            <input type="radio" name="type" value="Daftar Ulang" id="typeDaftarUlang" required> <label for="typeDaftarUlang">{{ __('Daftar Ulang') }}</label>
+                                        </div>
+                                        <div class="form-group" id="sppDropdown" style="display: none;">
+                                            <label>{{ __('Item SPP') }}</label>
+                                            <select class="form-control select2" name="credit_id">
+                                                @foreach ($credits as $credit)
+                                                    <option value="{{ $credit->id }}">{{ $credit->credit_name }} - {{ $credit->credit_price }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="daftarUlangDropdown" style="display: none;">
+                                            <label>{{ __('Item Daftar Ulang') }}</label>
+                                            <select class="form-control select2" name="attribute_id">
+                                                @foreach ($attributes as $attribute)
+                                                    <option value="{{ $attribute->id }}">{{ $attribute->attribute_name }} - {{ $attribute->attribute_price }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{ __('Status Blangko') }}</label><br>
+                                            <input type="radio" name="status" value="Paid" id="statusPaid" required> <label for="statusPaid">{{ __('Lunas') }}</label>
+                                            <input type="radio" name="status" value="Unpaid" id="statusUnpaid" required> <label for="statusUnpaid">{{ __('Belum Lunas') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer bg-whitesmoke br">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+                                        <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div> --}}
 
                     <div class="col-lg-12">
                         <div class="card">
@@ -206,8 +268,73 @@
         </footer>
     </div>
 
-    @foreach ($credit as $item)
-        <div class="modal fade" tabindex="-1" role="dialog" id="paymentModal{{ $item->id }}">
+    <div class="modal fade" tabindex="-1" role="dialog" id="createBillModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('Buat Data Tagihan') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('tagihan.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>{{ __('Pilih Siswa') }}</label>
+                            <select class="form-control select2" name="user_id" required>
+                                <option>{{ __('-- Pilih Siswa --') }}</option>
+                                @foreach ($studentsList as $student)
+                                    <option value="{{ $student->id }}">{{ $student->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>{{ __('Tipe Pembayaran') }}</label><br>
+                            <input type="radio" name="type" value="SPP" id="typeSPP" required> <label
+                                for="typeSPP">{{ __('SPP') }}</label>
+                            <input type="radio" name="type" value="Daftar Ulang" id="typeDaftarUlang" required>
+                            <label for="typeDaftarUlang">{{ __('Daftar Ulang') }}</label>
+                        </div>
+
+                        <div id="sppDropdown" style="display:none;">
+                            <label for="sppItems">{{ __('Item SPP') }}</label>
+                            <select id="sppItems" name="credit_id">
+                                @foreach ($creditList as $credit)
+                                    <option value="{{ $credit->id }}">{{ $credit->credit_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div id="daftarUlangDropdown" style="display:none;">
+                            <label for="daftarUlangItems">{{ __('Item Daftar Ulang') }}</label>
+                            <select id="daftarUlangItems" name="attribute_id">
+                                @foreach ($attributeList as $attribute)
+                                    <option value="{{ $attribute->id }}">{{ $attribute->attribute_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{ __('Status Blangko') }}</label><br>
+                            <input type="radio" name="status" value="Paid" id="statusPaid" required> <label
+                                for="statusPaid">{{ __('Lunas') }}</label>
+                            <input type="radio" name="status" value="Unpaid" id="statusUnpaid" required> <label
+                                for="statusUnpaid">{{ __('Belum Lunas') }}</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- @foreach ($credit as $item)
+        <div class="modal fade" tabindex="-1" role="dialog" id="paymentModal">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -289,10 +416,33 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @endforeach --}}
 
     @push('scripts')
         <script>
+            $(document).ready(function() {
+                $('input[type="radio"]').click(function() {
+                    if ($(this).attr('id') == 'typeSPP') {
+                        $('#sppDropdown').show();
+                        $('#daftarUlangDropdown').hide();
+                    } else if ($(this).attr('id') == 'typeDaftarUlang') {
+                        $('#sppDropdown').hide();
+                        $('#daftarUlangDropdown').show();
+                    }
+                });
+            });
+            document.getElementById('typeSPP').addEventListener('click', function() {
+                document.getElementById('sppDropdown').style.display = 'block';
+                document.getElementById('daftarUlangDropdown').style.display = 'none';
+                document.getElementById('statusBlangko').style.display = 'block';
+            });
+
+            document.getElementById('typeDaftarUlang').addEventListener('click', function() {
+                document.getElementById('sppDropdown').style.display = 'none';
+                document.getElementById('daftarUlangDropdown').style.display = 'block';
+                document.getElementById('statusBlangko').style.display = 'block';
+            });
+
             const generateButton = document.querySelectorAll('.generate');
 
             generateButton.forEach(button => {
