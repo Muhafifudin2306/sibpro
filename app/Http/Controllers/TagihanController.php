@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Year;
 use App\Models\Credit;
 use App\Models\Payment;
 use App\Models\Attribute;
-use App\Models\Notification;
-use App\Models\StudentClass;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 
 class TagihanController extends Controller
 {    
@@ -26,7 +23,7 @@ class TagihanController extends Controller
 
         $price = 0;
 
-        // dd($request->input('credit_id'));
+        $uuid = Str::uuid();
 
         if ($request->input('type') === 'SPP') {
             $price = Credit::find($request->input('credit_id'))->credit_price;
@@ -35,6 +32,7 @@ class TagihanController extends Controller
         }
 
         Payment::create([
+            'uuid' => $uuid,
             'user_id' =>  $request->input('user_id'),
             'type' => $request->input('type'),
             'credit_id' => $request->input('type') === 'SPP' ? $request->input('credit_id') : null,
@@ -43,6 +41,6 @@ class TagihanController extends Controller
             'price' => $price,
         ]);
 
-        return redirect('enrollment')->with('success', 'Data tagihan berhasil dibuat');
+        return response()->json(['success' => true, 'message' => 'Data tagihan berhasil dibuat']);
     }
 }
