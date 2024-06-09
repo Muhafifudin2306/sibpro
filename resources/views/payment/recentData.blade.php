@@ -109,9 +109,13 @@
                                             @endif
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
                                             <td>
-                                                <a href="{{ url('/payment-done/kwitansi/' . $item->invoice_number) }}">
-                                                    <i class="fas fa-file text-primary" title="Detail"></i>
-                                                </a>
+                                                @if ($item->petugas_id != null)
+                                                    <a href="{{ url('/payment-done/kwitansi/' . $item->invoice_number) }}">
+                                                        <i class="fas fa-file text-primary" title="Detail"></i>
+                                                    </a>
+                                                @else
+                                                    <span>Belum Ada Bukti</span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
