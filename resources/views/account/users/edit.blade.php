@@ -83,6 +83,30 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-6">
+                                        <label for="user_email">{{ __('Email') }}</label>
+                                        <input id="user_email" type="text"
+                                            class="form-control @error('user_email') is-invalid @enderror" name="user_email"
+                                            value="{{ $user->user_email }}" required>
+                                        @error('user_email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="number">{{ __('Number') }}</label>
+                                        <input id="number" type="text"
+                                            class="form-control @error('number') is-invalid @enderror" name="number"
+                                            value="{{ $user->number }}" required>
+                                        @error('number')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-6">
                                         <label for="nis">{{ __('Kelas') }} <span
                                                 class="text-danger">*</span></label>
                                         <select class="form-control" required name="class_id">

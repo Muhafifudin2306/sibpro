@@ -27,7 +27,7 @@ class ProfileController extends Controller
 
     public function userList()
     {
-        $users = User::with('roles', 'categories')->select('uuid', 'name', 'email', 'nis', 'id', 'class_id', 'category_id', 'gender')->orderBy("updated_at", "DESC")->get();
+        $users = User::with('roles', 'categories')->select('uuid', 'name', 'email', 'user_email', 'number', 'nis', 'id', 'class_id', 'category_id', 'gender')->orderBy("updated_at", "DESC")->get();
         $classes = StudentClass::orderBy("class_name", "DESC")->get();
         $categories = Category::orderBy("category_name", "DESC")->get();
         $roles = ModelsRole::orderBy("name", "DESC")->get();
@@ -52,6 +52,8 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:5', 'confirmed'],
+            'user_email' => ['nullable', 'string', 'min:5', 'max:255'],
+            'number' => ['nullable', 'string', 'min:10', 'max:15'],
             'nis' => ['required'],
             'class_id' => ['required'],
             'category_id' => ['required'],
@@ -62,7 +64,7 @@ class ProfileController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $user = User::create([
+        $data = [
             'uuid' => $uuid,
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -71,7 +73,17 @@ class ProfileController extends Controller
             'class_id' => $request->input('class_id'),
             'category_id' => $request->input('category_id'),
             'gender' => $request->input('gender')
-        ]);
+        ];
+
+        if ($request->filled('user_email')) {
+            $data['user_email'] = $request->input('user_email');
+        }
+
+        if ($request->filled('number')) {
+            $data['number'] = $request->input('number');
+        }
+
+        $user = User::create($data);
 
         $userRole = $request->input('role_id');
         $user->assignRole($userRole);
@@ -146,6 +158,8 @@ class ProfileController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'nis' => $request->input('nis'),
+            'user_email' => $request->input('user_email'),
+            'number' => $request->input('number'),
             'class_id' => $request->input('class_id'),
             'category_id' => $request->input('category_id'),
             'gender' => $request->input('gender')

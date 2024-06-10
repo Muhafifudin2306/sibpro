@@ -9,13 +9,14 @@ class Spending extends Model
     protected $table = "spendings";
 
     protected $fillable = [
-      'spending_date',
-      'spending_desc',
-      'spending_type',
-      'spending_price',
-      'attribute_id',
-      'year_id',
-      'vendor_id'  
+        'spending_date',
+        'spending_desc',
+        'spending_type',
+        'spending_price',
+        'attribute_id',
+        'year_id',
+        'vendor_id',
+        'image_url'
     ];
 
     public function year()

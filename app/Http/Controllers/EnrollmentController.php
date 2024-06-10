@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribute as ModelsAttribute;
+use App\Models\Credit;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Notification;
@@ -38,8 +40,17 @@ class EnrollmentController extends Controller
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
+        $studentsList = User::with('roles', 'categories')
+        ->whereHas('roles', function ($query) {
+            $query->where('id', 2);
+        })
+        ->select('uuid', 'name', 'email', 'user_email', 'number', 'nis', 'id', 'class_id', 'category_id', 'gender')
+        ->orderBy("updated_at", "DESC")
+        ->get();
+        $creditList = Credit::all();
+        $attributeList = ModelsAttribute::all();
 
-        return view('enrollment.index', compact('students', 'notifications', 'studentClasses','credit','years'));
+        return view('enrollment.index', compact('students', 'notifications', 'studentClasses','credit','years', 'studentsList', 'creditList', 'attributeList'));
     }
 
     public function detail($uuid)
