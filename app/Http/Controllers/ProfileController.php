@@ -125,7 +125,7 @@ class ProfileController extends Controller
 
         $user = User::find($uuid);
 
-        $roleUser = DB::table('model_has_roles')->where('model_id', $id)->first();
+        $roleUser = DB::table('model_has_roles')->where('model_id', $uuid)->first();
         $classes = StudentClass::orderBy("class_name", "DESC")->get();
         $categories = Category::orderBy("category_name", "DESC")->get();
         $roles = ModelsRole::orderBy("name", "DESC")->get();
