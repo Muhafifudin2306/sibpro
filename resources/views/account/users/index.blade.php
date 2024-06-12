@@ -119,7 +119,7 @@
                                             <td>
                                                 <div class="d-flex">
                                                     @can('access-userEdit')
-                                                        <a href="{{ url('account/users/edit/' . $item->uuid) }}">
+                                                        <a href="{{ url('account/users/edit/' . $item->id) }}">
                                                             <div class="text-warning mx-2 cursor-pointer">
                                                                 <i class="fas fa-pen" title="Edit User"></i>
                                                             </div>

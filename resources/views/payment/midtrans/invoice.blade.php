@@ -4,7 +4,7 @@
 
 @section('content')
     @push('styles')
-        <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        <script type="text/javascript" src="https://app.midtrans.com/snap/snap.js"
             data-client-key="{{ config('midtrans.client_key') }}"></script>
     @endpush
     <div class="main-wrapper main-wrapper-1">
