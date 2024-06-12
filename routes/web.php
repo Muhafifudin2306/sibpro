@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\TagihanController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserImportController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -313,9 +313,9 @@ Route::prefix('enrollment')->group(function () {
     Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
     Route::post('/process-multiple-payments', [App\Http\Controllers\EnrollmentController::class, 'processMultiplePayments'])->name('processMultiplePayments');
     Route::post('/process-invoice-number', [App\Http\Controllers\EnrollmentController::class, 'invoiceNumber'])->name('invoiceNumber');
-
     Route::post('/update/{id}', [App\Http\Controllers\EnrollmentController::class, 'editData']);
     Route::delete('/delete/{id}', [App\Http\Controllers\EnrollmentController::class, 'destroy'])->name('deletePayment');
+    Route::post('/tagihan', [App\Http\Controllers\TagihanController::class, 'store'])->name('tagihan.store');
 });
 
 Route::prefix('payment-done')->group(function () {
