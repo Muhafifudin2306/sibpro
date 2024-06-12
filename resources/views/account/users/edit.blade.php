@@ -26,7 +26,7 @@
                             <a href="{{ url('/account/users') }}"> {{ __('Close') }} </a>
                         </div>
                         <div class="card-body pb-5">
-                            <form class="update-form" data-action="{{ url('account/users/update/' . $user->uuid) }}"
+                            <form class="update-form" data-action="{{ url('account/users/update/' . $user->id) }}"
                                 method="POST">
                                 @csrf
                                 <div class="form-group">
@@ -147,7 +147,8 @@
                                     <label for="email">{{ __('NISN') }} <span class="text-danger">*</span></label>
                                     <input id="email" type="text"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
-                                        value="{{ $user->email }}" placeholder="111222333" required autocomplete="email">
+                                        value="{{ $user->email }}" placeholder="111222333" required
+                                        autocomplete="email">
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

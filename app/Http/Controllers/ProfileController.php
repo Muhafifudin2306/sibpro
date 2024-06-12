@@ -135,16 +135,7 @@ class ProfileController extends Controller
 
     public function updateUser(Request $request, $uuid)
     {
-        $data = User::where('uuid', $uuid)->first();
-
-        if (!$data) {
-            // Handle jika data tidak ditemukan
-            abort(404);
-        }
-
-        $id = $data->id;
-
-        $user = User::find($id);
+        $user = User::find($uuid);
 
         $user->update([
             'name' => $request->input('name'),
@@ -157,7 +148,7 @@ class ProfileController extends Controller
             'gender' => $request->input('gender')
         ]);
 
-        $roleUser = DB::table('model_has_roles')->where('model_id', $id)->update([
+        $roleUser = DB::table('model_has_roles')->where('model_id', $uuid)->update([
             'role_id' => $request->input('role_id')
         ]);
 
