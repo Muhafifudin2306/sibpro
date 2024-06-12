@@ -122,16 +122,8 @@ class ProfileController extends Controller
 
     public function editUser($uuid)
     {
-        $data = User::where('uuid', $uuid)->first();
 
-        if (!$data) {
-            // Handle jika data tidak ditemukan
-            abort(404);
-        }
-
-        $id = $data->id;
-
-        $user = User::find($id);
+        $user = User::find($uuid);
 
         $roleUser = DB::table('model_has_roles')->where('model_id', $id)->first();
         $classes = StudentClass::orderBy("class_name", "DESC")->get();
