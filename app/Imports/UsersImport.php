@@ -6,6 +6,8 @@ use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
+
 
 class UsersImport implements ToModel, WithHeadingRow
 {
@@ -28,8 +30,9 @@ class UsersImport implements ToModel, WithHeadingRow
         // $row[13] = null;
         // return dd($row);
         ++$this->rows;
-
+        $uuid = Str::uuid();
         $user = new User([
+            'uuid' => $uuid,
             'name' => $row["nama_lengkap"],
             'nis' => $row["nis"],
             'email' => $row["nis"],
