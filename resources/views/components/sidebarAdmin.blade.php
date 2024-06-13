@@ -117,7 +117,7 @@
                         <i class="fas fa-file-invoice-dollar"></i>
                         <span>Blangko Tagihan Siswa</span>
                     </a>
-                </li> --}}<li class="dropdown {{ Request::is('student*') ? 'active' : '' }}">
+                </li> --}}<li class="dropdown {{ Request::is('enrollment*') ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i>
                         <span>Blangko Tagihan Siswa</span></a>
                     <ul class="dropdown-menu">
