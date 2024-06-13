@@ -308,7 +308,7 @@ Route::prefix('payment')->group(function () {
 
 Route::prefix('enrollment')->group(function () {
     // Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index'])->name('enrollment');]
-    Route::get('/', [App\Http\Controllers\EnrollmentController::class, 'index']);
+    Route::get('/{id}', [App\Http\Controllers\EnrollmentController::class, 'index']);
     Route::get('/detail/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'detail'])->name('detailenrollment');
     Route::get('/detail/student/{uuid}', [App\Http\Controllers\EnrollmentController::class, 'billingStudent'])->name('enrollmentStudent');
     Route::post('/process-multiple-payments', [App\Http\Controllers\EnrollmentController::class, 'processMultiplePayments'])->name('processMultiplePayments');

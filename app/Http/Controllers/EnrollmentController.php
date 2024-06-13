@@ -28,12 +28,15 @@ class EnrollmentController extends Controller
     //     return view('enrollment.index', compact('notifications', 'studentClasses'));
     // }
 
-    public function index()
+    public function index($id)
     {
         $activeYearId = Year::where('year_current', 'selected')->value('id');
 
         $credit = Payment::orderBy("user_id", "DESC")
                     ->where('year_id', $activeYearId)
+                    ->whereHas('user', function ($query) use ($id) {
+                        $query->where('class_id', $id);
+                    })
                     ->where('status', 'Unpaid')
                     ->get();
         $years = Year::select('year_name', 'year_current')->orderBy("updated_at", "DESC")->get();

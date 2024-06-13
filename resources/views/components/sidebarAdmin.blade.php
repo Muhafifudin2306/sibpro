@@ -112,11 +112,20 @@
             </li> --}}
 
             @can('access-blangkoSiswa')
-                <li class="{{ Request::is('enrollment') ? 'active' : '' }}">
+                {{-- <li class="{{ Request::is('enrollment') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('/enrollment') }}">
                         <i class="fas fa-file-invoice-dollar"></i>
                         <span>Blangko Tagihan Siswa</span>
                     </a>
+                </li> --}}<li class="dropdown {{ Request::is('student*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i>
+                        <span>Blangko Tagihan Siswa</span></a>
+                    <ul class="dropdown-menu">
+                        @foreach ($students as $item)
+                            <li class="{{ Request::segment(2) == $item->id ? 'active' : '' }}"><a
+                                    href="{{ url('enrollment/' . $item->id) }}">{{ $item->class_name }}</a></li>
+                        @endforeach
+                    </ul>
                 </li>
             @endcan
 
