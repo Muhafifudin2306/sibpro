@@ -349,6 +349,16 @@ class CreditController extends Controller
 
     public function InvoicePage($uuid)
     {
+        $data = Payment::where('uuid', $uuid)->first();
+
+        if (!$data) {
+            abort(404);
+        }
+
+        $id = $data->id;
+        
+        $order = Payment::find($id);
+
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $credit = Payment::orderBy("updated_at", "DESC")
@@ -383,9 +393,9 @@ class CreditController extends Controller
                 'gross_amount' => $totalPriceCredits,
             ),
             'customer_details' => array(
-                'first_name' => $credit->user->name,
-                'email' => $credit->user->email,
-                'phone' =>  $credit->user->number,
+                'first_name' => $order->user->name,
+                'email' => $order->user->email,
+                'phone' =>  $order->user->number,
             ),
         );
         
