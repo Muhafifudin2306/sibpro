@@ -379,14 +379,13 @@ class CreditController extends Controller
 
         $params = array(
             'transaction_details' => array(
-                'order_id' => rand(),
-                'gross_amount' => 10000,
+                'order_id' => $credit->invoice_number,
+                'gross_amount' => $totalPriceCredits,
             ),
             'customer_details' => array(
-                'first_name' => 'budi',
-                'last_name' => 'pratama',
-                'email' => 'budi.pra@example.com',
-                'phone' => '08111222333',
+                'first_name' => $credit->user->name,
+                'email' => $credit->user->email,
+                'phone' =>  $credit->user->number,
             ),
         );
         
