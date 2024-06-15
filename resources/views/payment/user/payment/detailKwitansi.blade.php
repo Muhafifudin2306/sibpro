@@ -5,6 +5,19 @@
 @section('content')
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
+        <style>
+            .price-container {
+                position: relative;
+                display: inline-block;
+                width: 100%;
+            }
+
+            .lunas-image {
+                display: block;
+                margin: 0 auto;
+                opacity: 0.5;
+            }
+        </style>
     @endpush
 
     <div class="main-wrapper main-wrapper-1">
@@ -141,13 +154,19 @@
                             <div class="mt-5">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <div class="form-group">
+                                        <div class="form-group price-container">
                                             <label class="font-weight-bold"
                                                 for="attribute_price">{{ __('Total Transaksi') }}
                                             </label>
                                             <h3 class="font-weight-bold">
                                                 Rp{{ number_format($totalPriceCredits, 0, ',', '.') }}
                                             </h3>
+                                            @if ($allPaid)
+                                                <img class="lunas-image w-50"
+                                                    src="{{ asset('assets/img/lunas-lurus.png') }}" alt="Lunas">
+                                            @else
+                                                <span class="badge badge-warning">{{ __('Belum lunas') }}</span>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-3">
