@@ -379,7 +379,7 @@ class CreditController extends Controller
 
         $params = array(
             'transaction_details' => array(
-                'order_id' => $credit->invoice_number,
+                'order_id' => rand(),
                 'gross_amount' => $totalPriceCredits,
             ),
             'customer_details' => array(
@@ -389,14 +389,10 @@ class CreditController extends Controller
             ),
         );
         
-        try {
             $snapToken = \Midtrans\Snap::getSnapToken($params);
     
             return view('payment.midtrans.invoice', compact('snapToken','totalPriceCredits', 'students', 'credits', 'notifications', 'studentClasses', 'credit', 'years'));
-        } catch (\Exception $e) {
-            // Tangani kesalahan dan tampilkan pesan error
-            return back()->withError('Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage());
-        }
+      
     }
 
 }
