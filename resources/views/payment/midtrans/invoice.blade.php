@@ -178,6 +178,7 @@
                 snap.pay('{{ $snapToken }}', {
                     onSuccess: function(result) {
                         console.log(result);
+                        window.location.href = '/payment/proccess/{{ $credit->uuid }}';
                     },
                     onPending: function(result) {
                         console.log(result);

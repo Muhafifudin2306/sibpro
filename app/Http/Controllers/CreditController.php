@@ -405,4 +405,20 @@ class CreditController extends Controller
       
     }
 
+    public function InvoiceProccess($uuid){
+
+        $paymentIds = Payment::where('uuid', $uuid)->pluck('id');
+
+        $payments = Payment::find($paymentIds);
+
+        foreach($payments as $payment){
+            $payment->update([
+                'status' => 'Paid',
+                'petugas_id' => 1
+            ]);
+        }
+
+        return redirect('/payment-done');
+    }
+
 }
