@@ -394,7 +394,6 @@ class CreditController extends Controller
             ),
             'customer_details' => array(
                 'first_name' => $order->user->name,
-                'email' => $order->user->user_email,
                 'phone' =>  $order->user->invoice_number,
             ),
         );
