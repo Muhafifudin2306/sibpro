@@ -4,7 +4,6 @@
 
 @section('content')
     @push('styles')
-        <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
     @endpush
     <div class="main-wrapper main-wrapper-1">
@@ -209,7 +208,7 @@
         </footer>
     </div>
 
-    <div class="modal fade" role="dialog" id="createBillModal">
+    <div class="modal fade" tabindex="-1" role="dialog" id="createBillModal">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -223,7 +222,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label>{{ __('Pilih Siswa') }}</label>
-                            <select class="form-control select2" name="user_id">
+                            <select class="form-control select2" name="user_id" required>
                                 <option>{{ __('-- Pilih Siswa --') }}</option>
                                 @foreach ($studentsList as $student)
                                     <option value="{{ $student->id }}">{{ $student->name }}</option>
@@ -263,12 +262,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label>{{ __('Status Blangko') }}</label>
-                            <select class="form-control" name="status" required>
-                                <option value="">{{ __('-- Pilih Status --') }}</option>
-                                <option value="Paid">{{ __('Lunas') }}</option>
-                                <option value="Unpaid">{{ __('Belum Lunas') }}</option>
-                            </select>
+                            <label>{{ __('Status Blangko') }}</label><br>
+                            <input type="radio" name="status" value="Paid" id="statusPaid" required> <label
+                                for="statusPaid">{{ __('Lunas') }}</label>
+                            <input type="radio" name="status" value="Unpaid" id="statusUnpaid" required> <label
+                                for="statusUnpaid">{{ __('Belum Lunas') }}</label>
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
@@ -282,330 +280,329 @@
     </div>
 
     @push('scripts')
-    <script src="{{ asset('assets/modules/select2/dist/js/select2.full.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const updateForms = document.querySelectorAll('.createBillForm');
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const updateForms = document.querySelectorAll('.createBillForm');
 
-            updateForms.forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    const formData = new FormData(form);
+                updateForms.forEach(form => {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const formData = new FormData(form);
 
-                    Notiflix.Loading.standard('Processing...');
+                        Notiflix.Loading.standard('Processing...');
 
-                    fetch(form.action, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: formData
-                        })
-                        .then(response => {
-                            Notiflix.Loading.remove();
-
-                            if (!response.ok) {
-                                return response.text().then(text => {
-                                    throw new Error(text)
-                                });
-                            }
-
-                            return response.json();
-                        })
-                        .then(data => {
-                            Notiflix.Loading.remove();
-
-                            if (data.success) {
-                                Notiflix.Notify.success("Data tagihan berhasil dibuat!", {
-                                    timeout: 3000
-                                });
-                                location.reload();
-                            } else {
-                                Notiflix.Notify.failure(data.message ||
-                                    'Terjadi kesalahan saat membuat data tagihan.');
-                            }
-                        })
-                        .catch(error => {
-                            Notiflix.Loading.remove();
-                            Notiflix.Notify.failure('Error: ' + error.message);
-                            console.error('Error', error);
-                        });
-                });
-            });
-
-            document.querySelectorAll('input[name="type"]').forEach(function(element) {
-                element.addEventListener('change', function() {
-                    if (this.value === 'SPP') {
-                        document.getElementById('sppDropdown').style.display = 'block';
-                        document.getElementById('daftarUlangDropdown').style.display = 'none';
-                    } else if (this.value === 'Daftar Ulang') {
-                        document.getElementById('sppDropdown').style.display = 'none';
-                        document.getElementById('daftarUlangDropdown').style.display = 'block';
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        const generateButton = document.querySelectorAll('.generate');
-
-        generateButton.forEach(button => {
-            button.addEventListener('click', function() {
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin Melanjutkan Proses ini?', 'Ya',
-                    'Batal',
-                    function() {
-                        // Show loading animation only if user clicks "Ya"
-                        Notiflix.Loading.standard('Proses sedang berlangsung, harap tunggu...');
-
-                        fetch(`/credit/generate/`, {
-                                method: 'GET',
+                        fetch(form.action, {
+                                method: 'POST',
                                 headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: formData
                             })
-                            .then(response => response.json())
-                            .then(data => {
-                                Notiflix.Notify.success("Data atribut SPP berhasil dibuat!", {
-                                    timeout: 3000
-                                });
+                            .then(response => {
+                                Notiflix.Loading.remove(); // Remove loading animation
 
-                                // Remove loading animation after the process is complete
+                                if (!response.ok) {
+                                    return response.text().then(text => {
+                                        throw new Error(text)
+                                    });
+                                }
+
+                                return response.json();
+                            })
+                            .then(data => {
                                 Notiflix.Loading.remove();
 
-                                // Reload the page
-                                location.reload();
-                            })
-                            .catch(error => {
-                                Notiflix.Notify.failure('Error:', error);
-
-                                // Remove loading animation in case of error
-                                Notiflix.Loading.remove();
-                            });
-                    });
-            });
-        });
-    </script>
-    <script>
-        function updateYear() {
-            const form = document.getElementById('updateYearForm');
-            const formData = new FormData(form);
-
-            fetch('/current-year', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Terjadi kesalahan');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    Notiflix.Notify.success(data.message, {
-                        timeout: 3000
-                    });
-                    location.reload();
-                })
-                .catch(error => {
-                    Notiflix.Notify.failure('Error: Data tidak ditemukan!');
-                });
-        }
-    </script>
-    <script>
-        document.querySelector('.submit').addEventListener('click', function() {
-            Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
-                function() {
-                    var selectedIds = [];
-                    document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
-                        function(checkbox) {
-                            selectedIds.push(checkbox.getAttribute('data-id'));
-                        });
-
-                    if (selectedIds.length === 0) {
-                        Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
-                        return;
-                    }
-
-                    Notiflix.Loading.standard('Please wait...');
-
-                    fetch('/cart/offline', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                transactions: selectedIds
-                            })
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Gagal melakukan pemesanan data!');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            Notiflix.Notify.success(data.message);
-                            window.location.href =
-                                '/credit';
-                        })
-                        .catch(error => {
-                            Notiflix.Notify.failure(error
-                                .message);
-                        });
-                });
-        });
-    </script>
-
-    <script>
-        function updateTotalPrice() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)');
-            var totalPrice = 0;
-            var labelItem = '';
-
-            checkboxes.forEach(function(checkbox) {
-                var price = parseFloat(checkbox.getAttribute('data-price'));
-                var label = checkbox.getAttribute('data-label');
-                var name = checkbox.getAttribute('data-name');
-                var nis = checkbox.getAttribute('data-nis');
-                var type = checkbox.getAttribute('data-type');
-                var year = checkbox.getAttribute('data-year');
-                var priceItem = parseFloat(checkbox.getAttribute('data-price'));
-                totalPrice += price;
-
-                labelItem += '<tr>' + '<td>' + nis + '</td>' + '<td>' + name + '</td>' + '<td>' + type + '</td>' +
-                    '<td>' + label + '</td>' + '<td>' + year + '</td>' +
-                    '<td>' + 'Rp' + priceItem + '</td>' + '</tr>';
-            });
-
-            var selectedItemsTable = document.getElementById('selectedItems');
-            selectedItemsTable.innerHTML = labelItem;
-
-            var totalPriceSpan = document.getElementById('totalPrice');
-            totalPriceSpan.textContent = 'Rp' + totalPrice
-                .toLocaleString();
-        }
-
-        var checkboxAll = document.getElementById('checkbox-all');
-
-        checkboxAll.addEventListener('change', function() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
-
-            var isChecked = checkboxAll.checked;
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.checked = isChecked;
-            });
-
-            updateTotalPrice();
-        });
-
-        var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
-
-        checkboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', updateTotalPrice);
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const updateForms = document.querySelectorAll('.update-form');
-
-            updateForms.forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-
-                    const formData = new FormData(form);
-
-                    fetch(form.getAttribute('data-action'), {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            Notiflix.Notify.success("Data berhasil diperbarui!", {
-                                timeout: 3000
-                            });
-
-                            location.reload();
-                        })
-                        .catch(error => {
-                            Notiflix.Notify.failure('Error:', error);
-                        });
-                });
-            });
-        });
-    </script>
-    <script>
-        var checkboxStatus = {};
-
-        function updateCheckboxStatus(checkbox) {
-            var id = checkbox.getAttribute('id');
-            checkboxStatus[id] = checkbox.checked;
-        }
-
-        function restoreCheckboxStatus() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
-            checkboxes.forEach(function(checkbox) {
-                var id = checkbox.getAttribute('id');
-                if (checkboxStatus[id] === true) {
-                    checkbox.checked = true;
-                } else {
-                    checkbox.checked = false;
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            restoreCheckboxStatus();
-        });
-
-        checkboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
-                updateTotalPrice();
-                updateCheckboxStatus(checkbox);
-            });
-        });
-    </script>
-
-    <script>
-        const deleteAttribute = document.querySelectorAll('.payment-delete');
-
-        deleteAttribute.forEach(button => {
-            button.addEventListener('click', function() {
-                const cardId = button.dataset.cardId;
-
-                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
-                    'Batal',
-                    function() {
-                        fetch(`/enrollment/delete/${cardId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                Notiflix.Notify.success(
-                                    "Data atribut Tagihan Siswa berhasil dihapus!", {
+                                if (data.success) {
+                                    Notiflix.Notify.success("Data tagihan berhasil dibuat!", {
                                         timeout: 3000
                                     });
+                                    location.reload();
+                                } else {
+                                    Notiflix.Notify.failure(data.message ||
+                                        'Terjadi kesalahan saat membuat data tagihan.');
+                                }
+                            })
+                            .catch(error => {
+                                Notiflix.Loading.remove();
+                                Notiflix.Notify.failure('Error: ' + error.message);
+                                console.error('Error', error);
+                            });
+                    });
+                });
+
+                document.querySelectorAll('input[name="type"]').forEach(function(element) {
+                    element.addEventListener('change', function() {
+                        if (this.value === 'SPP') {
+                            document.getElementById('sppDropdown').style.display = 'block';
+                            document.getElementById('daftarUlangDropdown').style.display = 'none';
+                        } else if (this.value === 'Daftar Ulang') {
+                            document.getElementById('sppDropdown').style.display = 'none';
+                            document.getElementById('daftarUlangDropdown').style.display = 'block';
+                        }
+                    });
+                });
+            });
+        </script>
+        <script>
+            const generateButton = document.querySelectorAll('.generate');
+
+            generateButton.forEach(button => {
+                button.addEventListener('click', function() {
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin Melanjutkan Proses ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            // Show loading animation only if user clicks "Ya"
+                            Notiflix.Loading.standard('Proses sedang berlangsung, harap tunggu...');
+
+                            fetch(`/credit/generate/`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success("Data atribut SPP berhasil dibuat!", {
+                                        timeout: 3000
+                                    });
+
+                                    // Remove loading animation after the process is complete
+                                    Notiflix.Loading.remove();
+
+                                    // Reload the page
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
+
+                                    // Remove loading animation in case of error
+                                    Notiflix.Loading.remove();
+                                });
+                        });
+                });
+            });
+        </script>
+        <script>
+            function updateYear() {
+                const form = document.getElementById('updateYearForm');
+                const formData = new FormData(form);
+
+                fetch('/current-year', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Terjadi kesalahan');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        Notiflix.Notify.success(data.message, {
+                            timeout: 3000
+                        });
+                        location.reload();
+                    })
+                    .catch(error => {
+                        Notiflix.Notify.failure('Error: Data tidak ditemukan!');
+                    });
+            }
+        </script>
+        <script>
+            document.querySelector('.submit').addEventListener('click', function() {
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
+                    function() {
+                        var selectedIds = [];
+                        document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
+                            function(checkbox) {
+                                selectedIds.push(checkbox.getAttribute('data-id'));
+                            });
+
+                        if (selectedIds.length === 0) {
+                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk pembayaran tagihan');
+                            return;
+                        }
+
+                        Notiflix.Loading.standard('Please wait...');
+
+                        fetch('/cart/offline', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    transactions: selectedIds
+                                })
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal melakukan pemesanan data!');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                Notiflix.Notify.success(data.message);
+                                window.location.href =
+                                    '/credit';
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure(error
+                                    .message);
+                            });
+                    });
+            });
+        </script>
+
+        <script>
+            function updateTotalPrice() {
+                var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)');
+                var totalPrice = 0;
+                var labelItem = '';
+
+                checkboxes.forEach(function(checkbox) {
+                    var price = parseFloat(checkbox.getAttribute('data-price'));
+                    var label = checkbox.getAttribute('data-label');
+                    var name = checkbox.getAttribute('data-name');
+                    var nis = checkbox.getAttribute('data-nis');
+                    var type = checkbox.getAttribute('data-type');
+                    var year = checkbox.getAttribute('data-year');
+                    var priceItem = parseFloat(checkbox.getAttribute('data-price'));
+                    totalPrice += price;
+
+                    labelItem += '<tr>' + '<td>' + nis + '</td>' + '<td>' + name + '</td>' + '<td>' + type + '</td>' +
+                        '<td>' + label + '</td>' + '<td>' + year + '</td>' +
+                        '<td>' + 'Rp' + priceItem + '</td>' + '</tr>';
+                });
+
+                var selectedItemsTable = document.getElementById('selectedItems');
+                selectedItemsTable.innerHTML = labelItem;
+
+                var totalPriceSpan = document.getElementById('totalPrice');
+                totalPriceSpan.textContent = 'Rp' + totalPrice
+                    .toLocaleString();
+            }
+
+            var checkboxAll = document.getElementById('checkbox-all');
+
+            checkboxAll.addEventListener('change', function() {
+                var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
+
+                var isChecked = checkboxAll.checked;
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = isChecked;
+                });
+
+                updateTotalPrice();
+            });
+
+            var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
+
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', updateTotalPrice);
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const updateForms = document.querySelectorAll('.update-form');
+
+                updateForms.forEach(form => {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+
+                        const formData = new FormData(form);
+
+                        fetch(form.getAttribute('data-action'), {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Notiflix.Notify.success("Data berhasil diperbarui!", {
+                                    timeout: 3000
+                                });
+
                                 location.reload();
                             })
                             .catch(error => {
                                 Notiflix.Notify.failure('Error:', error);
                             });
                     });
+                });
             });
-        });
-    </script>
+        </script>
+        <script>
+            var checkboxStatus = {};
 
-    <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
-@endpush
+            function updateCheckboxStatus(checkbox) {
+                var id = checkbox.getAttribute('id');
+                checkboxStatus[id] = checkbox.checked;
+            }
+
+            function restoreCheckboxStatus() {
+                var checkboxes = document.querySelectorAll('input[type="checkbox"][data-checkboxes="mygroup"]');
+                checkboxes.forEach(function(checkbox) {
+                    var id = checkbox.getAttribute('id');
+                    if (checkboxStatus[id] === true) {
+                        checkbox.checked = true;
+                    } else {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                restoreCheckboxStatus();
+            });
+
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    updateTotalPrice();
+                    updateCheckboxStatus(checkbox);
+                });
+            });
+        </script>
+
+        <script>
+            const deleteAttribute = document.querySelectorAll('.payment-delete');
+
+            deleteAttribute.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardId = button.dataset.cardId;
+
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            fetch(`/enrollment/delete/${cardId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success(
+                                        "Data atribut Tagihan Siswa berhasil dihapus!", {
+                                            timeout: 3000
+                                        });
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure('Error:', error);
+                                });
+                        });
+                });
+            });
+        </script>
+
+        <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
+        <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
+    @endpush
 @endsection
