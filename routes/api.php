@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/get-external-count', [App\Http\Controllers\HomeController::class, 'getExternalCount'])->name('externalCount');
 
-// Route::post('/midtrans-callback', [App\Http\Controllers\GatewayController::class, 'callback'])->name('paymentCallback');
+Route::post('/midtrans-callback', [App\Http\Controllers\GatewayController::class, 'callback'])->name('paymentCallback');
 
 Route::prefix('payment')->group(function () {
     Route::post('/confirm', [App\Http\Controllers\GatewayController::class, 'confirmPaymentOnline']);
