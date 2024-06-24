@@ -37,7 +37,7 @@ class EnrollmentController extends Controller
             ->whereHas('user', function ($query) use ($id) {
                 $query->where('class_id', $id);
             })
-            ->where('status', 'Pending')
+            ->where('status', 'Unpaid')
             ->get();
         $years = Year::select('year_name', 'year_current')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();

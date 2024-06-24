@@ -19,8 +19,8 @@ class TagihanController extends Controller
             'user_id' => 'required|exists:users,id',
             'type' => 'required|in:SPP,Daftar Ulang',
             'status' => 'required|in:Paid,Unpaid',
-            'credit_id' => 'nullable|exists:credits,id',
-            'attribute_id' => 'nullable|exists:attributes,id',
+            // 'credit_id' => 'nullable|exists:credits,id',
+            // 'attribute_id' => 'nullable|exists:attributes,id',
         ]);
 
         $activeYearId = Year::where('year_current', 'selected')->value('id');
