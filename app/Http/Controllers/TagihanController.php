@@ -27,7 +27,7 @@ class TagihanController extends Controller
 
         $price = 0;
 
-        $uuid = Str::uuid();
+        // $uuid = Str::uuid();
 
         if ($request->input('type') === 'SPP') {
             $price = Credit::find($request->input('credit_id'))->credit_price;
@@ -36,7 +36,7 @@ class TagihanController extends Controller
         }
 
         Payment::create([
-            'uuid' => $uuid,
+            // 'uuid' => $uuid,
             'user_id' =>  $request->input('user_id'),
             'type' => $request->input('type'),
             'credit_id' => $request->input('type') === 'SPP' ? $request->input('credit_id') : null,
