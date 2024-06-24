@@ -8,10 +8,12 @@ use App\Models\Attribute;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
+use App\Models\Year;
+
 
 class TagihanController extends Controller
-{    
-    public function store(Request $request) 
+{
+    public function store(Request $request)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -20,6 +22,8 @@ class TagihanController extends Controller
             'credit_id' => 'nullable|exists:credits,id',
             'attribute_id' => 'nullable|exists:attributes,id',
         ]);
+
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
 
         $price = 0;
 
@@ -38,6 +42,7 @@ class TagihanController extends Controller
             'credit_id' => $request->input('type') === 'SPP' ? $request->input('credit_id') : null,
             'attribute_id' => $request->input('type') === 'Daftar Ulang' ? $request->input('attribute_id') : null,
             'status' => $request->input('status'),
+            'year_id' => $activeYearId,
             'price' => $price,
         ]);
 

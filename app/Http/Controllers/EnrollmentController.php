@@ -33,27 +33,27 @@ class EnrollmentController extends Controller
         $activeYearId = Year::where('year_current', 'selected')->value('id');
 
         $credit = Payment::orderBy("user_id", "DESC")
-                    ->where('year_id', $activeYearId)
-                    ->whereHas('user', function ($query) use ($id) {
-                        $query->where('class_id', $id);
-                    })
-                    ->where('status', 'Unpaid')
-                    ->get();
+            ->where('year_id', $activeYearId)
+            ->whereHas('user', function ($query) use ($id) {
+                $query->where('class_id', $id);
+            })
+            ->where('status', 'Pending')
+            ->get();
         $years = Year::select('year_name', 'year_current')->orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $studentsList = User::with('roles', 'categories')
-        ->whereHas('roles', function ($query) {
-            $query->where('id', 2);
-        })
-        ->select('uuid', 'name', 'email', 'user_email', 'number', 'nis', 'id', 'class_id', 'category_id', 'gender')
-        ->orderBy("updated_at", "DESC")
-        ->get();
+            ->whereHas('roles', function ($query) use ($id) {
+                $query->where('id', 2)->where('class_id', $id);
+            })
+            ->select('uuid', 'name', 'email', 'user_email', 'number', 'nis', 'id', 'class_id', 'category_id', 'gender')
+            ->orderBy("updated_at", "DESC")
+            ->get();
         $creditList = Credit::all();
         $attributeList = ModelsAttribute::all();
 
-        return view('enrollment.index', compact('students', 'notifications', 'studentClasses','credit','years', 'studentsList', 'creditList', 'attributeList'));
+        return view('enrollment.index', compact('students', 'notifications', 'studentClasses', 'credit', 'years', 'studentsList', 'creditList', 'attributeList'));
     }
 
     public function detail($uuid)
@@ -71,10 +71,10 @@ class EnrollmentController extends Controller
         $students = User::where('class_id', $id)
             ->whereNotNull('category_id')
             ->with(['paymentAttribute' => function ($query) {
-                $query->select('attributes.id', 'attribute_name','attribute_price as total_price', 'status', 'payments.price');
+                $query->select('attributes.id', 'attribute_name', 'attribute_price as total_price', 'status', 'payments.price');
             }])
             ->get();
-            
+
 
         $class = StudentClass::find($id);
 
@@ -88,24 +88,24 @@ class EnrollmentController extends Controller
 
         if (!$data) {
             // Handle jika data tidak ditemukan
-           abort(404);
-       }
+            abort(404);
+        }
 
         $id = $data->id;
 
         $student = DB::table('payments')
-                    ->join('users', 'payments.user_id', '=', 'users.id')
-                    ->join('attributes', 'payments.attribute_id', '=', 'attributes.id')
-                    ->select('attributes.attribute_name','attributes.attribute_price','payments.status','payments.id')
-                    ->where('user_id',$id)
-                    ->get();
+            ->join('users', 'payments.user_id', '=', 'users.id')
+            ->join('attributes', 'payments.attribute_id', '=', 'attributes.id')
+            ->select('attributes.attribute_name', 'attributes.attribute_price', 'payments.status', 'payments.id')
+            ->where('user_id', $id)
+            ->get();
 
         $user = User::find($id);
-        
+
 
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 
-        return view('enrollment.billing', compact('notifications', 'student','user'));
+        return view('enrollment.billing', compact('notifications', 'student', 'user'));
     }
 
     private function generateInvoiceNumberEnrollment()
@@ -114,7 +114,7 @@ class EnrollmentController extends Controller
 
         $letters = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
 
-        $invoiceNumber = "DU"."-".$digits ."-". $letters;
+        $invoiceNumber = "DU" . "-" . $digits . "-" . $letters;
 
         return $invoiceNumber;
     }
@@ -130,26 +130,26 @@ class EnrollmentController extends Controller
             $payment = Payment::find($transactionId);
 
             $price = DB::table('payments')
-                    ->join('attributes', 'payments.attribute_id', '=', 'attributes.id')
-                    ->select('attributes.attribute_price')
-                    ->where('payments.id',$transactionId)
-                    ->first();
-            
+                ->join('attributes', 'payments.attribute_id', '=', 'attributes.id')
+                ->select('attributes.attribute_price')
+                ->where('payments.id', $transactionId)
+                ->first();
+
             $priceItem = $price->attribute_price;
 
-            $payment->update(['invoice_number' => $invoiceNumber, 'price' => $priceItem,'status' => 'Pending']);
+            $payment->update(['invoice_number' => $invoiceNumber, 'price' => $priceItem, 'status' => 'Pending']);
         }
         // Validate if the user is authorized to perform these transactions (optional)
 
         // Now process the selected transactions
         foreach ($transactionIds as $transactionId) {
             $transaction = Payment::find($transactionId);
-            
+
             // Add the transaction to the array
             $transactions[] = $transaction;
         }
 
-            // Calculate total amount for the group payment
+        // Calculate total amount for the group payment
         $totalAmount = collect($transactions)->sum(function ($transaction) {
             return $transaction->attribute->attribute_price;
         });
@@ -161,7 +161,7 @@ class EnrollmentController extends Controller
         \Midtrans\Config::$is3ds = true;
 
         // Create a unique order ID for the group payment
-        $orderId = 'GROUP_' . now()->format('YmdHis') .$transactions[0]->id;
+        $orderId = 'GROUP_' . now()->format('YmdHis') . $transactions[0]->id;
 
         // Prepare Midtrans parameters for the group payment
         $params = [
@@ -216,7 +216,7 @@ class EnrollmentController extends Controller
         ]);
         $inputStatus = $request->input('status');
 
-        if($inputStatus == 'Paid'){
+        if ($inputStatus == 'Paid') {
             $payment->update([
                 'payment_type' => 'Khusus',
                 'petugas_id' => 1,
@@ -229,5 +229,4 @@ class EnrollmentController extends Controller
             'data' => $payment,
         ], 201);
     }
-
 }

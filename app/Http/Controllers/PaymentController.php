@@ -174,8 +174,10 @@ class PaymentController extends Controller
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
+        // return dd($credits);
+        $allPaid = $credits->every(fn ($credits) => $credits['status'] === 'Paid');
 
-        return view('payment.user.payment.detailKwitansi', compact('totalPriceCredits', 'students', 'credits', 'notifications', 'studentClasses', 'credit', 'years'));
+        return view('payment.user.payment.detailKwitansi', compact('totalPriceCredits', 'students', 'credits', 'notifications', 'studentClasses', 'credit', 'years', 'allPaid'));
     }
 
     public function printPaymentDone($id)
