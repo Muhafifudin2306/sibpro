@@ -246,7 +246,8 @@
 
                         <div class="form-group" id="sppDropdown" style="display:none;">
                             <label for="sppItems">{{ __('Item SPP') }}</label>
-                            <select class="form-control" id="sppItems" name="credit_id">
+                            <select class="form-control select2" id="sppItems" name="credit_id">
+                                <option>{{ __('-- Pilih SPP --') }}</option>
                                 @foreach ($creditList as $credit)
                                     <option value="{{ $credit->id }}">{{ $credit->credit_name }}</option>
                                 @endforeach
@@ -255,7 +256,8 @@
 
                         <div class="form-group" id="daftarUlangDropdown" style="display:none;">
                             <label for="daftarUlangItems">{{ __('Item Daftar Ulang') }}</label>
-                            <select class="form-control" id="daftarUlangItems" name="attribute_id">
+                            <select class="form-control select2" id="daftarUlangItems" name="attribute_id">
+                                <option>{{ __('-- Pilih Item Daftar Ulang --') }}</option>
                                 @foreach ($attributeList as $attribute)
                                     <option value="{{ $attribute->id }}">{{ $attribute->attribute_name }}</option>
                                 @endforeach
