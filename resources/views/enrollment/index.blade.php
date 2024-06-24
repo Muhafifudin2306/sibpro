@@ -47,7 +47,7 @@
                     </div>
                     @can('access-generatePayment')
                         <div class="action-content d-flex">
-                            <button class="btn btn-secondary mr-2 tagihan" data-toggle="modal"
+                            <button class="btn btn-info mr-2 tagihan" data-toggle="modal"
                                 data-target="#createBillModal">{{ __('+ Buat Data Tagihan') }}</button>
                             <button class="btn btn-primary generate mr-2">{{ __('+ Generate Data Tagihan') }}</button>
                         </div>
