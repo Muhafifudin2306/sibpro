@@ -15,7 +15,7 @@
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="email">{{ __('NISN') }}</label>
+                                    <label for="email">{{ __('NISN/Username') }}</label>
                                     <input id="email" type="text" placeholder="example@example.com"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
                                         value="{{ old('email') }}" required="" autocomplete="email" autofocus>
