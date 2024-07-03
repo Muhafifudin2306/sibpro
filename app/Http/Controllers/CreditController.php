@@ -369,7 +369,7 @@ class CreditController extends Controller
             ->where('uuid', $uuid)
             ->get();
 
-        $tax = 0;
+        $tax = 5000;
 
         $priceCredits = Payment::orderBy("updated_at", "DESC")
             ->where('uuid', $uuid)
