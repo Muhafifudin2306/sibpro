@@ -28,4 +28,9 @@ class Spending extends Model
     {
         return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
     }
+
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class, 'attribute_id', 'id');
+    }
 }

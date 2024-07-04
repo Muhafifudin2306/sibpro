@@ -23,10 +23,27 @@ class SpendingController extends Controller
     }
     public function indexAttribute()
     {
+        
+        $activeYearId = Year::where('year_current', 'selected')->value('id');
+
+        $attribute = Attribute::latest()->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
-        $attributes = Attribute::select('attribute_name', 'slug')->where('attribute_type', 1)->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        return view('spending.attribute.index', compact('students', 'attributes', 'notifications'));
+        $sumDebit = Payment::where('year_id', $activeYearId)->where('status', 'Paid')->sum('price');
+        $sumSpending = Spending::where('year_id', $activeYearId)->sum('spending_price');
+        $spendings = Spending::select('id', 'attribute_id', 'spending_desc', 'spending_price', 'spending_type', 'spending_date', 'vendor_id', 'image_url')
+            ->where('year_id', $activeYearId)
+            ->orderBy("updated_at", "DESC")
+            ->get();
+        $sumDebt = Debt::where('is_paid', 0)->where('year_id', $activeYearId)->sum('debt_amount');
+
+        $debts = Debt::select('id', 'description', 'debt_amount', 'vendor_id', 'due_date', 'is_paid', 'image_url','attribute_id')->where('year_id', $activeYearId)
+            ->orderBy("updated_at", "DESC")
+            ->get();
+
+        $vendors = Vendor::select('id', 'vendor_name')->orderBy("updated_at", "DESC")->get();
+        $years = Year::orderBy("updated_at", "DESC")->get();
+        return view('spending.attribute.index', compact('students', 'debts', 'sumDebt', 'vendors', 'years', 'attribute', 'notifications', 'sumDebit', 'sumSpending', 'spendings'));
     }
 
     public function detailAttribute($slug)
