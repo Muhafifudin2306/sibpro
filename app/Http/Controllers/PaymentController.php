@@ -441,7 +441,16 @@ class PaymentController extends Controller
         foreach($paymentId as $id){
             $payment = Payment::find($id);
 
-            $payment->delete();
+            $payment->update([
+                'status' => 'Unpaid',
+                'uuid' => NULL,
+                'increment' => NULL,
+                'invoice_number' => NULL,
+                'payment_type' => NULL,
+                'checkout_link' => NULL,
+                'external_id' => NULL,
+                'petugas_id' => NULL
+            ]);
         }
 
         return response()->json(['message' => 'Data Pembayaran berhasil dihapus.']);
