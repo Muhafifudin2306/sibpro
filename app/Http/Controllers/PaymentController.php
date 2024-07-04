@@ -433,4 +433,17 @@ class PaymentController extends Controller
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         return view('payment.credit.detail', compact('order', 'snapToken', 'notifications'));
     }
+
+    public function destroyPayment($invoice_number)
+    {
+        $paymentId = Payment::where('invoice_number', $invoice_number)->pluck('id');
+
+        foreach($paymentId as $id){
+            $payment = Payment::find($id);
+
+            $payment->delete();
+        }
+
+        return response()->json(['message' => 'Data Pembayaran berhasil dihapus.']);
+    }
 }

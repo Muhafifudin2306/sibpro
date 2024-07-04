@@ -107,9 +107,18 @@
                                             @endif
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
                                             <td>
-                                                <a href="{{ url('/payment-done/kwitansi/' . $item->invoice_number) }}">
-                                                    <i class="fas fa-file text-primary" title="Detail"></i>
-                                                </a>
+                                                <div class="d-flex justify-content-start">
+                                                    <div class="text-primary cursor-pointer">
+                                                        <a
+                                                            href="{{ url('/payment-done/kwitansi/' . $item->invoice_number) }}">
+                                                            <i class="fas fa-file" title="Detail"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="text-danger mx-2 cursor-pointer">
+                                                        <i class="fas payment-delete fa-trash-alt"
+                                                            data-card-id="{{ $item->invoice_number }}" title="Delete"></i>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -128,6 +137,38 @@
     </div>
 
     @push('scripts')
+        <script>
+            const deleteCategory = document.querySelectorAll('.payment-delete');
+
+            deleteCategory.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardId = button.dataset.cardId;
+
+                    Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus data ini?', 'Ya',
+                        'Batal',
+                        function() {
+                            fetch(`/income/payment/delete/${cardId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Notiflix.Notify.success("Data pembayaran berhasil dihapus!", {
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                })
+                                .catch(error => {
+                                    Notiflix.Notify.failure(
+                                        'Error: Data Pembayaran telah berelasi dengan tabel lainnya'
+                                    );
+                                });
+                        });
+                });
+            });
+        </script>
         <script>
             function updateYear() {
                 const form = document.getElementById('updateYearForm');
