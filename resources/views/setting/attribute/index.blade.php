@@ -439,8 +439,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="credit_price">{{ __('Harga (Tulis : 100000)') }} </label>
-                                <input type="number" class="form-control" name="credit_price" id="credit_price"
-                                    placeholder="80000">
+                                <input type="number" class="form-control currency-format" name="credit_price"
+                                    id="credit_price" placeholder="80000">
                             </div>
                             <div class="form-group">
                                 <label>{{ __('Semester') }}</label>
@@ -571,8 +571,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="credit_price">{{ __('Harga') }}</label>
-                                    <input type="number" class="form-control" name="credit_price" id="credit_price"
-                                        value="{{ round($item->credit_price) }}" autofocus>
+                                    <input type="number" class="form-control currency-format" name="credit_price"
+                                        id="credit_price" value="{{ round($item->credit_price) }}" autofocus>
                                 </div>
                                 <div class="form-group">
                                     <label>Semester</label>
@@ -919,6 +919,31 @@
 
     <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
 
+    <script>
+        function formatRupiah(value) {
+            if (!value) return '';
+            return value.replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function formatInput(input) {
+            const rawValue = input.value.replace(/\D/g, "");
+            input.value = formatRupiah(rawValue);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const currencyInputs = document.querySelectorAll('.currency-format');
+            currencyInputs.forEach(input => {
+                // Format nilai input saat halaman dimuat
+                formatInput(input);
+
+                // Tambahkan event listener untuk memformat nilai saat pengguna mengetik
+                input.addEventListener('input', function() {
+                    formatInput(input);
+                });
+            });
+        });
+    </script>
     <script>
         $("#table-relation").dataTable();
         $("#table-category").dataTable();
