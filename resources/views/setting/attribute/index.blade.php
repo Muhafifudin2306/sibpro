@@ -929,18 +929,29 @@
         function formatInput(input) {
             const rawValue = input.value.replace(/\D/g, "");
             input.value = formatRupiah(rawValue);
+            input.nextElementSibling.value = rawValue;
         }
 
         document.addEventListener("DOMContentLoaded", function() {
             const currencyInputs = document.querySelectorAll('.currency-format');
             currencyInputs.forEach(input => {
                 formatInput(input);
+
                 input.addEventListener('input', function() {
                     formatInput(input);
                 });
             });
+
+            const form = document.getElementById('currencyForm');
+            form.addEventListener('submit', function(event) {
+                currencyInputs.forEach(input => {
+                    const rawValue = input.value.replace(/\D/g, "");
+                    input.nextElementSibling.value = rawValue;
+                });
+            });
         });
     </script>
+
     <script>
         $("#table-relation").dataTable();
         $("#table-category").dataTable();
