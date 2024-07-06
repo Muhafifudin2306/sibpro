@@ -584,7 +584,7 @@
                                         <option value="X" {{ $item->semester == 'X' ? 'selected' : '' }}>
                                             {{ __('Kelas X') }}</option>
                                         <option value="XI" {{ $item->semester == 'XI' ? 'selected' : '' }}>
-                                            {{ __('Kelas XII') }}</option>
+                                            {{ __('Kelas XI') }}</option>
                                         <option value="XII" {{ $item->semester == 'XII' ? 'selected' : '' }}>
                                             {{ __('Kelas XII') }}</option>
                                     </select>
