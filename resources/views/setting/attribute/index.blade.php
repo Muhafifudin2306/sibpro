@@ -448,7 +448,7 @@
                                 <select class="form-control select2" name="semester" required="">
                                     <option>{{ __('-- Pilih Jenjang Kelas --') }}</option>
                                     <option value="X">{{ __('Kelas X') }}</option>
-                                    <option value="XI">{{ __('Kelas XII') }}</option>
+                                    <option value="XI">{{ __('Kelas XI') }}</option>
                                     <option value="XII">{{ __('Kelas XII') }}</option>
                                 </select>
                             </div>
