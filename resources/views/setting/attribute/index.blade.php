@@ -441,6 +441,7 @@
                                 <label for="credit_price">{{ __('Harga (Tulis : 100000)') }} </label>
                                 <input type="number" class="form-control currency-format" name="credit_price"
                                     id="credit_price" placeholder="80000">
+                                <input type="hidden" name="credit_price" class="currency-raw">
                             </div>
                             <div class="form-group">
                                 <label>{{ __('Semester') }}</label>
@@ -571,8 +572,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="credit_price">{{ __('Harga') }}</label>
-                                    <input type="number" class="form-control currency-format" name="credit_price"
-                                        id="credit_price" value="{{ round($item->credit_price) }}" autofocus>
+                                    <input type="number" class="form-control currency-format" id="credit_price"
+                                        value="{{ round($item->credit_price) }}" autofocus>
+                                    <input type="hidden" name="credit_price" class="currency-raw">
                                 </div>
                                 <div class="form-group">
                                     <label>Semester</label>
