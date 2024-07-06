@@ -237,7 +237,7 @@
                                             </th>
                                             <th>{{ __('Nama Atribut') }}</th>
                                             <th>{{ __('Harga Atribut') }}</th>
-                                            <th>{{ __('Semester') }}</th>
+                                            <th>{{ __('Kelas') }}</th>
                                             <th>{{ __('Diubah pada') }}</th>
                                             <th>{{ __('Action') }}</th>
                                         </tr>
@@ -258,7 +258,7 @@
                                                     Rp{{ number_format($credit->credit_price, 0, ',', '.') }}
                                                 </td>
                                                 <td>
-                                                    {{ $credit->semester }}
+                                                    {{ 'Kelas' . ' ' . $credit->semester }}
                                                 </td>
                                                 <td>
                                                     {{ $credit->updated_at->format('d F Y') }}
