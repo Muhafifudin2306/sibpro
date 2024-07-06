@@ -934,10 +934,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const currencyInputs = document.querySelectorAll('.currency-format');
             currencyInputs.forEach(input => {
-                // Format nilai input saat halaman dimuat
                 formatInput(input);
-
-                // Tambahkan event listener untuk memformat nilai saat pengguna mengetik
                 input.addEventListener('input', function() {
                     formatInput(input);
                 });
