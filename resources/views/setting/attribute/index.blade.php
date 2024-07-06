@@ -560,7 +560,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="update-form" data-action="{{ url('/setting/credit/update/' . $item->id) }} }}"
+                        <form class="update-form" data-action="{{ url('/setting/credit/update/' . $item->id) }}"
                             method="POST">
                             @csrf
                             <div class="modal-body">
