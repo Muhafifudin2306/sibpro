@@ -446,7 +446,7 @@
                             <div class="form-group">
                                 <label>{{ __('Tipe Kelas') }}</label>
                                 <select class="form-control select2" name="semester" required="">
-                                    <option>{{ __('-- Pilih Jenjnag Kelas --') }}</option>
+                                    <option>{{ __('-- Pilih Jenjang Kelas --') }}</option>
                                     <option value="X">{{ __('Kelas X') }}</option>
                                     <option value="XI">{{ __('Kelas XII') }}</option>
                                     <option value="XII">{{ __('Kelas XII') }}</option>
@@ -580,7 +580,7 @@
                                 <div class="form-group">
                                     <label>{{ __('Tipe Kelas') }}</label>
                                     <select class="form-control select2" name="semester" required="">
-                                        <option>{{ __('-- Pilih Jenjnag Kelas --') }}</option>
+                                        <option>{{ __('-- Pilih Jenjang Kelas --') }}</option>
                                         <option value="X" {{ $item->semester == 'X' ? 'selected' : '' }}>
                                             {{ __('Kelas X') }}</option>
                                         <option value="XI" {{ $item->semester == 'XI' ? 'selected' : '' }}>
