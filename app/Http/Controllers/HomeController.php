@@ -52,10 +52,14 @@ class HomeController extends Controller
                                         ->sum('income_price');
 
         // Menghitung total kredit dan atribut yang dibayar
-        $totalCredit = Payment::where('type', 'SPP')
+        $totalCredits = Payment::where('type', 'SPP')
                                 ->where('year_id', $activeYearId)
                                 ->where('status', 'Paid')
-                                ->sum('price');
+                                ->get();
+
+        $totalCredit = $totalCredits->reduce(function ($carry, $transaction) {
+            return $carry + max($transaction->price - 50000, 0);
+        }, 0);
 
         $totalAttribute = Payment::where('type', 'Daftar Ulang')
                                     ->where('year_id', $activeYearId)
@@ -75,7 +79,11 @@ class HomeController extends Controller
 
         $userId = Auth::user()->id;
         $totalPaid =  Payment::where('user_id', $userId)->where('year_id', $activeYear)->where('status', 'Paid')->sum('price');
-        $totalUnpaidSPP =  Payment::where('user_id', $userId)->where('year_id', $activeYear)->where('type', 'SPP')->where('status', '!=','Paid')->sum('price');
+        $totalUnpaidSPPs =  Payment::where('user_id', $userId)->where('year_id', $activeYear)->where('type', 'SPP')->where('status', '!=','Paid')->get();
+
+        $totalUnpaidSPP = $totalUnpaidSPPs->reduce(function ($carry, $transaction) {
+            return $carry + max($transaction->price - 50000, 0);
+        }, 0);
 
         $totalUnpaidDU =  Payment::where('user_id', $userId)->where('year_id', $activeYear)->where('type', 'Daftar Ulang')->where('status', '!=','Paid')->sum('price');
         // Mengambil 5 pembayaran terbaru
@@ -123,13 +131,17 @@ class HomeController extends Controller
             })
             ->whereDate('updated_at', $currentDate)
             ->sum('price');
-        $creditTodayPrice = Payment::where('status', 'Paid')
+        $creditTodayPrices = Payment::where('status', 'Paid')
             ->where('type', 'SPP')
             ->whereHas('year', function ($query) {
                 $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
             })
             ->whereDate('updated_at', $currentDate)
-            ->sum('price');
+            ->get();
+        
+        $creditTodayPrice = $creditTodayPrices->reduce(function ($carry, $transaction) {
+                return $carry + max($transaction->price - 50000, 0);
+            }, 0);
 
         $attributeTodayPrice = Payment::where('status', 'Paid')
             ->where('type', 'Daftar Ulang')
