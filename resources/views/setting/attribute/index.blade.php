@@ -438,17 +438,18 @@
                                     placeholder="SPP Juni" autofocus>
                             </div>
                             <div class="form-group">
-                                <label for="credit_price">{{ __('Harga (Tulis : 100000)') }} </label>
+                                <label for="credit_price">{{ __('Nominal SPP') }} </label>
                                 <input type="number" class="form-control currency-format" name="credit_price"
                                     id="credit_price" placeholder="80000">
                                 <input type="hidden" name="credit_price" class="currency-raw">
                             </div>
                             <div class="form-group">
-                                <label>{{ __('Semester') }}</label>
-                                <select class="form-control select2" name="semester">
-                                    <option>{{ __('-- Pilih Semester --') }}</option>
-                                    <option value="Genap">{{ __('Genap') }}</option>
-                                    <option value="Gasal">{{ __('Gasal') }}</option>
+                                <label>{{ __('Tipe Kelas') }}</label>
+                                <select class="form-control select2" name="semester" required="">
+                                    <option>{{ __('-- Pilih Jenjnag Kelas --') }}</option>
+                                    <option value="X">{{ __('Kelas X') }}</option>
+                                    <option value="XI">{{ __('Kelas XII') }}</option>
+                                    <option value="XII">{{ __('Kelas XII') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -571,18 +572,21 @@
                                         value="{{ $item->credit_name }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="credit_price">{{ __('Harga') }}</label>
+                                    <label for="credit_price">{{ __('Nominal SPP') }}</label>
                                     <input type="number" class="form-control currency-format" id="credit_price"
                                         value="{{ round($item->credit_price) }}" autofocus>
                                     <input type="hidden" name="credit_price" class="currency-raw">
                                 </div>
                                 <div class="form-group">
-                                    <label>Semester</label>
-                                    <select class="form-control select2" name="semester">
-                                        <option value="Genap" {{ $item->semester == 'Genap' ? 'selected' : '' }}>
-                                            {{ __('Genap') }}</option>
-                                        <option value="Gasal" {{ $item->semester == 'Gasal' ? 'selected' : '' }}>
-                                            {{ __('Gasal') }}</option>
+                                    <label>{{ __('Tipe Kelas') }}</label>
+                                    <select class="form-control select2" name="semester" required="">
+                                        <option>{{ __('-- Pilih Jenjnag Kelas --') }}</option>
+                                        <option value="X" {{ $item->semester == 'X' ? 'selected' : '' }}>
+                                            {{ __('Kelas X') }}</option>
+                                        <option value="XI" {{ $item->semester == 'XI' ? 'selected' : '' }}>
+                                            {{ __('Kelas XII') }}</option>
+                                        <option value="XII" {{ $item->semester == 'XII' ? 'selected' : '' }}>
+                                            {{ __('Kelas XII') }}</option>
                                     </select>
                                 </div>
                             </div>
