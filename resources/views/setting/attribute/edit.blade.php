@@ -67,9 +67,9 @@
                                         <div class="form-group">
                                             <label class="font-weight-bold">{{ __('Atribut SPP') }}</label>
                                             <div class="checkbox-list">
-                                                @foreach ($allCredit as $semester => $credits)
+                                                @foreach ($allCredit as $semester => $credit)
                                                     <label class="py-2">{{ 'Kelas' . ' ' . $semester }}</label>
-                                                    @foreach ($credits as $item)
+                                                    @foreach ($credit as $item)
                                                         <div class="py-1 mx-3">
                                                             <div class="custom-control custom-checkbox">
                                                                 <input class="custom-control-input" type="checkbox"
