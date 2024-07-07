@@ -120,7 +120,7 @@ class HomeController extends Controller
             return $carry + 50000;
         }, 0);
 
-        $sumSpending = $tabunganSPP;
+        $sumSpending = $tabunganSPP + $tabunganDaftarUlang;
 
         $sumDebt = Debt::where('is_paid', 0)
                         ->where('year_id', $activeYearId)
