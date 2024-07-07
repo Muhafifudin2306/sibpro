@@ -75,9 +75,9 @@
                                                                 <input class="custom-control-input" type="checkbox"
                                                                     name="credit_id[]" value="{{ $item->id }}"
                                                                     {{ in_array($item->id, $credits->pluck('id')->toArray()) ? 'checked' : '' }}
-                                                                    id="{{ $item->slug }}">
+                                                                    id="{{ $item->if }}">
                                                                 <label class="custom-control-label"
-                                                                    for="{{ $item->slug }}">{{ $item->credit_name }}</label>
+                                                                    for="{{ $item->if }}">{{ $item->credit_name }}</label>
                                                             </div>
                                                         </div>
                                                     @endforeach
