@@ -306,7 +306,7 @@
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Pengeluaran SPP & Daftar Ulang</h4>
+                                        <h4>Tabungan Siswa</h4>
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>

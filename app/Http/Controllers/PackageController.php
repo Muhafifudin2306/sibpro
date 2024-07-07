@@ -85,7 +85,7 @@ class PackageController extends Controller
         $allAttribute = Attribute::all();
 
         $credits = $category->credits;
-        $allCredit = Credit::all();
+        $allCredit = Credit::get()->groupBy('semester');
 
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
 

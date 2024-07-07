@@ -102,8 +102,11 @@ class HomeController extends Controller
                             ->where('status', 'Paid')
                             ->sum('price');
 
-        $sumSpending = Spending::where('year_id', $activeYearId)
-                                ->sum('spending_price');
+        // $sumSpending = Spending::where('year_id', $activeYearId)
+        //                         ->sum('spending_price');
+        $sumSpending = $totalCredits->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
 
         $sumDebt = Debt::where('is_paid', 0)
                         ->where('year_id', $activeYearId)
