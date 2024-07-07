@@ -57,6 +57,7 @@ class HomeController extends Controller
                                 ->where('status', 'Paid')
                                 ->get();
 
+
         $totalCredit = $totalCredits->reduce(function ($carry, $transaction) {
             return $carry + max($transaction->price - 50000, 0);
         }, 0);
@@ -104,9 +105,22 @@ class HomeController extends Controller
 
         // $sumSpending = Spending::where('year_id', $activeYearId)
         //                         ->sum('spending_price');
-        $sumSpending = $totalCredits->reduce(function ($carry, $transaction) {
+        $totalCreditDUs = Payment::where('type', 'Daftar Ulang')
+                    ->where('year_id', $activeYearId)
+                    ->where('status', 'Paid')
+                    ->whereHas('attribute', function ($query) {
+                        $query->where('attribute_type', 'Tabungan');
+                    })
+                    ->get();
+
+        $tabunganSPP = $totalCredits->reduce(function ($carry, $transaction) {
             return $carry + 50000;
         }, 0);
+        $tabunganDaftarUlang = $totalCreditDUs->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
+
+        $sumSpending = $tabunganSPP + $tabunganDaftarUlang;
 
         $sumDebt = Debt::where('is_paid', 0)
                         ->where('year_id', $activeYearId)

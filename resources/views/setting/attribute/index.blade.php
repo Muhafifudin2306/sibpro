@@ -176,7 +176,8 @@
                                                 <td>
                                                     Rp{{ number_format($item->attribute_price, 0, ',', '.') }}
                                                 </td>
-                                                <td>{{ $item->attribute_type == 1 ? 'Pembelian' : 'Non-Pembelian' }}</td>
+                                                <td>{{ $item->attribute_type == 1 ? 'Pembelian' : ($item->attribute_type == 2 ? 'Tabungan' : 'Non-Pembelian') }}
+                                                </td>
                                                 <td>
                                                     {{ $item->vendors->vendor_name }}
                                                 </td>
@@ -386,14 +387,16 @@
                                     placeholder="Topi/Dasi/Seragam" autofocus required="">
                             </div>
                             <div class="form-group">
-                                <label for="attribute_price">{{ __('Harga (Tulis : 100000)') }} </label>
-                                <input type="number" class="form-control" name="attribute_price" id="attribute_price"
+                                <label for="attribute_price">{{ __('Harga') }} </label>
+                                <input type="number" class="form-control currency-format" id="attribute_price"
                                     placeholder="100000" required="">
+                                <input type="hidden" name="attribute_price" class="currency-raw">
                             </div>
                             <div class="form-group">
                                 <label>{{ __('Tipe Atribut') }}</label>
                                 <select class="form-control select2" name="attribute_type" required="">
                                     <option>{{ __('-- Pilih Tipe --') }}</option>
+                                    <option value="2">{{ __('Tabungan') }}</option>
                                     <option value="1">{{ __('Pembelian') }}</option>
                                     <option value="0">{{ __('Non-Pembelian') }}</option>
                                 </select>
@@ -515,12 +518,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="attribute_price">{{ __('Harga (Tulis : 100000)') }} </label>
-                                    <input type="number" class="form-control" name="attribute_price" id="attribute_price"
+                                    <input type="number" class="form-control" id="attribute_price"
                                         value="{{ round($item->attribute_price) }}" autofocus required="">
+                                    <input type="hidden" name="attribute_price" class="currency-raw">
                                 </div>
                                 <div class="form-group">
                                     <label>{{ __('Tipe Kategori') }}</label>
                                     <select class="form-control select2" name="attribute_type" required="">
+                                        <option value="2" {{ $item->attribute_type == 2 ? 'selected' : '' }}>
+                                            {{ __('Tabungan') }}</option>
                                         <option value="1" {{ $item->attribute_type == 1 ? 'selected' : '' }}>
                                             {{ __('Pembelian') }}</option>
                                         <option value="0" {{ $item->attribute_type == 0 ? 'selected' : '' }}>
