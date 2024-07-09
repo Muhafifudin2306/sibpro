@@ -182,7 +182,7 @@
                                                         <div class="d-flex justify-content-start">
                                                             <a href="{{ route('editEnrollment', ['id' => $item->id]) }}">
                                                                 <div class="text-warning mx-2 cursor-pointer">
-                                                                    <i class="fas fa-pen" title="Edit Atribut"></i>
+                                                                    <i class="fas fa-pen" title="edit"></i>
                                                                 </div>
                                                             </a>
                                                             <div class="text-danger mx-2 cursor-pointer">
