@@ -113,7 +113,7 @@
                                                     <span>No image provided.</span>
                                                 @else
                                                     <a target="_blank"
-                                                        href="{{ asset('storage/petugas/operasional' . $item->image_url) }}">Lihat
+                                                        href="{{ asset('storage/petugas/' . $item->image_url) }}">Lihat
                                                         Bukti Pembayaran</a>
                                                 @endif
                                             </td>
