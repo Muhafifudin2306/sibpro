@@ -180,11 +180,11 @@
                                                     @endif
                                                     <td>
                                                         <div class="d-flex justify-content-start">
-                                                            <div class="text-warning mx-2 cursor-pointer"
-                                                                data-toggle="modal"
-                                                                data-target="#paymentModal{{ $item->id }}">
-                                                                <i class="fas fa-pen" title="Edit Atribut"></i>
-                                                            </div>
+                                                            <a href="{{ route('editEnrollment', ['id' => $item->id]) }}">
+                                                                <div class="text-warning mx-2 cursor-pointer">
+                                                                    <i class="fas fa-pen" title="Edit Atribut"></i>
+                                                                </div>
+                                                            </a>
                                                             <div class="text-danger mx-2 cursor-pointer">
                                                                 <i class="fas payment-delete fa-trash-alt"
                                                                     data-card-id="{{ $item->id }}" title="delete"></i>
@@ -217,77 +217,6 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="update-form" data-action="{{ url('/enrollment/update/' . $item->id) }} }}"
-                            method="POST">
-                            @csrf
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>{{ __('NIS') }}</label>
-                                            <input type="text" class="form-control" value="{{ $item->user->nis }}"
-                                                disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>{{ __('Nama Siswa') }}</label>
-                                            <input type="text" class="form-control" value="{{ $item->user->name }}"
-                                                disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>{{ __('Pembayaran') }}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $item->attribute->attribute_name ?? $item->credit->credit_name }}"
-                                                disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>{{ __('Tipe Pembayaran') }}</label>
-                                            <input type="text" class="form-control" value="{{ $item->type }}"
-                                                disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>{{ __('Tahun') }}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $item->year->year_name }}" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>{{ __('Harga Item') }}</label>
-                                            <input type="text" class="form-control currency-format" name="price"
-                                                id="attribute_name" value="{{ round($item->price) }}" required="">
-                                            <input type="hidden" name="price" class="currency-raw">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>{{ __('Status') }}</label>
-                                            <select name="status" id="" class="form-control">
-                                                @if ($item->status == 'Paid')
-                                                    <option value="Paid" selected>Lunas</option>
-                                                    <option value="Unpaid">Belum Lunas</option>
-                                                @elseif($item->status == 'Unpaid')
-                                                    <option value="Paid">Lunas</option>
-                                                    <option value="Unpaid" selected>Belum Lunas</option>
-                                                @endif
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer bg-whitesmoke br">
-                                <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">{{ __('Close') }}</button>
-                                <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -472,7 +401,6 @@
                     Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin Melanjutkan Proses ini?', 'Ya',
                         'Batal',
                         function() {
-                            // Show loading animation only if user clicks "Ya"
                             Notiflix.Loading.standard('Proses sedang berlangsung, harap tunggu...');
 
                             fetch(`/credit/generate/`, {
@@ -486,52 +414,18 @@
                                     Notiflix.Notify.success("Data atribut SPP berhasil dibuat!", {
                                         timeout: 3000
                                     });
-
-                                    // Remove loading animation after the process is complete
                                     Notiflix.Loading.remove();
-
-                                    // Reload the page
                                     location.reload();
                                 })
                                 .catch(error => {
                                     Notiflix.Notify.failure('Error:', error);
-
-                                    // Remove loading animation in case of error
                                     Notiflix.Loading.remove();
                                 });
                         });
                 });
             });
         </script>
-        <script>
-            function updateYear() {
-                const form = document.getElementById('updateYearForm');
-                const formData = new FormData(form);
 
-                fetch('/current-year', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Terjadi kesalahan');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        Notiflix.Notify.success(data.message, {
-                            timeout: 3000
-                        });
-                        location.reload();
-                    })
-                    .catch(error => {
-                        Notiflix.Notify.failure('Error: Data tidak ditemukan!');
-                    });
-            }
-        </script>
         <script>
             document.querySelector('.submit').addEventListener('click', function() {
                 Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin memesan paket ini ?', 'Ya', 'Tidak',
@@ -627,38 +521,7 @@
                 checkbox.addEventListener('change', updateTotalPrice);
             });
         </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const updateForms = document.querySelectorAll('.update-form');
 
-                updateForms.forEach(form => {
-                    form.addEventListener('submit', function(event) {
-                        event.preventDefault();
-
-                        const formData = new FormData(form);
-
-                        fetch(form.getAttribute('data-action'), {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                },
-                                body: formData
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                Notiflix.Notify.success("Data berhasil diperbarui!", {
-                                    timeout: 3000
-                                });
-
-                                location.reload();
-                            })
-                            .catch(error => {
-                                Notiflix.Notify.failure('Error:', error);
-                            });
-                    });
-                });
-            });
-        </script>
         <script>
             var checkboxStatus = {};
 

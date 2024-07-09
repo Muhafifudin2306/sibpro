@@ -318,6 +318,7 @@ Route::prefix('enrollment')->group(function () {
     Route::post('/update/{id}', [App\Http\Controllers\EnrollmentController::class, 'editData']);
     Route::delete('/delete/{id}', [App\Http\Controllers\EnrollmentController::class, 'destroy'])->name('deletePayment');
     Route::post('/tagihan', [App\Http\Controllers\TagihanController::class, 'store'])->name('tagihan.store');
+    Route::get('/edit/{id}', [App\Http\Controllers\EnrollmentController::class, 'editPayment'])->name('editEnrollment');
 });
 
 Route::prefix('payment-done')->group(function () {
