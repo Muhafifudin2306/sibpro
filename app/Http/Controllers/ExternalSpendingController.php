@@ -56,7 +56,7 @@ class ExternalSpendingController extends Controller
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/petugas', $imageName);
+            $image->storeAs('public/petugas/operasional', $imageName);
         } else {
             $imageName = null;
         }
