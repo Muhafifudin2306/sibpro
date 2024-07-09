@@ -102,7 +102,7 @@ class SpendingController extends Controller
         $imagePath = null;
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
-            $imagePath = $image->storeAs('public/spending', $image->hashName());
+            $imagePath = $image->storeAs('public/petugas', $image->hashName());
             $imageUrl = Storage::url($imagePath);
         } else {
             $imageUrl = null;
@@ -186,7 +186,7 @@ class SpendingController extends Controller
 
             $file = $request->file('image_url');
             $filename = time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public/spending', $filename);
+            $path = $file->storeAs('public/petugas', $filename);
             $imagePath = Storage::url($path);
         }
 
@@ -229,7 +229,7 @@ class SpendingController extends Controller
         $imagePath = null;
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
-            $imagePath = $image->storeAs('public/debt', $image->hashName());
+            $imagePath = $image->storeAs('public/petugas', $image->hashName());
             $imageUrl = Storage::url($imagePath);
         } else {
             $imageUrl = null;
@@ -312,7 +312,7 @@ class SpendingController extends Controller
             }
 
             $filename = time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/debts', $filename);
+            $path = $image->storeAs('public/petugas', $filename);
             $imagePath = Storage::url($path);
         }
 

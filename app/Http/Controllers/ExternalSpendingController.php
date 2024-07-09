@@ -102,7 +102,7 @@ class ExternalSpendingController extends Controller
         $imagePath = null;
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
-            $imagePath = $image->storeAs('public/non_oprerational', $image->hashName());
+            $imagePath = $image->storeAs('public/petugas', $image->hashName());
             $imageUrl = Storage::url($imagePath);
         } else {
             $imageUrl = null;
@@ -174,11 +174,11 @@ class ExternalSpendingController extends Controller
         $imagePath = $externalSpending->image_url;
         if ($request->hasFile('image_url')) {
             if ($externalSpending->image_url) {
-                Storage::delete('public/operational/' . basename($externalSpending->image_url));
+                Storage::delete('public/petugas/' . basename($externalSpending->image_url));
             }
             $image = $request->file('image_url');
-            $image->storeAs('public/operational', $image->hashName());
-            $imagePath = Storage::url('public/operational/' . $image->hashName());
+            $image->storeAs('public/petugas', $image->hashName());
+            $imagePath = Storage::url('public/petugas/' . $image->hashName());
         }
 
         $externalSpending->update([
@@ -224,11 +224,11 @@ class ExternalSpendingController extends Controller
         $imagePath = $externalSpending->image_url;
         if ($request->hasFile('image_url')) {
             if ($externalSpending->image_url) {
-                Storage::delete('public/non_operational/' . basename($externalSpending->image_url));
+                Storage::delete('public/petugas/' . basename($externalSpending->image_url));
             }
             $image = $request->file('image_url');
-            $image->storeAs('public/non_operational', $image->hashName());
-            $imagePath = Storage::url('public/non_operational/' . $image->hashName());
+            $image->storeAs('public/petugas', $image->hashName());
+            $imagePath = Storage::url('public/petugas/' . $image->hashName());
         }
 
         $externalSpending->update([
