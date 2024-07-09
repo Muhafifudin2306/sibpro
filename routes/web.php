@@ -142,7 +142,7 @@ Route::prefix('income')->group(function () {
     Route::prefix('payment')->group(function () {
         Route::get('/all', [App\Http\Controllers\PaymentController::class, 'allData'])->name('allData');
         Route::get('/confirm/{uuid}', [App\Http\Controllers\PaymentController::class, 'confirmXendit'])->name('paymentXendit');
-        Route::delete('/delete/{invoice_number}', [App\Http\Controllers\PaymentController::class, 'destroyPayment'])->name('deletePayment');
+        Route::delete('/delete/{invoice_number}', [App\Http\Controllers\PaymentController::class, 'destroyPayment'])->name('deletePay');
     });
 
     Route::prefix('external')->group(function () {
