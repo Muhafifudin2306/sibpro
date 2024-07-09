@@ -90,7 +90,6 @@
                                             </td>
                                             <td>
                                                 @if ($item->image_url)
-                                                    <img src="{{ asset($item->image_url) }}" alt="" class="w-100">
                                                     <a target="_blank" href="{{ asset($item->image_url) }}">Lihat
                                                         Bukti Pembayaran</a>
                                                 @else

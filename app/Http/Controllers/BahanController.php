@@ -45,7 +45,7 @@ class BahanController extends Controller
         $imagePath = null;
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
-            $imagePath = $image->storeAs('public/bahan', $image->hashName());
+            $imagePath = $image->storeAs('public/petugas', $image->hashName());
             $imageUrl = Storage::url($imagePath);
         } else {
             $imageUrl = null;
@@ -95,11 +95,11 @@ class BahanController extends Controller
         $imagePath = $bahan->image_url;
         if ($request->hasFile('image_url')) {
             if ($bahan->image_url) {
-                Storage::delete('public/bahan/' . basename($bahan->image_url));
+                Storage::delete('public/petugas/' . basename($bahan->image_url));
             }
             $image = $request->file('image_url');
-            $image->storeAs('public/bahan', $image->hashName());
-            $imagePath = Storage::url('public/bahan/' . $image->hashName());
+            $image->storeAs('public/petugas', $image->hashName());
+            $imagePath = Storage::url('public/petugas/' . $image->hashName());
         }
 
         $bahan->update([
