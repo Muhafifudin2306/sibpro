@@ -20,7 +20,7 @@ class ExternalSpendingController extends Controller
     public function indexOperasional()
     {
         $activeYearId = Year::where('year_current', 'selected')->value('id');
-        $externals = ExternalSpending::where('is_operational', 1)->where('year_id', $activeYearId)->get();
+        $externals = ExternalSpending::where('is_operational', 1)->where('year_id', $activeYearId)->latest()->get();
         $years = Year::orderBy("updated_at", "DESC")->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
