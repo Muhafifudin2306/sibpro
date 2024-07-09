@@ -88,8 +88,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="year_name">Nama Tahun Pelajaran</label>
-                                        <input type="text" id="year_name" class="form-control" name="year_name"
-                                            placeholder="2022/2023" required autofocus>
+                                        <input type="text" class="form-control" name="year_name" placeholder="2022/2023"
+                                            required autofocus>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@
                             } else {
                                 Notiflix.Notify.failure(
                                     'Error: Nama Tahun tidak boleh kosong atau nama sejenis telah digunakan'
-                                    );
+                                );
                             }
                         } else {
                             const responseData = await response.json();

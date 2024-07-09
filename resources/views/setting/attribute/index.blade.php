@@ -388,7 +388,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="attribute_price">{{ __('Harga') }} </label>
-                                <input type="number" class="form-control currency-format" id="attribute_price"
+                                <input type="text" class="form-control currency-format" id="attribute_price"
                                     placeholder="100000" required="">
                                 <input type="hidden" name="attribute_price" class="currency-raw">
                             </div>
@@ -442,7 +442,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="credit_price">{{ __('Nominal SPP') }} </label>
-                                <input type="number" class="form-control currency-format" name="credit_price"
+                                <input type="text" class="form-control currency-format" name="credit_price"
                                     id="credit_price" placeholder="80000">
                                 <input type="hidden" name="credit_price" class="currency-raw">
                             </div>
@@ -507,7 +507,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="update-form" data-action="{{ url('/setting/attribute/update/' . $item->id) }} }}"
+                        <form class="update-form" data-action="{{ url('/setting/attribute/update/' . $item->id) }}"
                             method="POST">
                             @csrf
                             <div class="modal-body">
@@ -517,8 +517,8 @@
                                         value="{{ $item->attribute_name }}" required="">
                                 </div>
                                 <div class="form-group">
-                                    <label for="attribute_price">{{ __('Harga (Tulis : 100000)') }} </label>
-                                    <input type="number" class="form-control" id="attribute_price"
+                                    <label for="attribute_price">{{ __('Harga') }} </label>
+                                    <input type="text" class="form-control currency-format" id="attribute_price"
                                         value="{{ round($item->attribute_price) }}" autofocus required="">
                                     <input type="hidden" name="attribute_price" class="currency-raw">
                                 </div>
@@ -579,7 +579,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="credit_price">{{ __('Nominal SPP') }}</label>
-                                    <input type="number" class="form-control currency-format" id="credit_price"
+                                    <input type="text" class="form-control currency-format" id="credit_price"
                                         value="{{ round($item->credit_price) }}" autofocus>
                                     <input type="hidden" name="credit_price" class="currency-raw">
                                 </div>
