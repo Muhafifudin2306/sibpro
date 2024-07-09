@@ -112,7 +112,9 @@
                                                 @if (!$item->image_url || $item->image_url == null)
                                                     <span>No image provided.</span>
                                                 @else
-                                                    <img src="{{ asset($item->image_url) }}" alt class="w-100">
+                                                    <a target="_blank"
+                                                        href="{{ asset('storage/operasional/' . $item->image_url) }}">Lihat
+                                                        Bukti Pembayaran</a>
                                                 @endif
                                             </td>
                                             <td>

@@ -53,13 +53,12 @@ class ExternalSpendingController extends Controller
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
 
-        $imagePath = null;
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
-            $imagePath = $image->storeAs('public/operational', $image->hashName());
-            $imageUrl = Storage::url($imagePath);
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/operasional', $imageName);
         } else {
-            $imageUrl = null;
+            $imageName = null;
         }
 
         $operational = ExternalSpending::create([
@@ -69,7 +68,7 @@ class ExternalSpendingController extends Controller
             'spending_type' => $request->input('spending_type'),
             'is_operational' => 1,
             'year_id' => $activeYearId,
-            'image_url' => $imageUrl
+            'image_url' => $imageName
         ]);
 
         $years = Year::find($activeYearId);
