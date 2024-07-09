@@ -207,6 +207,91 @@
                 {{ __('Development by Muhammad Afifudin') }}</a>
             </div>
         </footer>
+        @foreach ($credit as $item)
+            <div class="modal fade" tabindex="-1" role="dialog" id="paymentModal{{ $item->id }}">
+                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ __('Update Data Item Tagihan') }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form class="update-form" data-action="{{ url('/enrollment/update/' . $item->id) }} }}"
+                            method="POST">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('NIS') }}</label>
+                                            <input type="text" class="form-control" value="{{ $item->user->nis }}"
+                                                disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('Nama Siswa') }}</label>
+                                            <input type="text" class="form-control" value="{{ $item->user->name }}"
+                                                disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('Pembayaran') }}</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $item->attribute->attribute_name ?? $item->credit->credit_name }}"
+                                                disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('Tipe Pembayaran') }}</label>
+                                            <input type="text" class="form-control" value="{{ $item->type }}"
+                                                disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('Tahun') }}</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $item->year->year_name }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('Harga Item') }}</label>
+                                            <input type="text" class="form-control currency-format" name="price"
+                                                id="attribute_name" value="{{ round($item->price) }}" required="">
+                                            <input type="hidden" name="price" class="currency-raw">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ __('Status') }}</label>
+                                            <select name="status" id="" class="form-control">
+                                                @if ($item->status == 'Paid')
+                                                    <option value="Paid" selected>Lunas</option>
+                                                    <option value="Unpaid">Belum Lunas</option>
+                                                @elseif($item->status == 'Unpaid')
+                                                    <option value="Paid">Lunas</option>
+                                                    <option value="Unpaid" selected>Belum Lunas</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-whitesmoke br">
+                                <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ __('Simpan Data') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </div>
 
     <div class="modal fade" role="dialog" id="createBillModal">
@@ -282,9 +367,40 @@
             </div>
         </div>
     </div>
-
     @push('scripts')
         <script src="{{ asset('assets/modules/select2/dist/js/select2.full.js') }}"></script>
+        <script>
+            function formatRupiah(value) {
+                if (!value) return '';
+                return value.replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            function formatInput(input) {
+                const rawValue = input.value.replace(/\D/g, "");
+                input.value = formatRupiah(rawValue);
+                input.nextElementSibling.value = rawValue;
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const currencyInputs = document.querySelectorAll('.currency-format');
+                currencyInputs.forEach(input => {
+                    formatInput(input);
+
+                    input.addEventListener('input', function() {
+                        formatInput(input);
+                    });
+                });
+
+                const form = document.getElementById('currencyForm');
+                form.addEventListener('submit', function(event) {
+                    currencyInputs.forEach(input => {
+                        const rawValue = input.value.replace(/\D/g, "");
+                        input.nextElementSibling.value = rawValue;
+                    });
+                });
+            });
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const updateForms = document.querySelectorAll('.createBillForm');
