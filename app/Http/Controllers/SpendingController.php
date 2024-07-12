@@ -29,7 +29,19 @@ class SpendingController extends Controller
         $attribute = Attribute::latest()->get();
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
         $notifications = Notification::orderByRaw("CASE WHEN notification_status = 0 THEN 0 ELSE 1 END, updated_at DESC")->limit(10)->get();
-        $sumDebit = Payment::where('year_id', $activeYearId)->where('status', 'Paid')->sum('price');
+        $totalCreditDUs = Payment::where('type', 'Daftar Ulang')
+                    ->where('year_id', $activeYearId)
+                    ->where('status', 'Paid')
+                    ->whereHas('attribute', function ($query) {
+                        $query->where('attribute_type', 'Tabungan');
+                    })
+                    ->get();
+
+        $tabunganDaftarUlang = $totalCreditDUs->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
+        $paidDebit = Payment::where('year_id', $activeYearId)->where('status', 'Paid')->sum('price');
+        $sumDebit = $paidDebit - $tabunganDaftarUlang;
         $sumSpending = Spending::where('year_id', $activeYearId)->sum('spending_price');
         $spendings = Spending::select('id', 'attribute_id', 'spending_desc', 'spending_price', 'spending_type', 'spending_date', 'vendor_id', 'image_url')
             ->where('year_id', $activeYearId)
