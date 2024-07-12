@@ -72,7 +72,7 @@ class HomeController extends Controller
         $totalExternalSpending = ExternalSpending::where('year_id', $activeYearId)
                                     ->sum('spending_price');
 
-        $totalBahan = $totalBelanjaSpending + $totalExternalSpending;
+        $totalBahan = $totalBelanjaSpending + $totalExternalSpending + $totalAttribute;
 
         // Menghitung total yang dibayarkan oleh pengguna saat ini
         $activeYear = Year::where('year_status', 'active')->value('id');
