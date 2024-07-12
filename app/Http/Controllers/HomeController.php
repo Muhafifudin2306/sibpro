@@ -62,9 +62,8 @@ class HomeController extends Controller
             return $carry + max($transaction->price - 50000, 0);
         }, 0);
 
-        $totalAttribute = Payment::where('year_id', $activeYearId)
-                                    ->where('status', 'Paid')
-                                    ->sum('price');
+        $totalAttribute = Spending::where('year_id', $activeYearId)
+                                    ->sum('spending_price');
 
         $totalBelanjaSpending = Bahan::where('year_id', $activeYearId)
                                     ->sum('spending_price');
