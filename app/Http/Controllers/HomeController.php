@@ -62,7 +62,11 @@ class HomeController extends Controller
             return $carry + max($transaction->price - 50000, 0);
         }, 0);
 
-        $totalAttribute = Spending::where('year_id', $activeYearId)
+        $totalAttribute = Payment::where('type', 'Daftar Ulang')
+                                    ->where('year_id', $activeYearId)
+                                    ->where('status', 'Paid')
+                                    ->sum('price');
+        $totalBelanjaAttribute = Spending::where('year_id', $activeYearId)
                                     ->sum('spending_price');
 
         $totalBelanjaSpending = Bahan::where('year_id', $activeYearId)
@@ -71,7 +75,7 @@ class HomeController extends Controller
         $totalExternalSpending = ExternalSpending::where('year_id', $activeYearId)
                                     ->sum('spending_price');
 
-        $totalBahan = $totalBelanjaSpending + $totalExternalSpending + $totalAttribute;
+        $totalBahan = $totalBelanjaSpending + $totalExternalSpending + $totalBelanjaAttribute;
 
         // Menghitung total yang dibayarkan oleh pengguna saat ini
         $activeYear = Year::where('year_status', 'active')->value('id');
