@@ -108,6 +108,25 @@ class PaymentController extends Controller
         return response()->json(['message' => 'Pembayaran online berhasil dilakukan'], 200);
     }
 
+    public function deleteCart(Request $request)
+    {
+        // Validasi request
+        $request->validate([
+            'transactions' => 'required|array',
+            'transactions.*' => 'exists:payments,id' // Pastikan transaksi tersedia dalam database
+        ]);
+
+        $transactionIds = $request->input('transactions');
+
+        // Menghapus transaksi yang sesuai dengan ID yang diberikan
+        Payment::whereIn('id', $transactionIds)->delete();
+
+        // Kembalikan respons sukses
+        return response()->json(['message' => 'Transaksi berhasil dihapus'], 200);
+    }
+
+
+
     public function indexPaymentDone()
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');

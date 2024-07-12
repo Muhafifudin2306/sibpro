@@ -297,6 +297,7 @@ Route::prefix('setting')->group(function () {
 Route::prefix('cart')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexCart']);
     Route::post('/offline', [App\Http\Controllers\PaymentController::class, 'addToCart']);
+    Route::post('/delete', [App\Http\Controllers\PaymentController::class, 'deleteCart']);
 });
 
 Route::prefix('payment')->group(function () {

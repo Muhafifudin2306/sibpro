@@ -82,9 +82,12 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="mb-3">
-                                    <button data-toggle="modal" data-target="#offlineModal" class="btn btn-primary submit">
-                                        Generate Invoice
+                                <div class="mb-3 d-flex">
+                                    <button class="btn btn-primary submit mx-1">
+                                        <i class="fas fa-file mx-1"></i> Generate Invoice
+                                    </button>
+                                    <button class="btn btn-danger delete-bulk mx-1">
+                                        <i class="fas fa-trash mx-1"></i> Delete Invoice
                                     </button>
                                 </div>
                             </div>
@@ -463,6 +466,51 @@
                                 Notiflix.Notify.success(data.message);
                                 window.location.href =
                                     '/credit';
+                            })
+                            .catch(error => {
+                                Notiflix.Notify.failure(error
+                                    .message);
+                            });
+                    });
+            });
+        </script>
+
+        <script>
+            document.querySelector('.delete-bulk').addEventListener('click', function() {
+                Notiflix.Confirm.show('Konfirmasi', 'Apakah Anda yakin ingin menghapus paket ini ?', 'Ya', 'Tidak',
+                    function() {
+                        var selectedIds = [];
+                        document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox-all)').forEach(
+                            function(checkbox) {
+                                selectedIds.push(checkbox.getAttribute('data-id'));
+                            });
+
+                        if (selectedIds.length === 0) {
+                            Notiflix.Notify.failure('Pilih setidaknya satu transaksi untuk dihapus!');
+                            return;
+                        }
+
+                        Notiflix.Loading.standard('Please wait...');
+
+                        fetch('/cart/delete', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    transactions: selectedIds
+                                })
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal melakukan penghapusan data!');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                Notiflix.Notify.success(data.message);
+                                location.reload();
                             })
                             .catch(error => {
                                 Notiflix.Notify.failure(error

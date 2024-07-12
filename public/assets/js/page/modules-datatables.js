@@ -7,14 +7,14 @@ $("[data-checkboxes]").each(function () {
 
     me.change(function () {
         var all = $(
-                '[data-checkboxes="' +
-                    group +
-                    '"]:not([data-checkbox-role="dad"])'
-            ),
+            '[data-checkboxes="' +
+            group +
+            '"]:not([data-checkbox-role="dad"])'
+        ),
             checked = $(
                 '[data-checkboxes="' +
-                    group +
-                    '"]:not([data-checkbox-role="dad"]):checked'
+                group +
+                '"]:not([data-checkbox-role="dad"]):checked'
             ),
             dad = $(
                 '[data-checkboxes="' + group + '"][data-checkbox-role="dad"]'
@@ -50,5 +50,5 @@ $("#table-category").dataTable();
 $("#table-relation").dataTable();
 $("#table-credit").dataTable();
 $("#table-spp").dataTable({
-    pageLength: 25,
+    pageLength: 50,
 });
