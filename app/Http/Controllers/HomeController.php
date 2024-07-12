@@ -62,8 +62,7 @@ class HomeController extends Controller
             return $carry + max($transaction->price - 50000, 0);
         }, 0);
 
-        $totalAttribute = Payment::where('type', 'Daftar Ulang')
-                                    ->where('year_id', $activeYearId)
+        $totalAttribute = Payment::where('year_id', $activeYearId)
                                     ->where('status', 'Paid')
                                     ->sum('price');
 
