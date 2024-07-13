@@ -41,11 +41,11 @@ class PackageController extends Controller
         $activeYearId = Year::where('year_status', 'active')->value('id');
         $categories = Category::orderBy("updated_at", "DESC")->get();
         $attributes = Attribute::orderBy("updated_at", "DESC")->get();
-        $credits = Credit::orderBy("updated_at", "DESC")->get();
+        $allCredit = Credit::get()->groupBy('semester');
         $students = StudentClass::orderBy("class_name", 'ASC')->get();
 
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
-        return view('setting.attribute.add', compact('students', 'credits', 'notifications', 'categories', 'attributes'));
+        return view('setting.attribute.add', compact('students', 'allCredit', 'notifications', 'categories', 'attributes'));
     }
 
     public function store(Request $request)

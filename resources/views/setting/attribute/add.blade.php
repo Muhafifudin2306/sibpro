@@ -61,16 +61,19 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>{{ __('Atribut SPP') }}</label>
-                                            @foreach ($credits as $item)
-                                                <div class="py-1 mx-3">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            name="credit_id[]" value="{{ $item->id }}"
-                                                            id="{{ $item->slug }}">
-                                                        <label class="custom-control-label"
-                                                            for="{{ $item->slug }}">{{ $item->credit_name }}</label>
+                                            @foreach ($allCredit as $semester => $credit)
+                                                <label class="py-2">{{ 'Kelas' . ' ' . $semester }}</label>
+                                                @foreach ($credit as $item)
+                                                    <div class="py-1 mx-3">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox"
+                                                                name="credit_id[]" value="{{ $item->id }}"
+                                                                id="{{ $item->id }}">
+                                                            <label class="custom-control-label"
+                                                                for="{{ $item->id }}">{{ $item->credit_name }}</label>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @endforeach
                                             @endforeach
                                         </div>
                                     </div>
