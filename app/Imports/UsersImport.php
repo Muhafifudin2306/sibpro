@@ -35,7 +35,7 @@ class UsersImport implements ToModel, WithHeadingRow
             'uuid' => $uuid,
             'name' => $row["nama_lengkap"],
             'nis' => $row["nis"],
-            'email' => $row["nis"],
+            'email' => $row["nisn"],
             'gender' => $row["gender"],
             'class_id' => $row["kelas"],
             'category_id' => $row["kategori"],
@@ -54,7 +54,7 @@ class UsersImport implements ToModel, WithHeadingRow
             $studentRole = Role::where('name', 'Student')->first();
             $user->assignRole($studentRole);
         }
-
+        
 
 
         return $user;
