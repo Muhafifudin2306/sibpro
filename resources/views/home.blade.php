@@ -82,7 +82,7 @@
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
-                                            Rp{{ number_format($sumDebit + $externalCount - $sumSpending, 0, ',', '.') }}
+                                            Rp{{ number_format($totalCredit + $totalAttribute + $externalCount - $sumSpending, 0, ',', '.') }}
                                         </h5>
                                     </div>
                                     <div class="py-2"></div>
