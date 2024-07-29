@@ -70,10 +70,30 @@
                 </div>
 
                 <div class="row">
-                    @can('access-recentDebite')
+                    @can('access-recentBalance')
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-primary">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Sisa Saldo</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($totalCredit + $totalAttribute - $totalBahan - $sumSpending + $externalCount - $sumDebtPay, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
+                    @can('access-recentDebite')
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-success">
                                     <div class="py-1"></div>
                                 </div>
                                 <div class="card-wrap">
@@ -83,6 +103,47 @@
                                     <div class="card-body py-2">
                                         <h5>
                                             Rp{{ number_format($totalCredit + $totalAttribute + $externalCount - $sumSpending, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
+
+                    @can('access-recentBahan')
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-danger">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Pengeluaran Sekolah</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($totalBahan, 0, ',', '.') }}
+                                        </h5>
+                                    </div>
+                                    <div class="py-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
+                    @can('access-recentKredit')
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                            <div class="card card-statistic-1">
+                                <div class="bg-warning">
+                                    <div class="py-1"></div>
+                                </div>
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h4>Tabungan Siswa</h4>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <h5>
+                                            Rp{{ number_format($sumSpending, 0, ',', '.') }}
                                         </h5>
                                     </div>
                                     <div class="py-2"></div>
@@ -122,7 +183,7 @@
                         </script>
                     @endcan
                     @can('access-externalIncomeSum')
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        {{-- <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-success">
                                     <div class="py-1"></div>
@@ -139,11 +200,11 @@
                                     <div class="py-2"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     @endcan
 
                     @can('access-incomeSum')
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        {{-- <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-warning">
                                     <div class="py-1"></div>
@@ -160,11 +221,11 @@
                                     <div class="py-2"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     @endcan
 
                     @can('access-allAttributeSum')
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        {{-- <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-danger">
                                     <div class="py-1"></div>
@@ -179,7 +240,7 @@
                                     <div class="py-2"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     @endcan
 
 
@@ -235,7 +296,7 @@
                     @endcan
                 </div>
                 <div class="row">
-                    @can('access-recentBalance')
+                    {{-- @can('access-recentBalance')
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-primary">
@@ -254,9 +315,9 @@
                                 </div>
                             </div>
                         </div>
-                    @endcan
+                    @endcan --}}
 
-                    @can('access-recentBahan')
+                    {{-- @can('access-recentBahan')
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-success">
@@ -275,10 +336,10 @@
                                 </div>
                             </div>
                         </div>
-                    @endcan
+                    @endcan --}}
 
                     @can('access-recentHutang')
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        {{-- <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-warning">
                                     <div class="py-1"></div>
@@ -295,10 +356,10 @@
                                     <div class="py-2"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     @endcan
 
-                    @can('access-recentKredit')
+                    {{-- @can('access-recentKredit')
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-danger">
@@ -317,7 +378,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endcan
+                    @endcan --}}
                 </div>
 
                 @can('access-todayTransaction')
@@ -358,7 +419,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6 col-12">
+                        {{-- <div class="col-lg-3 col-md-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-warning">
                                     <div class="py-1"></div>
@@ -375,8 +436,8 @@
                                     <div class="py-2"></div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-12">
+                        </div> --}}
+                        {{-- <div class="col-lg-3 col-md-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="bg-danger">
                                     <div class="py-1"></div>
@@ -393,7 +454,7 @@
                                     <div class="py-2"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 @endcan
 
