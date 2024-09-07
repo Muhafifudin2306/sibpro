@@ -112,10 +112,10 @@
                                                 {{ $item->email }}
                                             </td>
                                             <td>
-                                                {{ $item->user_email }}
+                                                {{ $item->user_email || '-' }}
                                             </td>
                                             <td>
-                                                {{ $item->number }}
+                                                {{ $item->number || '-' }}
                                             </td>
                                             <td>
                                                 @foreach ($item->roles as $role)
