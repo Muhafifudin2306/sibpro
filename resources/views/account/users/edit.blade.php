@@ -86,7 +86,7 @@
                                         <label for="user_email">{{ __('Email') }}</label>
                                         <input id="user_email" type="text"
                                             class="form-control @error('user_email') is-invalid @enderror" name="user_email"
-                                            value="{{ $user->user_email }}" required>
+                                            value="{{ $user->user_email }}">
                                         @error('user_email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -94,10 +94,10 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-6">
-                                        <label for="number">{{ __('Number') }}</label>
+                                        <label for="number">{{ __('Telepon') }}</label>
                                         <input id="number" type="text"
                                             class="form-control @error('number') is-invalid @enderror" name="number"
-                                            value="{{ $user->number }}" required>
+                                            value="{{ $user->number }}">
                                         @error('number')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -144,7 +144,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">{{ __('NISN') }} <span class="text-danger">*</span></label>
+                                    <label for="email">{{ __('NISN/Username') }} <span
+                                            class="text-danger">*</span></label>
                                     <input id="email" type="text"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
                                         value="{{ $user->email }}" placeholder="111222333" required
