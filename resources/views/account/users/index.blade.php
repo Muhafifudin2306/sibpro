@@ -74,7 +74,7 @@
                                         <th>{{ __('Gender') }}</th>
                                         <th>{{ __('Kategori') }}</th>
                                         <th>{{ __('Kelas') }}</th>
-                                        <th>{{ __('NISN') }}</th>
+                                        <th>{{ __('NISN/Username') }}</th>
                                         <th>{{ __('Email') }}</th>
                                         <th>{{ __('No Telepon') }}</th>
                                         <th>{{ __('Role') }}</th>
@@ -180,7 +180,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-6">
-                                    <label for="nis">{{ __('NIS') }} <span class="text-danger">*</span></label>
+                                    <label for="nis">{{ __('NIS/Username') }} <span class="text-danger">*</span></label>
                                     <input id="nis" type="text" class="form-control @error('nis') is-invalid @enderror"
                                         name="nis" value="{{ old('nis') }}" placeholder="992883" required
                                         autocomplete="nis" autofocus>
