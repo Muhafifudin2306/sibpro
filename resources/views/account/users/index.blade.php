@@ -180,7 +180,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-6">
-                                    <label for="nis">{{ __('NIS/Username') }} <span class="text-danger">*</span></label>
+                                    <label for="nis">{{ __('NIS') }} <span class="text-danger">*</span></label>
                                     <input id="nis" type="text" class="form-control @error('nis') is-invalid @enderror"
                                         name="nis" value="{{ old('nis') }}" placeholder="992883" required
                                         autocomplete="nis" autofocus>
@@ -224,7 +224,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="email">{{ __('NISN') }} <span class="text-danger">*</span></label>
+                                <label for="email">{{ __('NISN/Username') }} <span class="text-danger">*</span></label>
                                 <input id="email" type="text"
                                     class="form-control @error('email') is-invalid @enderror" name="email"
                                     value="{{ old('email') }}" placeholder="112233445566" required autocomplete="email">
