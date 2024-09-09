@@ -150,7 +150,7 @@ class HomeController extends Controller
         ->where('year_id', $activeYearId)
         ->where('status', 'Paid')
         ->whereHas('user', function ($query) {
-            $query->whereIn('class_id', [32, 33, 34, 2, 3]);
+            $query->whereIn('class_id', [35, 36, 37, 38, 39]);
         })
         ->whereHas('attribute', function ($query) {
             $query->where('attribute_type', 'Tabungan');
