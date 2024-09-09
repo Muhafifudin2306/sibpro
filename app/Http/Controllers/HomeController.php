@@ -95,6 +95,10 @@ class HomeController extends Controller
 
         $totalExternalSpending = ExternalSpending::where('year_id', $activeYearId)
                                     ->sum('spending_price');
+        $totalOperationalSpending = ExternalSpending::where('year_id', $activeYearId)->where('is_operational',1)->sum('spending_price');
+        $totalNonOperationalSpending = ExternalSpending::where('year_id', $activeYearId)
+        ->where('is_operational',0)
+        ->sum('spending_price');
 
         $totalBahan = $totalBelanjaSpending + $totalExternalSpending + $totalBelanjaAttribute;
 
@@ -253,7 +257,7 @@ class HomeController extends Controller
                 ->whereMonth('updated_at', $currentMonth)
                 ->sum('price');
 
-        return view('home', compact('sumMonthPrice','sumTodayPrice','creditTodayPrice','attributeTodayPrice','sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumSpending12','sumSpending11','sumSpending10', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
+        return view('home', compact('sumMonthPrice','sumTodayPrice','creditTodayPrice','attributeTodayPrice','sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumSpending12','sumSpending11','sumSpending10', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalBelanjaAttribute','totalBelanjaSpending','totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits','totalNonOperationalSpending','totalOperationalSpending'));
     }
 
     public function getAdminCount()
