@@ -663,17 +663,17 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="year_name">Tabungan Kelas 12</label>
-                                        <input type="number" class="form-control" name="nama_tahun"
+                                        <input type="number" class="form-control currency-format" name="nama_tahun"
                                             value="{{ $sumSpending12 }}" id="year_name" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="year_name">Tabungan Kelas 11</label>
-                                        <input type="number" id="start_date" class="form-control"
+                                        <input type="number" id="start_date currency-format" class="form-control"
                                             value="{{ $sumSpending11 }}" name="start_date" disabled autofocus>
                                     </div>
                                     <div class="form-group">
                                         <label for="year_name">Tabungan Kelas 10</label>
-                                        <input type="number" id="finish_date" class="form-control"
+                                        <input type="number" id="finish_date currency-format" class="form-control"
                                             value="{{ $sumSpending10 }}" name="finish_date" disabled>
                                     </div>
                                 </div>
@@ -732,6 +732,38 @@
             </div>
         </div>
     </div>
+    <script>
+        function formatRupiah(value) {
+            if (!value) return '';
+            return value.replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function formatInput(input) {
+            const rawValue = input.value.replace(/\D/g, "");
+            input.value = formatRupiah(rawValue);
+            input.nextElementSibling.value = rawValue;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const currencyInputs = document.querySelectorAll('.currency-format');
+            currencyInputs.forEach(input => {
+                formatInput(input);
+
+                input.addEventListener('input', function() {
+                    formatInput(input);
+                });
+            });
+
+            const form = document.getElementById('currencyForm');
+            form.addEventListener('submit', function(event) {
+                currencyInputs.forEach(input => {
+                    const rawValue = input.value.replace(/\D/g, "");
+                    input.nextElementSibling.value = rawValue;
+                });
+            });
+        });
+    </script>
     <script>
         function updateYear() {
             const form = document.getElementById('updateYearForm');
