@@ -91,7 +91,8 @@
                         </div>
                     @endcan
                     @can('access-recentDebite')
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12 cursor-pointer" data-toggle="modal"
+                            data-target="#pemasukanModal" title="Lihat detail pemasukan">
                             <div class="card card-statistic-1">
                                 <div class="bg-success">
                                     <div class="py-1"></div>
@@ -688,6 +689,53 @@
                                     <input type="text" id="finish_date" class="form-control"
                                         value="Rp {{ number_format($totalNonOperationalSpending, 0, ',', '.') }}"
                                         name="finish_date" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
+    @can('access-recentDebite')
+        <div class="modal fade" tabindex="-1" role="dialog" id="pemasukanModal">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detail Pemasukan Sekolah</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row pt-3 pb-1">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="year_name">Total Pemasukan SPP</label>
+                                    <input type="text" class="form-control" name="nama_tahun"
+                                        value="Rp {{ number_format($totalCredit + $totalAttribute + $externalCount - $sumSpending, 0, ',', '.') }}"
+                                        id="year_name" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year_name">Pemasukan Daftar Ulang</label>
+                                    <input type="text" class="form-control" name="nama_tahun"
+                                        value="Rp {{ number_format($totalAttribute, 0, ',', '.') }}" id="year_name" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year_name">Pemasukan SPP</label>
+                                    <input type="text" id="start_date" class="form-control"
+                                        value="Rp {{ number_format($totalCredit - $sumSpending, 0, ',', '.') }}"
+                                        name="start_date" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year_name">Pemasukan External</label>
+                                    <input type="text" id="finish_date" class="form-control"
+                                        value="Rp {{ number_format($externalCount, 0, ',', '.') }}" name="finish_date"
+                                        disabled>
                                 </div>
                             </div>
                         </div>
