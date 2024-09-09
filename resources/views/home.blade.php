@@ -103,7 +103,7 @@
                                     </div>
                                     <div class="card-body py-2">
                                         <h5>
-                                            Rp{{ number_format($totalCredit + $totalAttribute + $externalCount - $sumSpending, 0, ',', '.') }}
+                                            Rp{{ number_format($totalCredit + $totalAttribute + $externalCount, 0, ',', '.') }}
                                         </h5>
                                     </div>
                                     <div class="py-2"></div>
@@ -715,9 +715,9 @@
                         <div class="row pt-3 pb-1">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="year_name">Total Pemasukan SPP</label>
+                                    <label for="year_name">Total Pemasukan</label>
                                     <input type="text" class="form-control" name="nama_tahun"
-                                        value="Rp {{ number_format($totalCredit + $totalAttribute + $externalCount - $sumSpending, 0, ',', '.') }}"
+                                        value="Rp {{ number_format($totalCredit + $totalAttribute + $externalCount, 0, ',', '.') }}"
                                         id="year_name" disabled>
                                 </div>
                                 <div class="form-group">
@@ -728,8 +728,7 @@
                                 <div class="form-group">
                                     <label for="year_name">Pemasukan SPP</label>
                                     <input type="text" id="start_date" class="form-control"
-                                        value="Rp {{ number_format($totalCredit - $sumSpending, 0, ',', '.') }}"
-                                        name="start_date" disabled>
+                                        value="Rp {{ number_format($totalCredit, 0, ',', '.') }}" name="start_date" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="year_name">Pemasukan External</label>
