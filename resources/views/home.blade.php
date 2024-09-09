@@ -662,19 +662,28 @@
                             <div class="row pt-3 pb-1">
                                 <div class="col-md-12">
                                     <div class="form-group">
+                                        <label for="year_name">Total Tabungan</label>
+                                        <input type="text" class="form-control" name="nama_tahun"
+                                            value="Rp {{ number_format($sumSpending, 0, ',', '.') }}" id="year_name"
+                                            disabled>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="year_name">Tabungan Kelas 12</label>
-                                        <input type="number" class="form-control" name="nama_tahun"
-                                            value="{{ $sumSpending12 }}" id="year_name" disabled>
+                                        <input type="text" class="form-control" name="nama_tahun"
+                                            value="Rp {{ number_format($sumSpending12, 0, ',', '.') }}" id="year_name"
+                                            disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="year_name">Tabungan Kelas 11</label>
-                                        <input type="number" id="start_date" class="form-control"
-                                            value="{{ $sumSpending11 }}" name="start_date" disabled>
+                                        <input type="text" id="start_date" class="form-control"
+                                            value="Rp {{ number_format($sumSpending11, 0, ',', '.') }}" name="start_date"
+                                            disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="year_name">Tabungan Kelas 10</label>
-                                        <input type="number" id="finish_date" class="form-control"
-                                            value="{{ $sumSpending10 }}" name="finish_date" disabled>
+                                        <input type="text" id="finish_date" class="form-control"
+                                            value="Rp {{ number_format($sumSpending10, 0, ',', '.') }}" name="finish_date"
+                                            disabled>
                                     </div>
                                 </div>
                             </div>
