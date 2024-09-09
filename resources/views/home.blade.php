@@ -132,7 +132,8 @@
                         </div>
                     @endcan
                     @can('access-recentKredit')
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12 cursor-pointer" data-toggle="modal"
+                            data-target="#tabunganModal">
                             <div class="card card-statistic-1">
                                 <div class="bg-warning">
                                     <div class="py-1"></div>
@@ -644,6 +645,48 @@
             </div>
         </footer>
     </div>
+
+    @can('access-recentKredit')
+        <div class="modal fade" tabindex="-1" role="dialog" id="tabunganModal">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detail Tabungan Siswa</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="form-action" method="post" action="{{ route('exportRealisasi') }}">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="row pt-3 pb-1">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="year_name">Tabungan Kelas 12</label>
+                                        <input type="number" class="form-control" name="nama_tahun"
+                                            value="{{ $sumSpending12 }}" id="year_name" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="year_name">Tabungan Kelas 11</label>
+                                        <input type="number" id="start_date" class="form-control"
+                                            value="{{ $sumSpending11 }}" name="start_date" disabled autofocus>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="year_name">Tabungan Kelas 10</label>
+                                        <input type="number" id="finish_date" class="form-control"
+                                            value="{{ $sumSpending10 }}" name="finish_date" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endcan
 
     <div class="modal fade" tabindex="-1" role="dialog" id="exportModal">
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">

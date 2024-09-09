@@ -56,7 +56,28 @@ class HomeController extends Controller
                                 ->where('year_id', $activeYearId)
                                 ->where('status', 'Paid')
                                 ->get();
-
+        $totalCredits12 = Payment::where('type', 'SPP')
+        ->where('year_id', $activeYearId)
+        ->whereHas('user', function ($query) {
+            $query->whereIn('class_id', [40, 41, 42, 43, 44]);
+        })
+        ->where('status', 'Paid')
+        ->get();
+                            
+        $totalCredits11 = Payment::where('type', 'SPP')
+        ->where('year_id', $activeYearId)
+        ->whereHas('user', function ($query) {
+            $query->whereIn('class_id', [35, 36, 37, 38, 39]);
+        })
+        ->where('status', 'Paid')
+        ->get();
+        $totalCredits10 = Payment::where('type', 'SPP')
+        ->where('year_id', $activeYearId)
+        ->whereHas('user', function ($query) {
+            $query->whereIn('class_id', [32, 33, 34, 2, 3]);
+        })
+        ->where('status', 'Paid')
+        ->get();
 
         $totalCredit = $totalCredits->reduce(function ($carry, $transaction) {
             return $carry + max($transaction->price - 50000, 0);
@@ -115,14 +136,67 @@ class HomeController extends Controller
                     })
                     ->get();
 
+        $totalCreditDUs12 = Payment::where('type', 'Daftar Ulang')
+        ->where('year_id', $activeYearId)
+        ->where('status', 'Paid')
+        ->whereHas('user', function ($query) {
+            $query->whereIn('class_id', [40, 41, 42, 43, 44]);
+        })
+        ->whereHas('attribute', function ($query) {
+            $query->where('attribute_type', 'Tabungan');
+        })
+        ->get();
+        $totalCreditDUs11 = Payment::where('type', 'Daftar Ulang')
+        ->where('year_id', $activeYearId)
+        ->where('status', 'Paid')
+        ->whereHas('user', function ($query) {
+            $query->whereIn('class_id', [32, 33, 34, 2, 3]);
+        })
+        ->whereHas('attribute', function ($query) {
+            $query->where('attribute_type', 'Tabungan');
+        })
+        ->get();
+        $totalCreditDUs10 = Payment::where('type', 'Daftar Ulang')
+        ->where('year_id', $activeYearId)
+        ->where('status', 'Paid')
+        ->whereHas('user', function ($query) {
+            $query->whereIn('class_id', [32, 33, 34, 2, 3]);
+        })
+        ->whereHas('attribute', function ($query) {
+            $query->where('attribute_type', 'Tabungan');
+        })
+        ->get();
+
         $tabunganSPP = $totalCredits->reduce(function ($carry, $transaction) {
             return $carry + 50000;
         }, 0);
+        $tabunganSPP12 = $totalCredits12->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
+        $tabunganSPP11 = $totalCredits11->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
+        $tabunganSPP10 = $totalCredits10->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
+
         $tabunganDaftarUlang = $totalCreditDUs->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
+        $tabunganDaftarUlang12 = $totalCreditDUs12->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
+        $tabunganDaftarUlang11 = $totalCreditDUs11->reduce(function ($carry, $transaction) {
+            return $carry + 50000;
+        }, 0);
+        $tabunganDaftarUlang10 = $totalCreditDUs10->reduce(function ($carry, $transaction) {
             return $carry + 50000;
         }, 0);
 
         $sumSpending = $tabunganSPP + $tabunganDaftarUlang;
+        $sumSpending12 = $tabunganSPP12 + $tabunganDaftarUlang12;
+        $sumSpending11 = $tabunganSPP11 + $tabunganDaftarUlang11;
+        $sumSpending10 = $tabunganSPP10 + $tabunganDaftarUlang10;
 
         $sumDebt = Debt::where('is_paid', 0)
                         ->where('year_id', $activeYearId)
@@ -179,7 +253,7 @@ class HomeController extends Controller
                 ->whereMonth('updated_at', $currentMonth)
                 ->sum('price');
 
-        return view('home', compact('sumMonthPrice','sumTodayPrice','creditTodayPrice','attributeTodayPrice','sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
+        return view('home', compact('sumMonthPrice','sumTodayPrice','creditTodayPrice','attributeTodayPrice','sumDebtPay','totalBahan', 'totalUnpaidSPP', 'totalUnpaidDU','classList', 'sumDebit', 'sumSpending', 'sumSpending12','sumSpending11','sumSpending10', 'sumDebt', 'adminCount', 'notifications', 'totalCredit', 'totalAttribute', 'totalPaid', 'externalCount', 'credit', 'years','credits'));
     }
 
     public function getAdminCount()
