@@ -112,8 +112,8 @@
                     @endcan
 
                     @can('access-recentBahan')
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12" data-toggle="modal" data-target="#pengeluaranModal"
-                            title="Lihat detail pengeluaran">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12 cursor-pointer" data-toggle="modal"
+                            data-target="#pengeluaranModal" title="Lihat detail pengeluaran">
                             <div class="card card-statistic-1">
                                 <div class="bg-danger">
                                     <div class="py-1"></div>
