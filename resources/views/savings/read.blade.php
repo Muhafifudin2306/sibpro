@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title_page', 'Loket Pemesanan Tagihan')
+@section('title_page', 'Tabungan Siswa')
 
 @section('content')
     @push('styles')
@@ -14,7 +14,7 @@
             <section class="section">
                 <div class="section-header d-flex justify-content-lg-between">
                     <div class="title">
-                        <h1>{{ __('Loket Pemesanan') }}</h1>
+                        <h1>{{ __('Tabungan Siswa') }}</h1>
                     </div>
                     @can('access-currentYear')
                         <div class="current__year d-flex py-lg-0 pt-3 pb-1">
