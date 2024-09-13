@@ -42,7 +42,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4>{{ __('Daftar Item Tagihan') }}</h4>
+                        <h4>{{ __('Daftar Tabungan Siswa') }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
