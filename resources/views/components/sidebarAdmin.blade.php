@@ -117,13 +117,24 @@
                         <i class="fas fa-file-invoice-dollar"></i>
                         <span>Blangko Tagihan Siswa</span>
                     </a>
-                </li> --}}<li class="dropdown {{ Request::is('enrollment*') ? 'active' : '' }}">
+                </li> --}}
+                <li class="dropdown {{ Request::is('enrollment*') ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i>
                         <span>Blangko Tagihan Siswa</span></a>
                     <ul class="dropdown-menu">
                         @foreach ($students as $item)
                             <li class="{{ Request::segment(2) == $item->id ? 'active' : '' }}"><a
                                     href="{{ url('enrollment/' . $item->id) }}">{{ $item->class_name }}</a></li>
+                        @endforeach
+                    </ul>
+                </li>
+                <li class="dropdown {{ Request::is('savings*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-funnel-dollar"></i>
+                        <span>Tabungan Siswa</span></a>
+                    <ul class="dropdown-menu">
+                        @foreach ($students as $item)
+                            <li class="{{ Request::segment(2) == $item->uuid ? 'active' : '' }}"><a
+                                    href="{{ url('savings/' . $item->uuid) }}">{{ $item->class_name }}</a></li>
                         @endforeach
                     </ul>
                 </li>

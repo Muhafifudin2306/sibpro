@@ -121,6 +121,12 @@ Route::prefix('spending')->group(function () {
     });
 });
 
+
+Route::prefix('savings')->group(function () {
+    Route::get('/{uuid}', [App\Http\Controllers\SavingController::class, 'index'])->name('indexSavings');
+});
+
+
 Route::prefix('credit')->group(function () {
     Route::get('/', [App\Http\Controllers\CreditController::class, 'index'])->name('credit');
     Route::get('/add', [App\Http\Controllers\CreditController::class, 'addPage'])->name('addCredit');
