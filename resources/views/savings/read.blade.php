@@ -33,9 +33,9 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center pb-3">
                     <div class="title-content">
-                        <h2 class="section-title">{{ __('Loket Pemesanan') }}</h2>
+                        <h2 class="section-title">{{ __('Tabungan Siswa') }}</h2>
                         <p class="section-lead">
-                            {{ __('Pilih item dan ketahui estimasi biayanya') }}
+                            {{ __('Lihat dan monitoring tabungan siswa') }}
                         </p>
                     </div>
                 </div>
