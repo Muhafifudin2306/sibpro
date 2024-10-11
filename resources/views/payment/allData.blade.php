@@ -110,7 +110,7 @@
                                                 <div class="d-flex justify-content-start">
                                                     <div class="text-primary cursor-pointer">
                                                         <a
-                                                            href="{{ url('/payment-done/kwitansi/' . $item->invoice_number . '/' . $item->id) }}">
+                                                            href="{{ url('/payment-done/kwitansi/' . $item->invoice_number . '/' . $item->uuid) }}">
                                                             <i class="fas fa-file" title="Detail"></i>
                                                         </a>
                                                     </div>
