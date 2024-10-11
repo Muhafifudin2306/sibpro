@@ -375,6 +375,7 @@ class PaymentController extends Controller
                 $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
             })
             ->groupBy('invoice_number')
+            ->select('MAX(updated_at) AS latest_updated_at,SUM(amount) AS total_amount')
             ->orderBy("updated_at", "DESC")
             ->get();
         $years = Year::orderBy("updated_at", "DESC")->get();
