@@ -172,20 +172,23 @@ class PaymentController extends Controller
         return view('payment.user.payment.detail', compact('totalPriceCredits', 'students', 'credits', 'notifications', 'studentClasses', 'credit', 'years'));
     }
 
-    public function detailKwitansiDone($invoice_number)
+    public function detailKwitansiDone($invoice_number, $uuid)
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $credit = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
+            ->where('uuid', $uuid)
             ->first();
 
         $credits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
+            ->where('uuid', $uuid)
             ->get();
 
         $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
+            ->where('uuid', $uuid)
             ->sum('price');
 
         $years = Year::orderBy("updated_at", "DESC")->get();
