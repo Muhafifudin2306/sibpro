@@ -375,7 +375,6 @@ class PaymentController extends Controller
                 $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
             })
             ->groupBy('invoice_number')
-            ->select('uuid','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
             ->orderBy("updated_at", "DESC")
             ->get();
         $years = Year::orderBy("updated_at", "DESC")->get();
