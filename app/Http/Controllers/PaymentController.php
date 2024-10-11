@@ -172,23 +172,23 @@ class PaymentController extends Controller
         return view('payment.user.payment.detail', compact('totalPriceCredits', 'students', 'credits', 'notifications', 'studentClasses', 'credit', 'years'));
     }
 
-    public function detailKwitansiDone($invoice_number, $uuid)
+    public function detailKwitansiDone($invoice_number, $id)
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $credit = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $uuid)
+            ->where('id', $id)
             ->first();
 
         $credits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $uuid)
+            ->where('id', $id)
             ->get();
 
         $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $uuid)
+            ->where('id', $id)
             ->sum('price');
 
         $years = Year::orderBy("updated_at", "DESC")->get();
@@ -396,7 +396,7 @@ class PaymentController extends Controller
             })
             ->groupBy('invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
             ->whereDate('updated_at', $currentDate)
-            ->select('uuid','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
+            ->select('id','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
             ->orderBy("updated_at", "DESC")
             ->get();
 
