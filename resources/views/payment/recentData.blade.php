@@ -93,7 +93,7 @@
                                             <td>{{ $item->invoice_number ?? '-' }}</td>
                                             <td>{{ $item->payment_type }}</td>
                                             <td>{{ $item->user->nis }}</td>
-                                            <td>{{ $item->user->name }}</td>
+                                            <td>{{ $item->user_id }}</td>
                                             <td>
                                                 Rp{{ number_format($item->total_price, 0, ',', '.') }}
                                             </td>
