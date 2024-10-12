@@ -374,9 +374,10 @@ class PaymentController extends Controller
             ->whereHas('year', function ($query) {
                 $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
             })
-            ->groupBy('invoice_number')
+            ->groupBy('invoice_number', 'updated_at')  // Adding 'updated_at' to groupBy
             ->orderBy("updated_at", "DESC")
             ->get();
+
         $years = Year::orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
         $studentClasses = StudentClass::orderBy("updated_at", "DESC")->get();
