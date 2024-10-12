@@ -370,13 +370,15 @@ class PaymentController extends Controller
 
     public function allTransaction()
     {
-        $credit = Payment::where('status', '!=', 'Unpaid')
-            ->whereHas('year', function ($query) {
-                $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
-            })
-            ->groupBy('invoice_number', 'updated_at')  // Adding 'updated_at' to groupBy
-            ->orderBy("updated_at", "DESC")
-            ->get();
+        $credit = Payment::selectRaw('invoice_number, MAX(updated_at) as latest_update, SUM(price) as total_price')
+                ->where('status', '!=', 'Unpaid')
+                ->whereHas('year', function ($query) {
+                    $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
+                })
+                ->groupBy('invoice_number')
+                ->orderBy('latest_update', 'DESC')
+                ->get();
+
 
         $years = Year::orderBy("updated_at", "DESC")->get();
         $notifications = Notification::orderBy("updated_at", 'DESC')->limit(10)->get();
