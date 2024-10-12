@@ -370,7 +370,7 @@ class PaymentController extends Controller
 
     public function allTransaction()
     {
-        $credit = Payment::selectRaw('invoice_number, MAX(updated_at) as latest_update, SUM(price) as total_price')
+        $credit = Payment::selectRaw('invoice_number, MAX(updated_at) as latest_update, SUM(price) as total_price', 'uuid','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
                 ->where('status', '!=', 'Unpaid')
                 ->whereHas('year', function ($query) {
                     $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
