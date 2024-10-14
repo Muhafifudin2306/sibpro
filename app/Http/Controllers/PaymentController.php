@@ -178,17 +178,17 @@ class PaymentController extends Controller
 
         $credit = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $user_id)
+            ->where('user_id', $user_id)
             ->first();
 
         $credits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $user_id)
+            ->where('user_id', $user_id)
             ->get();
 
         $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $user_id)
+            ->where('user_id', $user_id)
             ->sum('price');
 
         $years = Year::orderBy("updated_at", "DESC")->get();
