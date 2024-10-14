@@ -231,18 +231,21 @@ class PaymentController extends Controller
         return $pdf->stream('Kwitansi_Pembayaran' . '_' . $credit->invoice_number . '.pdf');
     }
 
-    public function printKwitansiDone($invoice_number)
+    public function printKwitansiDone($invoice_number, $user_id)
     {
         $credit = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
+            ->where('user_id', $user_id)
             ->first();
 
         $credits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
+            ->where('user_id', $user_id)
             ->get();
 
         $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
+            ->where('user_id', $user_id)
             ->sum('price');
 
         $data = [
