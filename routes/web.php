@@ -331,7 +331,7 @@ Route::prefix('enrollment')->group(function () {
 Route::prefix('payment-done')->group(function () {
     Route::get('/', [App\Http\Controllers\PaymentController::class, 'indexPaymentDone']);
     Route::get('/detail/{id}', [App\Http\Controllers\PaymentController::class, 'detailPaymentDone']);
-    Route::get('/kwitansi/{invoice_number}/{uuid}', [App\Http\Controllers\PaymentController::class, 'detailKwitansiDone']);
+    Route::get('/kwitansi/{invoice_number}/{user_id}', [App\Http\Controllers\PaymentController::class, 'detailKwitansiDone']);
     Route::get('/print/payment/{id}', [App\Http\Controllers\PaymentController::class, 'printPaymentDone']);
     Route::get('/print/kwitansi/{invoice_number}', [App\Http\Controllers\PaymentController::class, 'printKwitansiDone']);
 });

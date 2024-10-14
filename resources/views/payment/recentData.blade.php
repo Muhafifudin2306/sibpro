@@ -111,7 +111,7 @@
                                             <td>
                                                 @if ($item->petugas_id != null)
                                                     <a
-                                                        href="{{ url('/payment-done/kwitansi/' . $item->invoice_number . '/' . $item->uuid) }}">
+                                                        href="{{ url('/payment-done/kwitansi/' . $item->invoice_number . '/' . $item->user_id) }}">
                                                         <i class="fas fa-file text-primary" title="Detail"></i>
                                                     </a>
                                                 @else

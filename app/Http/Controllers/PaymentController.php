@@ -172,23 +172,23 @@ class PaymentController extends Controller
         return view('payment.user.payment.detail', compact('totalPriceCredits', 'students', 'credits', 'notifications', 'studentClasses', 'credit', 'years'));
     }
 
-    public function detailKwitansiDone($invoice_number, $uuid)
+    public function detailKwitansiDone($invoice_number, $user_id)
     {
         $activeYearId = Year::where('year_status', 'active')->value('id');
 
         $credit = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $uuid)
+            ->where('uuid', $user_id)
             ->first();
 
         $credits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $uuid)
+            ->where('uuid', $user_id)
             ->get();
 
         $totalPriceCredits = Payment::orderBy("updated_at", "DESC")
             ->where('invoice_number', $invoice_number)
-            ->where('uuid', $uuid)
+            ->where('uuid', $user_id)
             ->sum('price');
 
         $years = Year::orderBy("updated_at", "DESC")->get();
@@ -355,8 +355,8 @@ class PaymentController extends Controller
             ->whereHas('year', function ($query) {
                 $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
             })
-            ->groupBy('uuid','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
-            ->select('uuid','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
+            ->groupBy('invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
+            ->select('user_id','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
             ->orderBy("updated_at", "DESC")
             ->get();
 
@@ -394,9 +394,9 @@ class PaymentController extends Controller
             ->whereHas('year', function ($query) {
                 $query->where('id', '=', Year::where('year_current', 'selected')->value('id'));
             })
-            ->groupBy('uuid','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
+            ->groupBy('invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type')
             ->whereDate('updated_at', $currentDate)
-            ->select('uuid','invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
+            ->select('invoice_number', 'user_id', 'status', 'petugas_id', 'updated_at', 'payment_type', DB::raw('SUM(price) as total_price'))
             ->orderBy("updated_at", "DESC")
             ->get();
 

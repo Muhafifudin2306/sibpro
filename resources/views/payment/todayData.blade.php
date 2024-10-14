@@ -166,7 +166,7 @@
                                             <td>{{ $item->updated_at->format('F d, Y') }}</td>
                                             <td>
                                                 <a
-                                                    href="{{ url('/payment-done/kwitansi/' . $item->invoice_number . '/' . $item->uuid) }}">
+                                                    href="{{ url('/payment-done/kwitansi/' . $item->invoice_number . '/' . $item->user_id) }}">
                                                     <i class="fas fa-file text-primary" title="Detail"></i>
                                                 </a>
                                             </td>
